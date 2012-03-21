@@ -1,0 +1,31 @@
+See http://code.google.com/p/get-another-label/wiki/HowToRun for instructions on how to run the code.
+
+ATTENTION: This is the last stand-alone version of the code. Soon, we will make available a REST-based web service that has significant additional functionality (support for streaming and incremental updates, persistence, etc). Stay tuned.
+
+Mechanical Turk and other "micro-outsourcing" platforms allow the easy collection of annotation data from a wide variety of onliner workers. Unfortunately, the results returned back from the workers are of imperfect quality: No worker is perfect and each worker commits different types of errors. Some workers are nothing more than spammers doing minimal, if any, real work.
+
+The goal of this project is to create tools that allow requesters to infer the "true" results and the underlying quality of the workers, for a given task, by examining the labelers submitted by the workers.
+
+The requesters will also be able to examine which workers are doing a good work for the given task, and reward these workers appropriately. The tool also provides the ability to detect spammers, allowing the requester to potentially block the spammer worker from working any future projects.
+
+The ideas behind this work are described in Quality Management on Amazon Mechanical Turk, by Ipeirotis, Wang, and Provost, which was presented at HCOMP 2010.
+
+A web-accessible demo of this code is available at http://qmturk.appspot.com/
+
+A .NET version of the code, by Julián Urbano, is available at http://code.google.com/p/get-another-label-dotnet/
+
+New features in Version 0.1:
+
+* Ability to upload labels for objects with known classification (i.e., "gold" data) for improved estimation of labeler's quality. See http://behind-the-enemy-lines.blogspot.com/2010/09/worker-evaluation-in-crowdsourcing-gold.html for a longer discussion
+* Ability to customize classification costs. For example, classifying "porn" as "not porn" may be costlier than classifying "not porn" as "porn": the first error may expose children to porn, while the second simply blocks some users from seeing the resource.
+
+New features in Version 1.0:
+
+* We now report a "quality score" that ranges from 0% to 100%
+* We now show the number of objects labeled by each worker.
+
+New features in Version 2.0:
+
+* Better organization of output files with more information about the workers' quality
+* Code refactored and works with data files that contain millions of entries
+
