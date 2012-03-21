@@ -1,0 +1,6 @@
+Worker	Error Rate	Quality (Expected)	Quality (Optimized)	Number of Annotations	Gold Tests
+worker1	50.0%	---	---	5	2
+worker2	16.67%	50%	67%	5	2
+worker3	0.0%	100%	100%	5	2
+worker4	0.0%	100%	100%	5	2
+worker5	100.0%	100%	100%	5	2

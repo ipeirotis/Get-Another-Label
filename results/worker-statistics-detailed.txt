@@ -1,0 +1,50 @@
+Worker: worker1
+Error Rate: 50.0%
+Quality (Expected): ---
+Quality (Optimized): ---
+Number of Annotations: 5
+Number of Gold Tests: 2
+Confusion Matrix: 
+P[porn->porn]=100.0%	P[porn->notporn]=0.0%	
+P[notporn->porn]=100.0%	P[notporn->notporn]=0.0%	
+
+Worker: worker2
+Error Rate: 16.67%
+Quality (Expected): 50%
+Quality (Optimized): 67%
+Number of Annotations: 5
+Number of Gold Tests: 2
+Confusion Matrix: 
+P[porn->porn]=100.0%	P[porn->notporn]=0.0%	
+P[notporn->porn]=33.333%	P[notporn->notporn]=66.667%	
+
+Worker: worker3
+Error Rate: 0.0%
+Quality (Expected): 100%
+Quality (Optimized): 100%
+Number of Annotations: 5
+Number of Gold Tests: 2
+Confusion Matrix: 
+P[porn->porn]=100.0%	P[porn->notporn]=0.0%	
+P[notporn->porn]=0.0%	P[notporn->notporn]=100.0%	
+
+Worker: worker4
+Error Rate: 0.0%
+Quality (Expected): 100%
+Quality (Optimized): 100%
+Number of Annotations: 5
+Number of Gold Tests: 2
+Confusion Matrix: 
+P[porn->porn]=100.0%	P[porn->notporn]=0.0%	
+P[notporn->porn]=0.0%	P[notporn->notporn]=100.0%	
+
+Worker: worker5
+Error Rate: 100.0%
+Quality (Expected): 100%
+Quality (Optimized): 100%
+Number of Annotations: 5
+Number of Gold Tests: 2
+Confusion Matrix: 
+P[porn->porn]=0.0%	P[porn->notporn]=100.0%	
+P[notporn->porn]=100.0%	P[notporn->notporn]=0.0%	
+

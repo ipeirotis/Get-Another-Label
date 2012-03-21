@@ -1,0 +1,6 @@
+Object	Pr[porn]	Pr[notporn]	Pre-DS Majority Label	Pre-DS Min Cost Label	Post-DS Majority Label	Post-DS Min Cost Label
+url1	0.0	1.0	
+url2	1.0	0.0	
+url3	0.0	1.0	
+url4	1.0	0.0	
+url5	0.0	1.0	

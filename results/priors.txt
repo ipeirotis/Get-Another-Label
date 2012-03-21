@@ -1,0 +1,2 @@
+Prior[porn]=0.5
+Prior[notporn]=0.5
