@@ -1,20 +1,23 @@
 package com.ipeirotis.gal.scripts;
 
 public class MisclassificationCost {
-	private String categoryFrom;
-	private String categoryTo;
-	private Double cost;
-	
+
+	private String	categoryFrom;
+	private String	categoryTo;
+	private Double	cost;
+
 	public MisclassificationCost(String from, String to, Double cost) {
-		this.categoryFrom=from;
-		this.categoryTo=to;
-		this.cost=cost;
+
+		this.categoryFrom = from;
+		this.categoryTo = to;
+		this.cost = cost;
 	}
 
 	/**
 	 * @return the categoryFrom
 	 */
 	public String getCategoryFrom() {
+
 		return categoryFrom;
 	}
 
@@ -22,6 +25,7 @@ public class MisclassificationCost {
 	 * @return the categoryTo
 	 */
 	public String getCategoryTo() {
+
 		return categoryTo;
 	}
 
@@ -29,28 +33,33 @@ public class MisclassificationCost {
 	 * @return the cost
 	 */
 	public Double getCost() {
+
 		return cost;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
+
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((categoryFrom == null) ? 0 : categoryFrom.hashCode());
-		result = prime * result
-				+ ((categoryTo == null) ? 0 : categoryTo.hashCode());
+		result = prime * result + ((categoryFrom == null) ? 0 : categoryFrom.hashCode());
+		result = prime * result + ((categoryTo == null) ? 0 : categoryTo.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)

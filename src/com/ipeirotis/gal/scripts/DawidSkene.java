@@ -98,12 +98,11 @@ public class DawidSkene {
 		this.objects.put(objectName, d);
 	}
 
-	
 	/**
 	 * @return the fixedPriors
 	 */
 	public Boolean fixedPriors() {
-	
+
 		return fixedPriors;
 	}
 
@@ -289,7 +288,7 @@ public class DawidSkene {
 
 				String assigned_category = al.getCategoryName();
 				double evidence_for_category = w.getErrorRate(category.getName(), assigned_category);
-				if (Double.isNaN(evidence_for_category)) 
+				if (Double.isNaN(evidence_for_category))
 					continue;
 				categoryNominator *= evidence_for_category;
 			}
@@ -336,7 +335,7 @@ public class DawidSkene {
 	private HashMap<String, Double> getSoftLabelForHardCategoryLabel(Worker w, String label) {
 
 		// Pr(c | label) = Pr(label | c) * Pr (c) / Pr(label)
-		
+
 		HashMap<String, Double> worker_prior = w.getPrior(new HashSet<Category>(this.categories.values()));
 
 		HashMap<String, Double> result = new HashMap<String, Double>();
@@ -350,16 +349,19 @@ public class DawidSkene {
 	}
 
 	public int getNumberOfWorkers() {
+
 		return this.workers.size();
 	}
-	
+
 	public int getNumberOfObjects() {
+
 		return this.objects.size();
 	}
-	
+
 	public static int	COST_NAIVE							= 0;
 	public static int	COST_ADJUSTED						= 1;
-	public static int	COST_NAIVE_MINIMIZED		= 2; // Effectively, classifying into the "majority class" (class with lowest expected cost)
+	public static int	COST_NAIVE_MINIMIZED		= 2;	// Effectively, classifying into the "majority class" (class with
+																									// lowest expected cost)
 	public static int	COST_ADJUSTED_MINIMIZED	= 3;
 
 	/**
@@ -386,7 +388,7 @@ public class DawidSkene {
 		Double cost = 0.0;
 
 		// We estimate first how often the worker assigns each category label
-		
+
 		// If we do not have a fixed prior, we can just use the data about the worker
 		HashMap<String, Double> worker_prior = w.getPrior(new HashSet<Category>(this.categories.values()));
 
@@ -588,16 +590,16 @@ public class DawidSkene {
 		StringBuffer sb = new StringBuffer();
 
 		String workerName = w.getName();
-		
+
 		Double cost_naive = this.getAnnotatorCostNaive(w);
-		String s_cost_naive = (Double.isNaN(cost_naive))? "---" : Utils.round(100 * cost_naive, 2) + "%";
-		
+		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
+
 		Double cost_adj = this.getWorkerCost(w, DawidSkene.COST_ADJUSTED);
-		String s_cost_adj = (Double.isNaN(cost_adj))? "---" : Math.round(100 * (1 - cost_adj)) + "%";
-		
+		String s_cost_adj = (Double.isNaN(cost_adj)) ? "---" : Math.round(100 * (1 - cost_adj)) + "%";
+
 		Double cost_min = this.getWorkerCost(w, DawidSkene.COST_ADJUSTED_MINIMIZED);
-		String s_cost_min = (Double.isNaN(cost_min))? "---" : Math.round(100 * (1 - cost_min)) + "%";
-		
+		String s_cost_min = (Double.isNaN(cost_min)) ? "---" : Math.round(100 * (1 - cost_min)) + "%";
+
 		Integer contributions = w.getAssignedLabels().size();
 		Integer gold_tests = this.countGoldTests(w.getAssignedLabels());
 
@@ -608,19 +610,20 @@ public class DawidSkene {
 			sb.append("Quality (Optimized): " + s_cost_min + "\n");
 			sb.append("Number of Annotations: " + contributions + "\n");
 			sb.append("Number of Gold Tests: " + gold_tests + "\n");
-			
+
 			sb.append("Confusion Matrix: \n");
 			for (String correct_name : this.categories.keySet()) {
 				for (String assigned_name : this.categories.keySet()) {
-					Double cm_entry =  w.getErrorRate(correct_name, assigned_name);
-					String s_cm_entry =  Double.isNaN(cm_entry)? "---" : Utils.round(100 * cm_entry, 3).toString();
-					sb.append("P[" + correct_name + "->" + assigned_name + "]="	+ s_cm_entry + "%\t");
+					Double cm_entry = w.getErrorRate(correct_name, assigned_name);
+					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils.round(100 * cm_entry, 3).toString();
+					sb.append("P[" + correct_name + "->" + assigned_name + "]=" + s_cm_entry + "%\t");
 				}
 				sb.append("\n");
 			}
 			sb.append("\n");
 		} else {
-			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_adj + "\t"	+ s_cost_min + "\t" + contributions + "\t" + gold_tests + "\n");
+			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_adj + "\t" + s_cost_min + "\t" + contributions + "\t"
+					+ gold_tests + "\n");
 		}
 
 		return sb.toString();

@@ -6,8 +6,8 @@ import java.util.Set;
 
 import com.ipeirotis.utils.Utils;
 
-
 public class Main {
+
 	public static void main(String[] args) {
 
 		// TODO: Use a "getopt"-like library to process options
@@ -21,14 +21,19 @@ public class Main {
 		boolean verbose = false;
 
 		if (args.length != 5) {
-			System.out.println("Usage: java -jar getanotherlabel.jar <categoriesfile> <inputfile> <correctfile> <costfile> <iterations>");
+			System.out
+					.println("Usage: java -jar getanotherlabel.jar <categoriesfile> <inputfile> <correctfile> <costfile> <iterations>");
 			System.out.println("");
-			System.out.println("Example: java -jar getanotherlabel.jar data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt 10");
+			System.out
+					.println("Example: java -jar getanotherlabel.jar data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt 10");
 			System.out.println("");
-			System.out.println("The <categoriesfile> is a text file and contains the list of categories used to annotate the objects.");
+			System.out
+					.println("The <categoriesfile> is a text file and contains the list of categories used to annotate the objects.");
 			System.out.println("It contains one category per line.");
-			System.out.println("The <categoriesfile> can also be used to define the prior values for the different categories, instead of letting the priors be defined by the data.");
-			System.out.println("In that case, it becomes a tab-separated file and each line has the form <category><tab><prior>");
+			System.out
+					.println("The <categoriesfile> can also be used to define the prior values for the different categories, instead of letting the priors be defined by the data.");
+			System.out
+					.println("In that case, it becomes a tab-separated file and each line has the form <category><tab><prior>");
 			System.out.println("");
 			System.out.println("The <inputfile> is a tab-separated text file.");
 			System.out.println("Each line has the form <workerid><tab><objectid><tab><assigned_label>");
@@ -62,15 +67,15 @@ public class Main {
 		// Plus, it makes it easier to implement the algorithm in a streaming mode.
 
 		Set<Category> categories = loadCategories(categoriesfile);
-		
+
 		DawidSkene ds = new DawidSkene(categories);
 		if (ds.fixedPriors() == true)
 			System.out.println("Using fixed priors.");
 		else
 			System.out.println("Using data-inferred priors.");
-		
+
 		Set<MisclassificationCost> costs = loadCosts(costfile);
-		assert(costs.size() == categories.size() * categories.size());
+		assert (costs.size() == categories.size() * categories.size());
 		for (MisclassificationCost mcc : costs) {
 			ds.addMisclassificationCost(mcc);
 		}
@@ -97,9 +102,9 @@ public class Main {
 
 		System.out.println("");
 		System.out.println("Running the Dawid&Skene algorithm");
-		for (int i=0; i<iterations; i++) {
-			System.out.println("Iteration: " +i);
-			//ds.estimate(iterations);
+		for (int i = 0; i < iterations; i++) {
+			System.out.println("Iteration: " + i);
+			// ds.estimate(iterations);
 			ds.estimate(1);
 		}
 		System.out.println("Done\n");
@@ -115,7 +120,7 @@ public class Main {
 		saveDifferences(verbose, ds, prior_voting, posterior_voting);
 
 	}
-	
+
 	/**
 	 * @param verbose
 	 * @param ds
@@ -126,7 +131,8 @@ public class Main {
 			HashMap<String, String> posterior_voting) {
 
 		System.out.println("");
-		System.out.println("Computing the differences between naive majority vote and Dawid&Skene (see also file results/differences-with-majority-vote.txt)");
+		System.out
+				.println("Computing the differences between naive majority vote and Dawid&Skene (see also file results/differences-with-majority-vote.txt)");
 		String differences = ds.printDiffVote(prior_voting, posterior_voting);
 		if (verbose) {
 			System.out.println("=======DIFFERENCES WITH MAJORITY VOTE========");
@@ -202,7 +208,8 @@ public class Main {
 		// Save the estimated quality characteristics for each worker
 		System.out.println("");
 		System.out.print("Estimating worker quality");
-		System.out.println(" (see also file results/worker-statistics-summary.txt and results/worker-statistics-detailed.txt)");
+		System.out
+				.println(" (see also file results/worker-statistics-summary.txt and results/worker-statistics-detailed.txt)");
 		boolean detailed = false;
 		String summary_report = ds.printAllWorkerScores(detailed);
 		detailed = true;
@@ -336,9 +343,6 @@ public class Main {
 		return labels;
 	}
 
-	
-
-	
 	/**
 	 * @param inputfile
 	 * @return
@@ -366,7 +370,7 @@ public class Main {
 		System.out.println("");
 		System.out.println("Loading cost file.");
 		String[] lines_cost = Utils.getFile(costfile).split("\n");
-		//assert (lines_cost.length == categories.size() * categories.size());
+		// assert (lines_cost.length == categories.size() * categories.size());
 		System.out.println("File contains " + lines_cost.length + " entries.");
 		Set<MisclassificationCost> costs = getClassificationCost(lines_cost);
 		return costs;

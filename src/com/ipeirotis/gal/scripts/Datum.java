@@ -7,32 +7,36 @@ import java.util.Set;
 import com.ipeirotis.utils.Utils;
 
 public class Datum {
-	String name;
-	
+
+	String									name;
+
 	// Defines if we have the correct category for this object
 	// and if it is gold, the correctCategory holds the name of the correct category
-	Boolean isGold;
-	String correctCategory;
-	
+	Boolean									isGold;
+	String									correctCategory;
+
 	// The probability estimates for the object belonging to different categories
-	HashMap<String, Double> categoryProbability;
-	
+	HashMap<String, Double>	categoryProbability;
+
 	// The labels that have been assigned to this object, together with the workers who
-	// assigned these labels. Serves mainly as a speedup, and intended to be used in 
+	// assigned these labels. Serves mainly as a speedup, and intended to be used in
 	// environments with persistence and caching (especially memcache)
-	Set<AssignedLabel> labels;
-	
+	Set<AssignedLabel>			labels;
+
 	/**
 	 * @return the isGold
 	 */
 	public Boolean isGold() {
+
 		return isGold;
 	}
 
 	/**
-	 * @param isGold the isGold to set
+	 * @param isGold
+	 *          the isGold to set
 	 */
 	public void setGold(Boolean isGold) {
+
 		this.isGold = isGold;
 	}
 
@@ -40,18 +44,22 @@ public class Datum {
 	 * @return the goldCategory
 	 */
 	public String getCorrectCategory() {
+
 		return correctCategory;
 	}
 
 	/**
-	 * @param goldCategory the goldCategory to set
+	 * @param goldCategory
+	 *          the goldCategory to set
 	 */
 	public void setCorrectCategory(String correctCategory) {
+
 		this.correctCategory = correctCategory;
-		
+
 	}
 
 	public Double getCategoryProbability(String c) {
+
 		if (this.isGold) {
 			if (c.equals(this.correctCategory)) {
 				return 1.0;
@@ -61,51 +69,57 @@ public class Datum {
 		}
 		return categoryProbability.get(c);
 	}
-	
+
 	public void setCategoryProbability(String c, Double prob) {
+
 		categoryProbability.put(c, prob);
 	}
-	
+
 	public Double getEntropy() {
+
 		double[] p = new double[this.categoryProbability.size()];
-		
-		int i=0;
-		for (String c: this.categoryProbability.keySet()) {
+
+		int i = 0;
+		for (String c : this.categoryProbability.keySet()) {
 			p[i] = getCategoryProbability(c);
 			i++;
 		}
-		
+
 		return Utils.entropy(p);
 	}
-	
+
 	public Datum(String name, Set<Category> categories) {
+
 		this.name = name;
 		this.isGold = false;
 		this.correctCategory = null;
 		this.labels = new HashSet<AssignedLabel>();
-		
+
 		// We initialize the probabilities vector to be uniform across categories
-		this.categoryProbability = new HashMap<String,Double>();
+		this.categoryProbability = new HashMap<String, Double>();
 		for (Category c : categories) {
-			this.categoryProbability.put(c.getName(), 1.0/categories.size());
+			this.categoryProbability.put(c.getName(), 1.0 / categories.size());
 		}
 	}
-	
+
 	public void addAssignedLabel(AssignedLabel al) {
+
 		if (al.getObjectName().equals(name)) {
 			this.labels.add(al);
 		}
 	}
-	
+
 	public Set<AssignedLabel> getAssignedLabels() {
+
 		return this.labels;
 	}
-	
+
 	public String getMajorityCategory() {
+
 		double maxProbability = -1;
 		String majorityCategory = null;
-		
-		for (String category: this.categoryProbability.keySet()) {
+
+		for (String category : this.categoryProbability.keySet()) {
 			Double probability = this.categoryProbability.get(category);
 			if (probability > maxProbability) {
 				maxProbability = probability;
@@ -116,13 +130,13 @@ public class Datum {
 				// using the priors. But then we also need to group together
 				// all the ties, and break ties probabilistically across the
 				// group. Otherwise, we slightly favor the later comparisons.
-				if (Math.random()>0.5) {
+				if (Math.random() > 0.5) {
 					maxProbability = probability;
 					majorityCategory = category;
 				}
 			}
 		}
-		
+
 		return majorityCategory;
 	}
 
@@ -130,25 +144,32 @@ public class Datum {
 	 * @return the categoryProbability
 	 */
 	public HashMap<String, Double> getCategoryProbability() {
+
 		return categoryProbability;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
+
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -168,16 +189,17 @@ public class Datum {
 	 * @return the name
 	 */
 	public String getName() {
+
 		return name;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *          the name to set
 	 */
 	public void setName(String name) {
+
 		this.name = name;
 	}
 
-	
-	
 }

@@ -1,10 +1,12 @@
 package com.ipeirotis.gal.scripts;
 
 public class CorrectLabel {
-	private String objectName;
-	private String correctCategory;
-	
+
+	private String	objectName;
+	private String	correctCategory;
+
 	public CorrectLabel(String objectName, String correctCategory) {
+
 		this.objectName = objectName;
 		this.correctCategory = correctCategory;
 	}
@@ -13,6 +15,7 @@ public class CorrectLabel {
 	 * @return the objectName
 	 */
 	public String getObjectName() {
+
 		return objectName;
 	}
 
@@ -20,28 +23,33 @@ public class CorrectLabel {
 	 * @return the correctCategory
 	 */
 	public String getCorrectCategory() {
+
 		return correctCategory;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
+
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((correctCategory == null) ? 0 : correctCategory.hashCode());
-		result = prime * result
-				+ ((objectName == null) ? 0 : objectName.hashCode());
+		result = prime * result + ((correctCategory == null) ? 0 : correctCategory.hashCode());
+		result = prime * result + ((objectName == null) ? 0 : objectName.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)
