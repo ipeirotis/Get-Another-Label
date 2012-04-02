@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Get-another-label : Quality control code for estimating the quality of the workers in crowdsourcing environments" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Get-another-label</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ipeirotis/Get-Another-Label">Fork Me on GitHub</a>
+
+          <h1 id="project_title">Get-another-label</h1>
+          <h2 id="project_tagline">Quality control code for estimating the quality of the workers in crowdsourcing environments</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/ipeirotis/Get-Another-Label/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/ipeirotis/Get-Another-Label/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>The Dawid-Skene Algorithm</h2>
+
+<p>The algorithm is a variation of the expectation-maximization algorithm of Dawid and Skene from the paper: <em>Maximum Likelihood Estimation of Observer Error-Rates Using the EM Algorithm, Applied Statistics, Vol. 28, No. 1. (1979), pp. 20-28</em>. The algorithm runs in rounds, performing the following steps in each round:</p>
+
+<ol>
+<li>Using the labels given by multiple workers, estimate the most likely "correct" label for each object.</li>
+<li>Based on the estimated correct answer for each object, compute the error rates for each worker.</li>
+<li>Taking into consideration the error rates for each worker, recompute the most likely "correct" label for each object.</li>
+<li>Go to step 2</li>
+</ol><h2>Differences of Get Another Label from The Dawid-Skene Algorithm</h2>
+
+<p>A few key differences with the original algorithm:</p>
+
+<ul>
+<li>When evaluating the quality of a worker (i.e., its own confusion matrix) we compare the labels assigned by the worker with the "most probable" category of the object. However, unlike the original Dawid-Skene, we do not take into consideration the labels of the worker in determining the category of the object but we use only the labels assigned by the other workers that labeled this object.</li>
+<li>We compute scalar quality metrics that are based on the expected cost of the misclassifications of the workers; these metrics are normalized to be between 0 and 1, and take into consideration the different costs of the misclassification decisions.</li>
+<li>We give the ability to have fixed prior values for the categories, instead of defining the priors in a maximum likelihood manner by the data</li>
+<li>We allow the inclusion of "gold" data, which are objects that have immutable categories that are not being modified by the algorithm but are used to evaluate workers. (This makes the algorithm "semi"-supervised instead of completely unsupervised.)</li>
+</ul><h2>Details on Running the Algorithm</h2>
+
+<p>For details on how to run the algorithm see <a href="https://github.com/ipeirotis/Get-Another-Label/wiki/How-to-Run-Get-Another-Label">https://github.com/ipeirotis/Get-Another-Label/wiki/How-to-Run-Get-Another-Label</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Get-another-label maintained by <a href="https://github.com/ipeirotis">ipeirotis</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
