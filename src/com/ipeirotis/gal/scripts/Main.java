@@ -98,6 +98,7 @@ public class Main {
 		}
 		System.out.println(correct.size() + " correct labels loaded.");
 
+		ds.estimate(1);
 		HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);
 
 		System.out.println("");
