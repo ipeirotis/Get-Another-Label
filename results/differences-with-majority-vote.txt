@@ -1,5 +1,10 @@
-SAME	url1	notporn
+DIFF	url1	notporn->porn
+SAME	url10	porn
 SAME	url2	porn
-SAME	url3	notporn
-SAME	url4	porn
-DIFF	url5	porn->notporn
+DIFF	url3	notporn->porn
+DIFF	url4	notporn->porn
+SAME	url5	porn
+SAME	url6	porn
+SAME	url7	porn
+SAME	url8	porn
+SAME	url9	porn

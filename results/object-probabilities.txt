@@ -1,6 +1,11 @@
 Object	Pr[porn]	Pr[notporn]	Pre-DS Majority Label	Pre-DS Min Cost Label	Post-DS Majority Label	Post-DS Min Cost Label
-url1	0.0	1.0	
-url2	1.0	0.0	
-url3	0.0	1.0	
-url4	1.0	0.0	
-url5	0.0	1.0	
+url1	0.71897	0.28103	
+url10	0.68099	0.31901	
+url2	0.63532	0.36468	
+url3	0.69475	0.30525	
+url4	0.62714	0.37286	
+url5	0.67136	0.32864	
+url6	0.68891	0.31109	
+url7	0.68905	0.31095	
+url8	0.60143	0.39857	
+url9	0.61177	0.38823	
