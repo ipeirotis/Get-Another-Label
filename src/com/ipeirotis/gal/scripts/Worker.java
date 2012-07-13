@@ -14,8 +14,8 @@ public class Worker {
 	// The error matrix for the worker
 	private HashMap<String, Integer>	priorCounts;
 
-	// The labels that have been assigned to this object, together with the workers who
-	// assigned these labels. Serves mainly as a speedup, and intended to be used in
+	// The labels that have been assigned by this worker
+	// Serves mainly as a speedup, and intended to be used in
 	// environments with persistence and caching (especially memcache)
 	private Set<AssignedLabel>				labels;
 
@@ -59,6 +59,7 @@ public class Worker {
 	 */
 	public HashMap<String, Double> getPrior(Set<Category> categories) {
 
+		/*
 		HashMap<String, Double> worker_prior = new HashMap<String, Double>();
 		for (Category c : categories) {
 			worker_prior.put(c.getName(), 0.0);
@@ -71,6 +72,19 @@ public class Worker {
 				worker_prior.put(to.getName(), existing + from2to);
 			}
 		}
+		*/
+		int sum = 0;
+		for (Integer i : this.priorCounts.values()) {
+			sum += i;
+		}
+		
+		HashMap<String, Double> worker_prior = new HashMap<String, Double>();
+		for (Category c : categories) {
+			Double prob = 1.0 * this.priorCounts.get(c.getName()) / sum;
+			worker_prior.put(c.getName(), prob);
+		}
+		
+		
 		return worker_prior;
 	}
 

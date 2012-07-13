@@ -341,7 +341,7 @@ public class DawidSkene {
 		HashMap<String, Double> result = new HashMap<String, Double>();
 		for (Category source : this.categories.values()) {
 			Double error = w.getErrorRate(source.getName(), label);
-			Double soft = source.getPrior() * error / worker_prior.get(label);
+			Double soft = ( worker_prior.get(label) >0 )? source.getPrior() * error / worker_prior.get(label): 0;
 			result.put(source.getName(), soft);
 		}
 
@@ -394,7 +394,7 @@ public class DawidSkene {
 
 		// We now know the frequency with which we will see a label
 		// "assigned_label" from worker
-		// Each of this "hard" labels from the annotator k will corresponds to a
+		// Each of this "hard" labels from the annotator k will correspond to a
 		// corrected
 		// "soft" label
 		for (Category assigned : this.categories.values()) {
