@@ -88,6 +88,51 @@ public class Datum {
 		return Utils.entropy(p);
 	}
 
+	/**
+	 * This class computes the expected cost of the example.
+	 * 
+	 * @param categories Each Category object contains the misclassification costs, so by passing this parameter, we allow the method to compute the expected misclassification cost of the object
+	 *   
+	 * @return 
+	 */
+	public Double getExpectedCost(HashMap<String, Category>	categories) {
+
+		Double c = 0.0;
+		for (String c1 : categories.keySet()) {
+			for (String c2 : categories.keySet()) {
+				Double p1 = this.categoryProbability.get(c1);
+				Double p2 = this.categoryProbability.get(c2);
+				Double cost = categories.get(c1).getCost(c2);
+				c += p1 * p2 * cost;
+			}
+		}
+
+		return c;
+	}
+	
+	/**
+	 * This class computes the expected cost of the example.
+	 * 
+	 * @param categories Each Category object contains the misclassification costs, so by passing this parameter, we allow the method to compute the expected misclassification cost of the object
+	 *   
+	 * @return 
+	 */
+	public Double getExpectedMVCost(HashMap<String, Category>	categories) {
+
+		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		Double c = 0.0;
+		for (String c1 : categories.keySet()) {
+			for (String c2 : categories.keySet()) {
+				Double p1 = majorityVote.get(c1);
+				Double p2 = majorityVote.get(c2);
+				Double cost = categories.get(c1).getCost(c2);
+				c += p1 * p2 * cost;
+			}
+		}
+
+		return c;
+	}
+	
 	public Datum(String name, Set<Category> categories) {
 
 		this.name = name;
@@ -114,16 +159,16 @@ public class Datum {
 		return this.labels;
 	}
 
-	public String getMajorityCategory() {
+	public String getMostLikelyCategory() {
 
 		double maxProbability = -1;
-		String majorityCategory = null;
+		String maxLikelihoodCategory = null;
 
 		for (String category : this.categoryProbability.keySet()) {
 			Double probability = this.categoryProbability.get(category);
 			if (probability > maxProbability) {
 				maxProbability = probability;
-				majorityCategory = category;
+				maxLikelihoodCategory = category;
 			} else if (probability == maxProbability) {
 				// In case of a tie, break ties randomly
 				// TODO: This is a corner case. We can also break ties
@@ -132,12 +177,12 @@ public class Datum {
 				// group. Otherwise, we slightly favor the later comparisons.
 				if (Math.random() > 0.5) {
 					maxProbability = probability;
-					majorityCategory = category;
+					maxLikelihoodCategory = category;
 				}
 			}
 		}
 
-		return majorityCategory;
+		return maxLikelihoodCategory;
 	}
 
 	/**
@@ -146,6 +191,26 @@ public class Datum {
 	public HashMap<String, Double> getCategoryProbability() {
 
 		return categoryProbability;
+	}
+	
+	/**
+	 * @return the categoryProbability
+	 */
+	public HashMap<String, Double> getMVCategoryProbability() {
+		HashMap<String, Double> result = new HashMap<String, Double>();
+		
+		for (String c : this.categoryProbability.keySet()) {
+			result.put(c, 0d);
+		}
+		
+		int n = this.labels.size();		
+		for (AssignedLabel al : this.labels) {
+			String c = al.getCategoryName();
+			Double current = result.get(c);
+			result.put(c, current + 1.0/n);
+		}
+		
+		return result;
 	}
 
 	/*

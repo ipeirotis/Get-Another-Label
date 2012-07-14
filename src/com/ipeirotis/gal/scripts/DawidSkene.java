@@ -139,7 +139,7 @@ public class DawidSkene {
 
 		for (String objectName : this.objects.keySet()) {
 			Datum d = this.objects.get(objectName);
-			String category = d.getMajorityCategory();
+			String category = d.getMostLikelyCategory();
 			result.put(objectName, category);
 		}
 		return result;
@@ -632,10 +632,8 @@ public class DawidSkene {
 	/**
 	 * Prints the objects that have probability distributions with entropy
 	 * higher than the given threshold
-	 * 
-	 * @param entropy_threshold
 	 */
-	public String printObjectClassProbabilities(double entropy_threshold) {
+	public String printObjectClassProbabilities() {
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("Object\t");
@@ -643,20 +641,23 @@ public class DawidSkene {
 			sb.append("Pr[" + c + "]\t");
 		}
 		// TODO: Also print majority label and the min-cost label, pre-DS and post-DS
-		sb.append("Pre-DS Majority Label\tPre-DS Min Cost Label\tPost-DS Majority Label\tPost-DS Min Cost Label\n");
+		sb.append("DS Cost\tMajorityVote Cost\tNoVote Cost\n");
 
 		for (String object_name : new TreeSet<String>(this.objects.keySet())) {
 			Datum d = this.objects.get(object_name);
 
-			Double entropy = d.getEntropy();
-			if (entropy < entropy_threshold)
-				continue;
+			//Double entropy = d.getEntropy();
+			//if (entropy < entropy_threshold)
+			//	continue;
 
 			sb.append(object_name + "\t");
 			for (String c : this.categories.keySet()) {
 				sb.append(d.getCategoryProbability(c) + "\t");
 			}
-			sb.append("\n");
+			sb.append(d.getExpectedCost(categories) + "\t");
+			sb.append(d.getExpectedMVCost(categories) + "\t");
+			sb.append(getSpammerCost() + "\n");
+
 		}
 
 		return sb.toString();

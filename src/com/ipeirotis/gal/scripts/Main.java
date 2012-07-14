@@ -191,7 +191,7 @@ public class Main {
 		// Save the probability that an object belongs to each class
 		System.out.println("");
 		System.out.println("Printing category probabilities for objects (see also file results/object-probabilities.txt)");
-		String objectProbs = ds.printObjectClassProbabilities(0.0);
+		String objectProbs = ds.printObjectClassProbabilities();
 		if (verbose) {
 			System.out.println("=======CATEGORY PROBABILITIES========");
 			System.out.println(objectProbs);
