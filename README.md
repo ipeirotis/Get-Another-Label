@@ -1,4 +1,4 @@
-# Description
+## Description
 
 Mechanical Turk and other "micro-outsourcing" platforms allow the easy collection of annotation data from a wide variety of onliner workers. Unfortunately, the results returned back from the workers are of imperfect quality: No worker is perfect and each worker commits different types of errors. Some workers are nothing more than spammers doing minimal, if any, real work.
 
@@ -12,6 +12,7 @@ The ideas behind this work are described in Quality Management on Amazon Mechani
 
 For details on how to run the algorithm see https://github.com/ipeirotis/Get-Another-Label/wiki/How-to-Run-Get-Another-Label
 
+## Version Changes
 
 ### New features in Version 2.1
 
@@ -35,7 +36,7 @@ For details on how to run the algorithm see https://github.com/ipeirotis/Get-Ano
 
 ## Miscellaneous
 
-A web-accessible demo of this code is available at http://qmturk.appspot.com/
+A web-accessible demo of is available at http://qmturk.appspot.com/
 
 A .NET version of the code, by Julian Urbano, is available at http://code.google.com/p/get-another-label-dotnet/
 
