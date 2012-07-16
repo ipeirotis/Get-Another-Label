@@ -11,6 +11,10 @@ public class Worker {
 	// The error matrix for the worker
 	private ConfusionMatrix						cm;
 
+	//The confusion matrix for the worker based on evaluation data
+	private ConfusionMatrix						eval_cm;
+
+	
 	// The error matrix for the worker
 	private HashMap<String, Integer>	priorCounts;
 
@@ -31,6 +35,7 @@ public class Worker {
 
 		this.name = name;
 		this.cm = new ConfusionMatrix(categories);
+		this.eval_cm = new ConfusionMatrix(categories);
 		this.labels = new HashSet<AssignedLabel>();
 		this.priorCounts = new HashMap<String, Integer>();
 		for (Category c : categories) {
@@ -59,20 +64,6 @@ public class Worker {
 	 */
 	public HashMap<String, Double> getPrior(Set<Category> categories) {
 
-		/*
-		HashMap<String, Double> worker_prior = new HashMap<String, Double>();
-		for (Category c : categories) {
-			worker_prior.put(c.getName(), 0.0);
-		}
-
-		for (Category from : categories) {
-			for (Category to : categories) {
-				Double existing = worker_prior.get(to.getName());
-				Double from2to = from.getPrior() * this.cm.getErrorRate(from.getName(), to.getName());
-				worker_prior.put(to.getName(), existing + from2to);
-			}
-		}
-		*/
 		int sum = 0;
 		for (Integer i : this.priorCounts.values()) {
 			sum += i;
@@ -83,9 +74,27 @@ public class Worker {
 			Double prob = 1.0 * this.priorCounts.get(c.getName()) / sum;
 			worker_prior.put(c.getName(), prob);
 		}
-		
-		
+	
 		return worker_prior;
+	}
+	
+
+	
+	/**
+	 * @return the eval_cm
+	 */
+	public ConfusionMatrix getEvalConfusionMatrix() {
+	
+		return eval_cm;
+	}
+
+	
+	/**
+	 * @param eval_cm the eval_cm to set
+	 */
+	public void setEvalConfusionMatrix(ConfusionMatrix eval_cm) {
+	
+		this.eval_cm = eval_cm;
 	}
 
 	public void addAssignedLabel(AssignedLabel al) {

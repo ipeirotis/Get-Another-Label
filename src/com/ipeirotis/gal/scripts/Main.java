@@ -17,15 +17,16 @@ public class Main {
 		String inputfile = "";
 		String correctfile = "";
 		String costfile = "";
+		String evaluationfile = "";
 		int iterations = 0;
 		boolean verbose = false;
 
-		if (args.length != 5) {
+		if (args.length != 6) {
 			System.out
-					.println("Usage: java -jar getanotherlabel.jar <categoriesfile> <inputfile> <correctfile> <costfile> <iterations>");
+					.println("Usage: java -jar getanotherlabel.jar <categoriesfile> <inputfile> <correctfile> <costfile> <evaluationdata> <iterations>");
 			System.out.println("");
 			System.out
-					.println("Example: java -jar getanotherlabel.jar data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt 10");
+					.println("Example: java -jar getanotherlabel.jar data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt 10");
 			System.out.println("");
 			System.out
 					.println("The <categoriesfile> is a text file and contains the list of categories used to annotate the objects.");
@@ -55,7 +56,8 @@ public class Main {
 			inputfile = args[1];
 			correctfile = args[2];
 			costfile = args[3];
-			iterations = Integer.parseInt(args[4]);
+			evaluationfile = args[4];
+			iterations = Integer.parseInt(args[5]);
 		}
 
 		// We start by defining the set of categories in which the DS algorithm
@@ -98,6 +100,15 @@ public class Main {
 		}
 		System.out.println(correct.size() + " correct labels loaded.");
 
+		Set<CorrectLabel> evaluation = loadGoldLabels(evaluationfile);
+		cl = 0;
+		for (CorrectLabel l : evaluation) {
+			if (++cl % 1000 == 0)
+				System.out.print(".");
+			ds.addEvaluationLabel(l);
+		}
+		System.out.println(correct.size() + " evaluation labels loaded.");
+		
 		ds.estimate(1);
 		HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);
 

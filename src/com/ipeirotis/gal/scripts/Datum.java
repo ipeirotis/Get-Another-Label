@@ -13,7 +13,9 @@ public class Datum {
 	// Defines if we have the correct category for this object
 	// and if it is gold, the correctCategory holds the name of the correct category
 	Boolean									isGold;
+	Boolean									isEvaluation;
 	String									correctCategory;
+	String									evaluationCategory;
 
 	// The probability estimates for the object belonging to different categories
 	HashMap<String, Double>	categoryProbability;
@@ -46,6 +48,42 @@ public class Datum {
 	public String getCorrectCategory() {
 
 		return correctCategory;
+	}
+
+	
+	/**
+	 * @return the isEvaluation
+	 */
+	public Boolean getEvaluation() {
+	
+		return isEvaluation;
+	}
+
+	
+	/**
+	 * @param isEvaluation the isEvaluation to set
+	 */
+	public void setEvaluation(Boolean isEvaluation) {
+	
+		this.isEvaluation = isEvaluation;
+	}
+
+	
+	/**
+	 * @return the evaluationCategory
+	 */
+	public String getEvaluationCategory() {
+	
+		return evaluationCategory;
+	}
+
+	
+	/**
+	 * @param evaluationCategory the evaluationCategory to set
+	 */
+	public void setEvaluationCategory(String evaluationCategory) {
+	
+		this.evaluationCategory = evaluationCategory;
 	}
 
 	/**

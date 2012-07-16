@@ -115,11 +115,9 @@ public class ConfusionMatrix {
 
 				// If the marginal across the "from" category is 0
 				// this means that the worker has not even seen an object of the "from"
-				// category. In this case, we switch to Laplacean smoothing for
-				// computing the matrix
+				// category. In this case, we set the value to NaN
 				if (from_marginal == 0.0) {
 					error_rate = Double.NaN;
-					// error_rate = (error + 1)/ (from_marginal + this.categories.size());
 				} else {
 					error_rate = error / from_marginal;
 				}

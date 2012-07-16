@@ -97,6 +97,23 @@ public class DawidSkene {
 		}
 		this.objects.put(objectName, d);
 	}
+	
+	public void addEvaluationLabel(CorrectLabel cl) {
+
+		String objectName = cl.getObjectName();
+		String correctCategory = cl.getCorrectCategory();
+
+		Datum d;
+		if (this.objects.containsKey(objectName)) {
+			d = this.objects.get(objectName);
+		} else {
+			Set<Category> categories = new HashSet<Category>(this.categories.values());
+			d = new Datum(objectName, categories);
+		}
+		d.setEvaluation(true);
+		d.setEvaluationCategory(correctCategory);
+		this.objects.put(objectName, d);
+	}
 
 	/**
 	 * @return the fixedPriors
@@ -111,7 +128,7 @@ public class DawidSkene {
 		String from = cl.getCategoryFrom();
 		String to = cl.getCategoryTo();
 		Double cost = cl.getCost();
-
+		
 		Category c = this.categories.get(from);
 		c.setCost(to, cost);
 		this.categories.put(from, c);
@@ -402,12 +419,12 @@ public class DawidSkene {
 			String assignedCategory = assigned.getName();
 
 			if (method == COST_NAIVE) {
-				// TODO: Check this for correctness. Compare results wth tested
+				// TODO: Check this for correctness. Compare results with tested
 				// implementation first
 				HashMap<String, Double> naiveSoftLabel = getNaiveSoftLabel(w, assignedCategory);
 				cost += getNaiveSoftLabelCost(assigned.getName(), naiveSoftLabel) * assigned.getPrior();
 			} else if (method == COST_NAIVE_MINIMIZED) {
-				// TODO: Check this for correctness. Compare results wth tested
+				// TODO: Check this for correctness. Compare results with tested
 				// implementation first
 				HashMap<String, Double> naiveSoftLabel = getNaiveSoftLabel(w, assignedCategory);
 				cost += getNaiveSoftLabelCost(assigned.getName(), naiveSoftLabel) * assigned.getPrior();
@@ -539,6 +556,26 @@ public class DawidSkene {
 			categories.put(cat, c);
 		}
 	}
+	
+	private void evaluateWorkers() {
+
+		for (Worker w : this.workers.values()) {
+			computeEvalConfusionMatrix(w);
+		}
+	}
+	
+	private void computeEvalConfusionMatrix(Worker w) {
+		ConfusionMatrix eval_cm = new ConfusionMatrix(this.categories.values());
+		for (AssignedLabel l : w.getAssignedLabels()){
+			
+			String objectName = l.getObjectName();
+			String correctCategory = l.getCategoryName();
+			String assignedCategory = this.objects.get(objectName).getEvaluationCategory();
+			Double currentCount = eval_cm.getErrorRate(correctCategory, assignedCategory);
+			eval_cm.addError(correctCategory, assignedCategory, currentCount+1);
+		}
+		eval_cm.normalize();
+	}
 
 	public String printDiffVote(HashMap<String, String> prior_voting, HashMap<String, String> posterior_voting) {
 
@@ -620,6 +657,10 @@ public class DawidSkene {
 				}
 				sb.append("\n");
 			}
+			
+
+
+			
 			sb.append("\n");
 		} else {
 			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_adj + "\t" + s_cost_min + "\t" + contributions + "\t"
