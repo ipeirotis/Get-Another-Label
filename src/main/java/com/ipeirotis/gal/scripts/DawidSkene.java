@@ -329,7 +329,7 @@ public class DawidSkene {
 			String objectName = l.getObjectName();
 			Datum d = this.objects.get(objectName);
 			assert(d != null);
-			if (d.getEvaluation() == false) continue;
+			if (!d.isEvaluation()) continue;
 			
 			String assignedCategory = l.getCategoryName();
 			String correctCategory = d.getEvaluationCategory();
@@ -465,8 +465,8 @@ public class DawidSkene {
 		sb.append("MV_Category\t");
 		// TODO: Also print majority label and the min-cost label, pre-DS and post-DS
 		sb.append("DS_Exp_Cost\tMV_Exp_Cost\tNoVote_Exp_Cost\t");
-		sb.append("DS_Opt_Cost\tMV_Opt_Cost\tNoVote_Opt_Cost\n");
-
+		sb.append("DS_Opt_Cost\tMV_Opt_Cost\tNoVote_Opt_Cost\t");
+		sb.append("Correct_Category\tEval_Cost_MV_ML\tEval_Cost_DS_ML\tEval_Cost_MV_Soft\tEval_Cost_DS_Soft\n");
 		
 		for (String object_name : new TreeSet<String>(this.objects.keySet())) {
 			Datum d = this.objects.get(object_name);
@@ -491,10 +491,17 @@ public class DawidSkene {
 			
 			sb.append(d.getMinCost(categories) + "\t");
 			sb.append(d.getMinMVCost(categories) + "\t");
-			sb.append(Helper.getMinSpammerCost(categories) + "\n");
+			sb.append(Helper.getMinSpammerCost(categories) + "\t");
 			
-			// TODO: Print evaluation label, actual cost for "ML" version of MV and DS, cost for the soft versions of MV and DS
-			
+			if (d.isEvaluation()) {
+				sb.append(d.getEvaluationCategory() + "\t");
+				sb.append(d.getEvalClassificationCost(Datum.MV_ML, categories) + "\t");
+				sb.append(d.getEvalClassificationCost(Datum.DS_ML, categories) + "\t");
+				sb.append(d.getEvalClassificationCost(Datum.MV_Soft, categories) + "\t");
+				sb.append(d.getEvalClassificationCost(Datum.DS_Soft, categories) + "\n");
+			} else {
+				sb.append("---\t---\t---\t---\t---\n");
+			}
 		}
 
 		return sb.toString();

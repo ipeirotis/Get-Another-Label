@@ -24,6 +24,14 @@ public class Datum {
 	// assigned these labels. Serves mainly as a speedup, and intended to be used in
 	// environments with persistence and caching (especially memcache)
 	Set<AssignedLabel>			labels;
+	
+	public static int MV_ML = 0;
+	public static int DS_ML = 1;
+	public static int MV_Soft = 2;
+	public static int DS_Soft = 3;
+	
+
+
 
 	/**
 	 * @return the isGold
@@ -54,7 +62,7 @@ public class Datum {
 	/**
 	 * @return the isEvaluation
 	 */
-	public Boolean getEvaluation() {
+	public Boolean isEvaluation() {
 	
 		return isEvaluation;
 	}
@@ -150,6 +158,40 @@ public class Datum {
 		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
 		return Helper.getMinSoftLabelCost(majorityVote, categories);
 		
+	}
+	
+	public Double getEvalClassificationCost(int method, HashMap<String, Category>	categories) {
+		
+		String from  = this.getEvaluationCategory();
+		if (method == Datum.DS_ML) {
+			String to = this.getMostLikelyCategory();
+			return categories.get(from).getCost(to);
+		} else if (method == Datum.DS_Soft) {
+			Double cost = 0.0;
+			HashMap<String, Double>	probabilities = this.getCategoryProbability();
+			for (String to : probabilities.keySet()) {
+				Double prob = probabilities.get(to);
+				Double misclassification_cost = categories.get(from).getCost(to);
+				cost += prob * misclassification_cost;
+			}
+					
+			return cost;
+		} else if (method == Datum.MV_ML) {
+			String to = this.getMostLikelyCategory_MV();
+			return categories.get(from).getCost(to);
+		} else if (method == Datum.MV_Soft) {
+			Double cost = 0.0;
+			HashMap<String, Double>	probabilities = this.getMVCategoryProbability();
+			for (String to : probabilities.keySet()) {
+				Double prob = probabilities.get(to);
+				Double misclassification_cost = categories.get(from).getCost(to);
+				cost += prob * misclassification_cost;
+			}
+			return cost;
+		}
+		
+		
+		return -1.0;
 	}
 	
 	/**
