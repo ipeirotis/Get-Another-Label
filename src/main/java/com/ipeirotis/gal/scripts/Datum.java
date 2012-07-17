@@ -174,7 +174,6 @@ public class Datum {
 				Double misclassification_cost = categories.get(from).getCost(to);
 				cost += prob * misclassification_cost;
 			}
-					
 			return cost;
 		} else if (method == Datum.MV_ML) {
 			String to = this.getMostLikelyCategory_MV();
@@ -256,7 +255,6 @@ public class Datum {
 				}
 			}
 		}
-
 		return maxLikelihoodCategory;
 	}
 	

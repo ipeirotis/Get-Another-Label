@@ -249,40 +249,17 @@ public class DawidSkene {
 
 	}
 
-	/**
-	 * Estimates the cost for annotator k without attempting corrections of
-	 * labels
-	 * 
-	 * @param w
-	 *          The worker
-	 * @return The expected cost of misclassifications of worker
-	 */
-	public Double getAnnotatorCostNaive(Worker w) {
 
-		Double c = 0.0;
-		Double s = 0.0;
-		for (Category from : this.categories.values()) {
-			for (Category to : this.categories.values()) {
-				c += from.getPrior() * from.getCost(to.getName()) * w.getErrorRate(from.getName(), to.getName());
-				s += from.getPrior() * from.getCost(to.getName());
-			}
-		}
-		return (s > 0) ? c / s : 0.0;
-	}
 
 
 
 	public int getNumberOfWorkers() {
-
 		return this.workers.size();
 	}
 
 	public int getNumberOfObjects() {
-
 		return this.objects.size();
 	}
-
-
 
 
 	/**
@@ -341,30 +318,12 @@ public class DawidSkene {
 		w.setEvalConfusionMatrix(eval_cm);
 	}
 
-	public String printDiffVote(HashMap<String, String> prior_voting, HashMap<String, String> posterior_voting) {
-
-		StringBuffer sb = new StringBuffer();
-
-		for (String obj : (new TreeSet<String>(prior_voting.keySet()))) {
-			String prior_vote = prior_voting.get(obj);
-			String posterior_vote = posterior_voting.get(obj);
-
-			if (prior_vote.equals(posterior_vote)) {
-				sb.append("SAME\t" + obj + "\t" + prior_vote);
-			} else {
-				sb.append("DIFF\t" + obj + "\t" + prior_vote + "->" + posterior_vote);
-			}
-			sb.append("\n");
-		}
-		return sb.toString();
-	}
-
 	public String printAllWorkerScores(boolean detailed) {
 
 		StringBuffer sb = new StringBuffer();
 
 		if (!detailed) {
-			sb.append("Worker\tError Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests\n");
+			sb.append("Worker\tEst. Error Rate\tEval. Error Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests\n");
 		}
 		for (String workername : new TreeSet<String>(this.workers.keySet())) {
 			Worker w = this.workers.get(workername);
@@ -392,9 +351,12 @@ public class DawidSkene {
 
 		String workerName = w.getName();
 
-		Double cost_naive = this.getAnnotatorCostNaive(w);
+		Double cost_naive = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
 		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
 
+		Double cost_naive_eval = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
+		String s_cost_naive_eval = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive_eval, 2) + "%";
+		
 		Double cost_exp = w.getWorkerCost(categories, Worker.EXP_COST_EST);
 		String s_cost_exp = (Double.isNaN(cost_exp)) ? "---" : Math.round(100 * (1 - cost_exp)) + "%";
 
@@ -413,6 +375,7 @@ public class DawidSkene {
 		if (detailed) {
 			sb.append("Worker: " + workerName + "\n");
 			sb.append("Est. Error Rate: " + s_cost_naive + "\n");
+			sb.append("Eval. Error Rate: " + s_cost_naive_eval + "\n");
 			sb.append("Est. Quality (Expected): " + s_cost_exp + "\n");
 			sb.append("Est. Quality (Optimized): " + s_cost_min + "\n");
 			sb.append("Eval. Quality (Expected): " + s_cost_exp_eval + "\n");
@@ -440,7 +403,7 @@ public class DawidSkene {
 			}	
 			sb.append("\n");
 		} else {
-			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
+			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_naive_eval + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
 					"\t" + s_cost_min_eval + "\t" + contributions + "\t" + gold_tests + "\n");
 		}
 
@@ -477,28 +440,28 @@ public class DawidSkene {
 
 			sb.append(object_name + "\t");
 			for (String c : this.categories.keySet()) {
-				sb.append(d.getCategoryProbability(c) + "\t");
+				sb.append(Utils.round(d.getCategoryProbability(c), 3) + "\t");
 			}
 			sb.append(d.getMostLikelyCategory() + "\t");
 			for (String c : this.categories.keySet()) {
-				sb.append(d.getMVCategoryProbability(c) + "\t");
+				sb.append(Utils.round(d.getMVCategoryProbability(c), 3) + "\t");
 			}
 			sb.append(d.getMostLikelyCategory_MV() + "\t");
 			
-			sb.append(d.getExpectedCost(categories) + "\t");
-			sb.append(d.getExpectedMVCost(categories) + "\t");
-			sb.append(Helper.getSpammerCost(categories) + "\t");
+			sb.append(Utils.round(d.getExpectedCost(categories), 3) + "\t");
+			sb.append(Utils.round(d.getExpectedMVCost(categories), 3) + "\t");
+			sb.append(Utils.round(Helper.getSpammerCost(categories),3) + "\t");
 			
-			sb.append(d.getMinCost(categories) + "\t");
-			sb.append(d.getMinMVCost(categories) + "\t");
-			sb.append(Helper.getMinSpammerCost(categories) + "\t");
+			sb.append(Utils.round(d.getMinCost(categories), 3) + "\t");
+			sb.append(Utils.round(d.getMinMVCost(categories), 3) + "\t");
+			sb.append(Utils.round(Helper.getMinSpammerCost(categories), 3) + "\t");
 			
 			if (d.isEvaluation()) {
 				sb.append(d.getEvaluationCategory() + "\t");
-				sb.append(d.getEvalClassificationCost(Datum.MV_ML, categories) + "\t");
-				sb.append(d.getEvalClassificationCost(Datum.DS_ML, categories) + "\t");
-				sb.append(d.getEvalClassificationCost(Datum.MV_Soft, categories) + "\t");
-				sb.append(d.getEvalClassificationCost(Datum.DS_Soft, categories) + "\n");
+				sb.append(Utils.round(d.getEvalClassificationCost(Datum.MV_ML, categories), 3) + "\t");
+				sb.append(Utils.round(d.getEvalClassificationCost(Datum.DS_ML, categories), 3) + "\t");
+				sb.append(Utils.round(d.getEvalClassificationCost(Datum.MV_Soft, categories), 3) + "\t");
+				sb.append(Utils.round(d.getEvalClassificationCost(Datum.DS_Soft, categories), 3) + "\n");
 			} else {
 				sb.append("---\t---\t---\t---\t---\n");
 			}
