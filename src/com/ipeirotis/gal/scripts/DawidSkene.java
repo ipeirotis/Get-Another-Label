@@ -341,6 +341,7 @@ public class DawidSkene {
 		w.setEvalConfusionMatrix(eval_cm);
 	}
 
+	/*
 	public String printDiffVote(HashMap<String, String> prior_voting, HashMap<String, String> posterior_voting) {
 
 		StringBuffer sb = new StringBuffer();
@@ -358,13 +359,14 @@ public class DawidSkene {
 		}
 		return sb.toString();
 	}
+	*/
 
 	public String printAllWorkerScores(boolean detailed) {
 
 		StringBuffer sb = new StringBuffer();
 
 		if (!detailed) {
-			sb.append("Worker\tError Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests\n");
+			sb.append("Worker\tError Rate\tExpected Quality (Est.)\tOptimized Quality (Est.)\tExpected Quality (Eval.)\tOptimized Quality (Eval.)\tNumber of Annotations\tGold Tests\n");
 		}
 		for (String workername : new TreeSet<String>(this.workers.keySet())) {
 			Worker w = this.workers.get(workername);

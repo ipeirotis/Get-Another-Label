@@ -112,8 +112,8 @@ public class Main {
 		// We compute the evaluation-based confusion matrix for the workers
 		ds.evaluateWorkers();
 		
-		ds.estimate(1);
-		HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);
+		//ds.estimate(1);
+		//HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);
 
 		System.out.println("");
 		System.out.println("Running the Dawid&Skene algorithm");
@@ -130,9 +130,9 @@ public class Main {
 
 		saveCategoryPriors(verbose, ds);
 
-		HashMap<String, String> posterior_voting = saveDawidSkeneVote(verbose, ds);
+		//HashMap<String, String> posterior_voting = saveDawidSkeneVote(verbose, ds);
 
-		saveDifferences(verbose, ds, prior_voting, posterior_voting);
+		//saveDifferences(verbose, ds, prior_voting, posterior_voting);
 
 	}
 
@@ -142,6 +142,7 @@ public class Main {
 	 * @param prior_voting
 	 * @param posterior_voting
 	 */
+	/*
 	private static void saveDifferences(boolean verbose, DawidSkene ds, HashMap<String, String> prior_voting,
 			HashMap<String, String> posterior_voting) {
 
@@ -156,12 +157,14 @@ public class Main {
 		}
 		Utils.writeFile(differences, "results/differences-with-majority-vote.txt");
 	}
+	*/
 
 	/**
 	 * @param verbose
 	 * @param ds
 	 * @return
 	 */
+	/*
 	private static HashMap<String, String> saveDawidSkeneVote(boolean verbose, DawidSkene ds) {
 
 		// Save the vote after the D&S estimation
@@ -177,6 +180,7 @@ public class Main {
 		Utils.writeFile(dawidskene, "results/dawid-skene-results.txt");
 		return posterior_voting;
 	}
+	*/
 
 	/**
 	 * @param verbose
@@ -243,6 +247,7 @@ public class Main {
 	 * @param ds
 	 * @return
 	 */
+	/*
 	private static HashMap<String, String> saveMajorityVote(boolean verbose, DawidSkene ds) {
 
 		// Save the majority vote before the D&S estimation
@@ -258,6 +263,7 @@ public class Main {
 		Utils.writeFile(majority, "results/naive-majority-vote.txt");
 		return prior_voting;
 	}
+	*/
 
 	/**
 	 * @param correctfile
