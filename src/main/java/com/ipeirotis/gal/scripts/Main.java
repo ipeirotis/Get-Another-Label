@@ -135,12 +135,7 @@ public class Main {
 
 	}
 
-	/**
-	 * @param verbose
-	 * @param ds
-	 * @param prior_voting
-	 * @param posterior_voting
-	 */
+
 	/*
 	private static void saveDifferences(boolean verbose, DawidSkene ds, HashMap<String, String> prior_voting,
 			HashMap<String, String> posterior_voting) {

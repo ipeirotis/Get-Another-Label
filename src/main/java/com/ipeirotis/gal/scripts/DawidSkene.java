@@ -354,8 +354,8 @@ public class DawidSkene {
 		Double cost_naive = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
 		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
 
-		Double cost_naive_eval = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
-		String s_cost_naive_eval = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive_eval, 2) + "%";
+		Double cost_naive_eval = w.getWorkerCost(categories, Worker.COST_NAIVE_EVAL);
+		String s_cost_naive_eval = (Double.isNaN(cost_naive_eval)) ? "---" : Utils.round(100 * cost_naive_eval, 2) + "%";
 		
 		Double cost_exp = w.getWorkerCost(categories, Worker.EXP_COST_EST);
 		String s_cost_exp = (Double.isNaN(cost_exp)) ? "---" : Math.round(100 * (1 - cost_exp)) + "%";
