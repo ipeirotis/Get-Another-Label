@@ -49,7 +49,7 @@ public class Main {
 			System.out.println("and records the classification cost of classifying an object that");
 			System.out.println("belongs to the `from_class` into the `to_class`.");
 			System.out.println("");
-			System.out.println("<iterations> is the number of times to run the algorithm. Even a value of 1 works well.");
+			System.out.println("<iterations> is the number of times to run the algorithm. Even a value of 10 less often works well.");
 			System.exit(-1);
 		} else {
 			categoriesfile = args[0];
@@ -101,13 +101,16 @@ public class Main {
 		System.out.println(correct.size() + " correct labels loaded.");
 
 		Set<CorrectLabel> evaluation = loadGoldLabels(evaluationfile);
-		cl = 0;
+		int el = 0;
 		for (CorrectLabel l : evaluation) {
-			if (++cl % 1000 == 0)
+			if (++el % 1000 == 0)
 				System.out.print(".");
 			ds.addEvaluationLabel(l);
 		}
-		System.out.println(correct.size() + " evaluation labels loaded.");
+		System.out.println(evaluation.size() + " evaluation labels loaded.");
+		
+		// We compute the evaluation-based confusion matrix for the workers
+		ds.evaluateWorkers();
 		
 		ds.estimate(1);
 		HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);

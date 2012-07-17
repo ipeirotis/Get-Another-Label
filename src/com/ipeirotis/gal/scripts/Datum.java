@@ -135,17 +135,21 @@ public class Datum {
 	 */
 	public Double getExpectedCost(HashMap<String, Category>	categories) {
 
-		Double c = 0.0;
-		for (String c1 : categories.keySet()) {
-			for (String c2 : categories.keySet()) {
-				Double p1 = this.categoryProbability.get(c1);
-				Double p2 = this.categoryProbability.get(c2);
-				Double cost = categories.get(c1).getCost(c2);
-				c += p1 * p2 * cost;
-			}
-		}
+		return Helper.getExpectedSoftLabelCost(this.categoryProbability, categories);
+		
+	}
+	
+	public Double getMinCost(HashMap<String, Category>	categories) {
 
-		return c;
+		return Helper.getMinSoftLabelCost(this.categoryProbability, categories);
+		
+	}
+	
+	public Double getMinMVCost(HashMap<String, Category>	categories) {
+
+		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		return Helper.getMinSoftLabelCost(majorityVote, categories);
+		
 	}
 	
 	/**
@@ -158,17 +162,8 @@ public class Datum {
 	public Double getExpectedMVCost(HashMap<String, Category>	categories) {
 
 		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
-		Double c = 0.0;
-		for (String c1 : categories.keySet()) {
-			for (String c2 : categories.keySet()) {
-				Double p1 = majorityVote.get(c1);
-				Double p2 = majorityVote.get(c2);
-				Double cost = categories.get(c1).getCost(c2);
-				c += p1 * p2 * cost;
-			}
-		}
-
-		return c;
+		return Helper.getExpectedSoftLabelCost(majorityVote, categories);
+		
 	}
 	
 	public Datum(String name, Set<Category> categories) {
@@ -222,6 +217,35 @@ public class Datum {
 
 		return maxLikelihoodCategory;
 	}
+	
+	public String getMostLikelyCategory_MV() {
+
+		double maxProbability = -1;
+		String maxLikelihoodCategory = null;
+
+		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		for (String category : majorityVote.keySet()) {
+			Double probability = majorityVote.get(category);
+			if (probability > maxProbability) {
+				maxProbability = probability;
+				maxLikelihoodCategory = category;
+			} else if (probability == maxProbability) {
+				// In case of a tie, break ties randomly
+				// TODO: This is a corner case. We can also break ties
+				// using the priors. But then we also need to group together
+				// all the ties, and break ties probabilistically across the
+				// group. Otherwise, we slightly favor the later comparisons.
+				if (Math.random() > 0.5) {
+					maxProbability = probability;
+					maxLikelihoodCategory = category;
+				}
+			}
+		}
+
+		return maxLikelihoodCategory;
+	}
+
+	
 
 	/**
 	 * @return the categoryProbability
@@ -250,7 +274,18 @@ public class Datum {
 		
 		return result;
 	}
+	
+	/**
+	 * @return the categoryProbability
+	 */
+	public Double getMVCategoryProbability(String category) {
+		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		return majorityVote.get(category);
+		
+	}
 
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -43,20 +43,7 @@ public class Worker {
 		}
 	}
 
-	/**
-	 * @param categories
-	 * @return
-	 * 
-	 *         public HashMap<String, Double> getPrior() {
-	 *         HashMap<String, Double> worker_prior = new HashMap<String, Double>();
-	 *         for (String categoryName : priorCounts.keySet()) {
-	 *         Integer categoryCount = this.priorCounts.get(categoryName);
-	 *         Integer total = this.labels.size();
-	 *         worker_prior.put(categoryName, 1.0*categoryCount/total);
-	 *         }
-	 *         return worker_prior;
-	 *         }
-	 */
+
 
 	/**
 	 * @param categories
@@ -107,10 +94,135 @@ public class Worker {
 		priorCounts.put(category, categoryCount + 1);
 	}
 
+	
+	public static int	EXP_COST_EVAL	= 0; // Expected cost, according to evaluation data
+	public static int	EXP_COST_EST	= 1; // Expected cost, according to the algorithm estimates
+	public static int	MIN_COST_EVAL	= 2; // Minimized cost, according to evaluation data	
+	public static int	MIN_COST_EST	= 3; // Minimized cost, according to the algorithm estimates
+	
+	/**
+	 * 
+	 * Estimates the cost for worker using various methods: COST_NAIVE: We do
+	 * not adjust the label assigned by the worker (i.e., use the "hard" label)
+	 * COST_ADJUSTED: We use the error rates of the worker and compute the
+	 * posterior probability vector for each object COST_MINIMIZED: Like
+	 * COST_ADJUSTED but we also assign the object to the category that
+	 * generates the minimum expected error
+	 * 
+	 * @param w
+	 *          The worker object
+	 * @param method
+	 *          One of DawidSkene.COST_NAIVE, DawidSkene.COST_ADJUSTED,
+	 *          DawidSkene.COST_MINIMIZED
+	 * @return The expected cost of the worker, normalized to be between 0 and
+	 *         1, where 1 is the cost of a "spam" worker
+	 */
+	public Double getWorkerCost(HashMap<String, Category>	categories, int method) {
+
+		assert (method == Worker.EXP_COST_EST || method == Worker.EXP_COST_EVAL || method==Worker.MIN_COST_EST || method == Worker.MIN_COST_EVAL);
+
+		Double cost = 0.0;
+
+		// We estimate first how often the worker assigns each category label
+
+		HashMap<String, Double> worker_prior = getPrior(new HashSet<Category>(categories.values()));
+
+		// We now know the frequency with which we will see a label
+		// "assigned_label" from worker
+		// Each of this "hard" labels from the annotator k will correspond to a
+		// corrected
+		// "soft" label
+		for (Category assigned : categories.values()) {
+			// Let's find the soft label that corresponds to assigned_label
+			String assignedCategory = assigned.getName();
+
+			if (method == Worker.EXP_COST_EVAL) {
+				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
+				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
+			} else if (method == Worker.MIN_COST_EVAL) {
+				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
+				cost += Helper.getMinSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
+			} else if (method == Worker.EXP_COST_EST) {
+				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
+				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
+			} else if (method == Worker.MIN_COST_EST) {
+				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
+				cost += Helper.getMinSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
+			} else {
+				// We should never reach this
+				System.err.println("Error: Incorrect method for cost");
+			}
+
+			// And add the cost of this label, weighted with the prior of seeing
+			// this label.
+
+		}
+
+		if (method == Worker.EXP_COST_EVAL) {
+			return cost / Helper.getSpammerCost(categories);
+		} else if (method == Worker.MIN_COST_EVAL) {
+			return cost / Helper.getMinSpammerCost(categories);
+		} else if (method == Worker.EXP_COST_EST) {
+			return cost / Helper.getSpammerCost(categories);
+		} else if (method == Worker.MIN_COST_EST) {
+			return cost / Helper.getMinSpammerCost(categories);
+		} else {
+			// We should never reach this
+			System.err.println("Error: We should have never reached this in getWorkerCost");
+			return Double.NaN;
+		}
+
+	}
+	
+
+	/**
+	 * @param w
+	 * @param objectCategory
+	 * @return
+	 */
+	private HashMap<String, Double> getNaiveSoftLabel(String objectCategory, HashMap<String, Category>	categories) {
+
+		HashMap<String, Double> naiveSoftLabel = new HashMap<String, Double>();
+		for (String cat : categories.keySet()) {
+			naiveSoftLabel.put(cat, getErrorRate(objectCategory, cat));
+		}
+		return naiveSoftLabel;
+	}
+
+
+
+	public HashMap<String, Double> getSoftLabelForLabel(String label, HashMap<String, Category>	categories, boolean evaluation) {
+
+		// Pr(c | label) = Pr(label | c) * Pr (c) / Pr(label)
+
+		// We compute the Pr(label), using the worker prior 
+		HashMap<String, Double> worker_prior = getPrior(new HashSet<Category>(categories.values()));
+
+		HashMap<String, Double> result = new HashMap<String, Double>();
+		for (Category source : categories.values()) {
+			// Error is Pr(label | c)
+			Double error = evaluation?getErrorRate_Eval(source.getName(), label):getErrorRate(source.getName(), label);
+			
+			// Pr(c) is source.getPrior()
+			// Pr(c | label) is soft
+			Double soft = ( worker_prior.get(label) >0 )? source.getPrior() * error / worker_prior.get(label): 0;
+			result.put(source.getName(), soft);
+		}
+
+		return result;
+	}
+
+	
 	public Double getErrorRate(String categoryFrom, String categoryTo) {
 
 		return this.cm.getErrorRate(categoryFrom, categoryTo);
 	}
+	
+	public Double getErrorRate_Eval(String categoryFrom, String categoryTo) {
+
+		return this.eval_cm.getErrorRate(categoryFrom, categoryTo);
+	}
+
 
 	/**
 	 * @return the priorCounts
@@ -124,6 +236,13 @@ public class Worker {
 
 		this.cm.setErrorRate(categoryFrom, categoryTo, error);
 	}
+	
+
+	public void setErrorRate_Eval(String categoryFrom, String categoryTo, Double error) {
+
+		this.eval_cm.setErrorRate(categoryFrom, categoryTo, error);
+	}
+
 
 	/**
 	 * @return the cm

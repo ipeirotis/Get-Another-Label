@@ -102,14 +102,8 @@ public class DawidSkene {
 
 		String objectName = cl.getObjectName();
 		String correctCategory = cl.getCorrectCategory();
-
-		Datum d;
-		if (this.objects.containsKey(objectName)) {
-			d = this.objects.get(objectName);
-		} else {
-			Set<Category> categories = new HashSet<Category>(this.categories.values());
-			d = new Datum(objectName, categories);
-		}
+		Datum d = this.objects.get(objectName);
+		assert( d != null); // All objects in the evaluation should be rated by at least one worker
 		d.setEvaluation(true);
 		d.setEvaluationCategory(correctCategory);
 		this.objects.put(objectName, d);
@@ -162,83 +156,10 @@ public class DawidSkene {
 		return result;
 	}
 
-	private String getMinCostLabel(HashMap<String, Double> softLabel) {
 
-		String result = null;
-		Double min_cost = Double.MAX_VALUE;
 
-		for (String c1 : softLabel.keySet()) {
-			// So, with probability p1 it belongs to class c1
-			// Double p1 = probabilities.get(c1);
 
-			// What is the cost in this case?
-			Double costfor_c1 = 0.0;
-			for (String c2 : softLabel.keySet()) {
-				// With probability p2 it actually belongs to class c2
-				Double p2 = softLabel.get(c2);
-				Double cost = this.categories.get(c1).getCost(c2);
-				costfor_c1 += p2 * cost;
 
-			}
-
-			if (costfor_c1 < min_cost) {
-				result = c1;
-				min_cost = costfor_c1;
-			}
-
-		}
-
-		return result;
-	}
-
-	/**
-	 * Gets as input a "soft label" (i.e., a distribution of probabilities over
-	 * classes) and returns the smallest possible cost for this soft label.
-	 * 
-	 * @param p
-	 * @return The expected cost of this soft label
-	 */
-	private Double getMinSoftLabelCost(HashMap<String, Double> probabilities) {
-
-		Double min_cost = Double.NaN;
-
-		for (String c1 : probabilities.keySet()) {
-			// So, with probability p1 it belongs to class c1
-			// Double p1 = probabilities.get(c1);
-
-			// What is the cost in this case?
-			Double costfor_c2 = 0.0;
-			for (String c2 : probabilities.keySet()) {
-				// With probability p2 it actually belongs to class c2
-				Double p2 = probabilities.get(c2);
-				Double cost = this.categories.get(c1).getCost(c2);
-				costfor_c2 += p2 * cost;
-
-			}
-
-			if (Double.isNaN(min_cost) || costfor_c2 < min_cost) {
-				min_cost = costfor_c2;
-			}
-
-		}
-
-		return min_cost;
-	}
-
-	/**
-	 * Returns the minimum possible cost of a "spammer" worker, who assigns
-	 * completely random labels.
-	 * 
-	 * @return The expected cost of a spammer worker
-	 */
-	private double getMinSpammerCost() {
-
-		HashMap<String, Double> prior = new HashMap<String, Double>();
-		for (Category c : this.categories.values()) {
-			prior.put(c.getName(), c.getPrior());
-		}
-		return getMinSoftLabelCost(prior);
-	}
 
 	private HashMap<String, Double> getObjectClassProbabilities(String objectName, String workerToIgnore) {
 
@@ -349,21 +270,7 @@ public class DawidSkene {
 		return (s > 0) ? c / s : 0.0;
 	}
 
-	private HashMap<String, Double> getSoftLabelForHardCategoryLabel(Worker w, String label) {
 
-		// Pr(c | label) = Pr(label | c) * Pr (c) / Pr(label)
-
-		HashMap<String, Double> worker_prior = w.getPrior(new HashSet<Category>(this.categories.values()));
-
-		HashMap<String, Double> result = new HashMap<String, Double>();
-		for (Category source : this.categories.values()) {
-			Double error = w.getErrorRate(source.getName(), label);
-			Double soft = ( worker_prior.get(label) >0 )? source.getPrior() * error / worker_prior.get(label): 0;
-			result.put(source.getName(), soft);
-		}
-
-		return result;
-	}
 
 	public int getNumberOfWorkers() {
 
@@ -375,158 +282,8 @@ public class DawidSkene {
 		return this.objects.size();
 	}
 
-	public static int	COST_NAIVE							= 0;
-	public static int	COST_ADJUSTED						= 1;
-	public static int	COST_NAIVE_MINIMIZED		= 2;	// Effectively, classifying into the "majority class" (class with
-																									// lowest expected cost)
-	public static int	COST_ADJUSTED_MINIMIZED	= 3;
 
-	/**
-	 * 
-	 * Estimates the cost for worker using various methods: COST_NAIVE: We do
-	 * not adjust the label assigned by the worker (i.e., use the "hard" label)
-	 * COST_ADJUSTED: We use the error rates of the worker and compute the
-	 * posterior probability vector for each object COST_MINIMIZED: Like
-	 * COST_ADJUSTED but we also assign the object to the category that
-	 * generates the minimum expected error
-	 * 
-	 * @param w
-	 *          The worker object
-	 * @param method
-	 *          One of DawidSkene.COST_NAIVE, DawidSkene.COST_ADJUSTED,
-	 *          DawidSkene.COST_MINIMIZED
-	 * @return The expected cost of the worker, normalized to be between 0 and
-	 *         1, where 1 is the cost of a "spam" worker
-	 */
-	public Double getWorkerCost(Worker w, int method) {
 
-		assert (method == COST_NAIVE || method == COST_ADJUSTED || method == COST_NAIVE_MINIMIZED || method == COST_ADJUSTED_MINIMIZED);
-
-		Double cost = 0.0;
-
-		// We estimate first how often the worker assigns each category label
-
-		// If we do not have a fixed prior, we can just use the data about the worker
-		HashMap<String, Double> worker_prior = w.getPrior(new HashSet<Category>(this.categories.values()));
-
-		// We now know the frequency with which we will see a label
-		// "assigned_label" from worker
-		// Each of this "hard" labels from the annotator k will correspond to a
-		// corrected
-		// "soft" label
-		for (Category assigned : this.categories.values()) {
-			// Let's find the soft label that corresponds to assigned_label
-			String assignedCategory = assigned.getName();
-
-			if (method == COST_NAIVE) {
-				// TODO: Check this for correctness. Compare results with tested
-				// implementation first
-				HashMap<String, Double> naiveSoftLabel = getNaiveSoftLabel(w, assignedCategory);
-				cost += getNaiveSoftLabelCost(assigned.getName(), naiveSoftLabel) * assigned.getPrior();
-			} else if (method == COST_NAIVE_MINIMIZED) {
-				// TODO: Check this for correctness. Compare results with tested
-				// implementation first
-				HashMap<String, Double> naiveSoftLabel = getNaiveSoftLabel(w, assignedCategory);
-				cost += getNaiveSoftLabelCost(assigned.getName(), naiveSoftLabel) * assigned.getPrior();
-			} else if (method == COST_ADJUSTED) {
-				HashMap<String, Double> softLabel = getSoftLabelForHardCategoryLabel(w, assignedCategory);
-				cost += getSoftLabelCost(softLabel) * worker_prior.get(assignedCategory);
-			} else if (method == COST_ADJUSTED_MINIMIZED) {
-				HashMap<String, Double> softLabel = getSoftLabelForHardCategoryLabel(w, assignedCategory);
-				cost += getMinSoftLabelCost(softLabel) * worker_prior.get(assignedCategory);
-			} else {
-				// We should never reach this
-				System.err.println("Error: Incorrect method for cost");
-			}
-
-			// And add the cost of this label, weighted with the prior of seeing
-			// this label.
-
-		}
-
-		if (method == COST_NAIVE || method == COST_NAIVE_MINIMIZED) {
-			return cost;
-		} else if (method == COST_ADJUSTED) {
-			return cost / getSpammerCost();
-		} else if (method == COST_ADJUSTED_MINIMIZED) {
-			return cost / getMinSpammerCost();
-		} else {
-			// We should never reach this
-			System.err.println("Error: We should have never reached this in getWorkerCost");
-			return Double.NaN;
-		}
-
-	}
-
-	/**
-	 * @param w
-	 * @param objectCategory
-	 * @return
-	 */
-	private HashMap<String, Double> getNaiveSoftLabel(Worker w, String objectCategory) {
-
-		HashMap<String, Double> naiveSoftLabel = new HashMap<String, Double>();
-		for (String cat : this.categories.keySet()) {
-			naiveSoftLabel.put(cat, w.getErrorRate(objectCategory, cat));
-		}
-		return naiveSoftLabel;
-	}
-
-	/**
-	 * Gets as input a "soft label" (i.e., a distribution of probabilities over
-	 * classes) and returns the expected cost of this soft label.
-	 * 
-	 * @param p
-	 * @return The expected cost of this soft label
-	 */
-	private Double getNaiveSoftLabelCost(String source, HashMap<String, Double> destProbabilities) {
-
-		Double c = 0.0;
-		for (String destination : destProbabilities.keySet()) {
-			Double p = destProbabilities.get(destination);
-			Double cost = this.categories.get(source).getCost(destination);
-			c += p * cost;
-		}
-
-		return c;
-	}
-
-	/**
-	 * Gets as input a "soft label" (i.e., a distribution of probabilities over
-	 * classes) and returns the expected cost of this soft label.
-	 * 
-	 * @param p
-	 * @return The expected cost of this soft label
-	 */
-	private Double getSoftLabelCost(HashMap<String, Double> probabilities) {
-
-		Double c = 0.0;
-		for (String c1 : probabilities.keySet()) {
-			for (String c2 : probabilities.keySet()) {
-				Double p1 = probabilities.get(c1);
-				Double p2 = probabilities.get(c2);
-				Double cost = this.categories.get(c1).getCost(c2);
-				c += p1 * p2 * cost;
-			}
-		}
-
-		return c;
-	}
-
-	/**
-	 * Returns the cost of a "spammer" worker, who assigns completely random
-	 * labels.
-	 * 
-	 * @return The expected cost of a spammer worker
-	 */
-	private double getSpammerCost() {
-
-		HashMap<String, Double> prior = new HashMap<String, Double>();
-		for (Category c : this.categories.values()) {
-			prior.put(c.getName(), c.getPrior());
-		}
-		return getSoftLabelCost(prior);
-	}
 
 	/**
 	 * We initialize the misclassification costs using the 0/1 loss
@@ -557,7 +314,7 @@ public class DawidSkene {
 		}
 	}
 	
-	private void evaluateWorkers() {
+	public void evaluateWorkers() {
 
 		for (Worker w : this.workers.values()) {
 			computeEvalConfusionMatrix(w);
@@ -566,15 +323,22 @@ public class DawidSkene {
 	
 	private void computeEvalConfusionMatrix(Worker w) {
 		ConfusionMatrix eval_cm = new ConfusionMatrix(this.categories.values());
+		eval_cm.empty();
 		for (AssignedLabel l : w.getAssignedLabels()){
 			
 			String objectName = l.getObjectName();
-			String correctCategory = l.getCategoryName();
-			String assignedCategory = this.objects.get(objectName).getEvaluationCategory();
-			Double currentCount = eval_cm.getErrorRate(correctCategory, assignedCategory);
-			eval_cm.addError(correctCategory, assignedCategory, currentCount+1);
+			Datum d = this.objects.get(objectName);
+			assert(d != null);
+			if (d.getEvaluation() == false) continue;
+			
+			String assignedCategory = l.getCategoryName();
+			String correctCategory = d.getEvaluationCategory();
+			
+			//Double currentCount = eval_cm.getErrorRate(correctCategory, assignedCategory);
+			eval_cm.addError(correctCategory, assignedCategory, 1.0);
 		}
 		eval_cm.normalize();
+		w.setEvalConfusionMatrix(eval_cm);
 	}
 
 	public String printDiffVote(HashMap<String, String> prior_voting, HashMap<String, String> posterior_voting) {
@@ -600,7 +364,7 @@ public class DawidSkene {
 		StringBuffer sb = new StringBuffer();
 
 		if (!detailed) {
-			sb.append("Worker\tError Rate\tQuality (Expected)\tQuality (Optimized)\tNumber of Annotations\tGold Tests\n");
+			sb.append("Worker\tError Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests\n");
 		}
 		for (String workername : new TreeSet<String>(this.workers.keySet())) {
 			Worker w = this.workers.get(workername);
@@ -631,24 +395,32 @@ public class DawidSkene {
 		Double cost_naive = this.getAnnotatorCostNaive(w);
 		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
 
-		Double cost_adj = this.getWorkerCost(w, DawidSkene.COST_ADJUSTED);
-		String s_cost_adj = (Double.isNaN(cost_adj)) ? "---" : Math.round(100 * (1 - cost_adj)) + "%";
+		Double cost_exp = w.getWorkerCost(categories, Worker.EXP_COST_EST);
+		String s_cost_exp = (Double.isNaN(cost_exp)) ? "---" : Math.round(100 * (1 - cost_exp)) + "%";
 
-		Double cost_min = this.getWorkerCost(w, DawidSkene.COST_ADJUSTED_MINIMIZED);
+		Double cost_min = w.getWorkerCost(categories, Worker.MIN_COST_EST);
 		String s_cost_min = (Double.isNaN(cost_min)) ? "---" : Math.round(100 * (1 - cost_min)) + "%";
 
+		Double cost_exp_eval = w.getWorkerCost(categories, Worker.EXP_COST_EVAL);
+		String s_cost_exp_eval = (Double.isNaN(cost_exp_eval)) ? "---" : Math.round(100 * (1 - cost_exp_eval)) + "%";
+
+		Double cost_min_eval = w.getWorkerCost(categories, Worker.MIN_COST_EVAL);
+		String s_cost_min_eval = (Double.isNaN(cost_min_eval)) ? "---" : Math.round(100 * (1 - cost_min_eval)) + "%";
+			
 		Integer contributions = w.getAssignedLabels().size();
 		Integer gold_tests = this.countGoldTests(w.getAssignedLabels());
 
 		if (detailed) {
 			sb.append("Worker: " + workerName + "\n");
-			sb.append("Error Rate: " + s_cost_naive + "\n");
-			sb.append("Quality (Expected): " + s_cost_adj + "\n");
-			sb.append("Quality (Optimized): " + s_cost_min + "\n");
+			sb.append("Est. Error Rate: " + s_cost_naive + "\n");
+			sb.append("Est. Quality (Expected): " + s_cost_exp + "\n");
+			sb.append("Est. Quality (Optimized): " + s_cost_min + "\n");
+			sb.append("Eval. Quality (Expected): " + s_cost_exp_eval + "\n");
+			sb.append("Eval. Quality (Optimized): " + s_cost_min_eval + "\n");
 			sb.append("Number of Annotations: " + contributions + "\n");
 			sb.append("Number of Gold Tests: " + gold_tests + "\n");
 
-			sb.append("Confusion Matrix: \n");
+			sb.append("Confusion Matrix (Estimated): \n");
 			for (String correct_name : this.categories.keySet()) {
 				for (String assigned_name : this.categories.keySet()) {
 					Double cm_entry = w.getErrorRate(correct_name, assigned_name);
@@ -656,15 +428,20 @@ public class DawidSkene {
 					sb.append("P[" + correct_name + "->" + assigned_name + "]=" + s_cm_entry + "%\t");
 				}
 				sb.append("\n");
-			}
-			
-
-
-			
+			}		
+			sb.append("Confusion Matrix (Evaluation data): \n");
+			for (String correct_name : this.categories.keySet()) {
+				for (String assigned_name : this.categories.keySet()) {
+					Double cm_entry = w.getErrorRate_Eval(correct_name, assigned_name);
+					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils.round(100 * cm_entry, 3).toString();
+					sb.append("P[" + correct_name + "->" + assigned_name + "]=" + s_cm_entry + "%\t");
+				}
+				sb.append("\n");
+			}	
 			sb.append("\n");
 		} else {
-			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_adj + "\t" + s_cost_min + "\t" + contributions + "\t"
-					+ gold_tests + "\n");
+			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
+					"\t" + s_cost_min_eval + "\t" + contributions + "\t" + gold_tests + "\n");
 		}
 
 		return sb.toString();
@@ -679,11 +456,18 @@ public class DawidSkene {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Object\t");
 		for (String c : this.categories.keySet()) {
-			sb.append("Pr[" + c + "]\t");
+			sb.append("DS_Pr[" + c + "]\t");
 		}
+		sb.append("DS_Category\t");
+		for (String c : this.categories.keySet()) {
+			sb.append("MV_Pr[" + c + "]\t");
+		}
+		sb.append("MV_Category\t");
 		// TODO: Also print majority label and the min-cost label, pre-DS and post-DS
-		sb.append("DS Cost\tMajorityVote Cost\tNoVote Cost\n");
+		sb.append("DS_Exp_Cost\tMV_Exp_Cost\tNoVote_Exp_Cost\t");
+		sb.append("DS_Opt_Cost\tMV_Opt_Cost\tNoVote_Opt_Cost\n");
 
+		
 		for (String object_name : new TreeSet<String>(this.objects.keySet())) {
 			Datum d = this.objects.get(object_name);
 
@@ -695,10 +479,22 @@ public class DawidSkene {
 			for (String c : this.categories.keySet()) {
 				sb.append(d.getCategoryProbability(c) + "\t");
 			}
+			sb.append(d.getMostLikelyCategory() + "\t");
+			for (String c : this.categories.keySet()) {
+				sb.append(d.getMVCategoryProbability(c) + "\t");
+			}
+			sb.append(d.getMostLikelyCategory_MV() + "\t");
+			
 			sb.append(d.getExpectedCost(categories) + "\t");
 			sb.append(d.getExpectedMVCost(categories) + "\t");
-			sb.append(getSpammerCost() + "\n");
-
+			sb.append(Helper.getSpammerCost(categories) + "\t");
+			
+			sb.append(d.getMinCost(categories) + "\t");
+			sb.append(d.getMinMVCost(categories) + "\t");
+			sb.append(Helper.getMinSpammerCost(categories) + "\n");
+			
+			// TODO: Print evaluation label, actual cost for "ML" version of MV and DS, cost for the soft versions of MV and DS
+			
 		}
 
 		return sb.toString();
