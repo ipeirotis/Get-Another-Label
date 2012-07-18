@@ -59,7 +59,7 @@ public class EngineContext {
 		this.evaluationFile = evaluationfile;
 	}
 
-	@Option(name="-iterations", usage="is the number of times to run the algorithm. Even a value of 10 (the default) less often works well.", metaVar="<num-iterations>")
+	@Option(name="--iterations", usage="is the number of times to run the algorithm. Even a value of 10 (the default) less often works well.", metaVar="<num-iterations>")
 	int numIterations = 10;
 
 	public int getNumIterations() {
@@ -70,7 +70,7 @@ public class EngineContext {
 		this.numIterations = iterations;
 	}
 
-	@Option(name="-verbose", usage="Verbose Mode?")
+	@Option(name="--verbose", usage="Verbose Mode?")
 	boolean verbose = false;
 
 	public boolean isVerbose() {

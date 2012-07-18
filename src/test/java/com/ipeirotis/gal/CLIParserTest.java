@@ -14,6 +14,7 @@ import com.ipeirotis.gal.engine.EngineContext;
 
 public class CLIParserTest {
 	private EngineContext ctx;
+	
 	private CmdLineParser parser;
 
 	@Before
@@ -25,7 +26,7 @@ public class CLIParserTest {
 	
 	@Test
 	public void testHappyPath() throws Exception {
-		parser.parseArgument("data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt -iterations 10".split("\\s+"));
+		parser.parseArgument("data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt --iterations 10".split("\\s+"));
 		
 		assertEquals("data\\categories.txt", ctx.getCategoriesFile());
 		assertEquals("data\\unlabeled.txt", ctx.getInputFile());
@@ -37,7 +38,7 @@ public class CLIParserTest {
 
 	@Test(expected=CmdLineException.class)
 	public void testMissingArgument() throws Exception {
-		parser.parseArgument("data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt -iterations 10".split("\\s+"));
+		parser.parseArgument("data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt --iterations 10".split("\\s+"));
 	}
 	
 	@Test

@@ -1,11 +1,18 @@
 package com.ipeirotis.gal.scripts;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+
+import br.com.ingenieux.launchify.api.LaunchifyAs;
 
 import com.ipeirotis.gal.engine.Engine;
 import com.ipeirotis.gal.engine.EngineContext;
 
+@LaunchifyAs("get-another-label")
 public class Main {
 	/**
 	 * Main Entry Point
@@ -17,14 +24,35 @@ public class Main {
 	public static void main(String[] args) {
 		EngineContext ctx = new EngineContext();
 		
+		List<String> argList = new ArrayList<String>(Arrays.asList(args));
+		
+		{
+			/*
+			 * Currently, the hashdot stubs for launchify contain an error. 
+			 * 
+			 * It will be fixed in 2.0, but right now, we only need to shift arguments
+			 */
+			if (!argList.isEmpty() && argList.get(0).endsWith("hashdot")) {
+				argList.remove(0);
+			}
+		}
+		
 		CmdLineParser parser = new CmdLineParser(ctx);
 		
+		if (argList.isEmpty()) {
+			parser.printSingleLineUsage(System.out);
+			
+			return;
+		}
+		
 		try {
-			parser.parseArgument(args);
+			parser.parseArgument(argList);
 		} catch (CmdLineException e) {
 			System.err.println(e);
 			
 			parser.printUsage(System.err);
+			
+			return;
 		}
 
 		// We start by defining the set of categories in which the DS algorithm
