@@ -265,7 +265,7 @@ public class DawidSkene {
 	/**
 	 * We initialize the misclassification costs using the 0/1 loss
 	 * 
-	 * @param categories
+	 * @param engine.getCategories()
 	 */
 	private void initializeCosts() {
 
