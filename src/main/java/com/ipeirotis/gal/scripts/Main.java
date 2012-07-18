@@ -40,7 +40,7 @@ public class Main {
 		CmdLineParser parser = new CmdLineParser(ctx);
 		
 		if (argList.isEmpty()) {
-			parser.printSingleLineUsage(System.out);
+			showUsage(parser);
 			
 			return;
 		}
@@ -50,7 +50,7 @@ public class Main {
 		} catch (CmdLineException e) {
 			System.err.println(e);
 			
-			parser.printUsage(System.err);
+			showUsage(parser);
 			
 			return;
 		}
@@ -66,5 +66,11 @@ public class Main {
 		Engine engine = new Engine(ctx);
 		
 		engine.execute();
+	}
+
+	private static void showUsage(CmdLineParser parser) {
+		System.err.println("Usage: \n");
+		parser.printUsage(System.err);
+		System.err.println();
 	}
 }
