@@ -12,17 +12,17 @@ import com.ipeirotis.utils.Utils;
 
 public class Engine {
 	private Set<Category> categories;
-	
+
 	private DawidSkene ds;
-	
+
 	private Set<MisclassificationCost> costs;
-	
+
 	private Set<AssignedLabel> labels;
-	
+
 	private Set<CorrectLabel> correct;
-	
+
 	private Set<CorrectLabel> evaluation;
-	
+
 	private EngineContext ctx;
 
 	public Engine(EngineContext ctx) {
@@ -87,17 +87,17 @@ public class Engine {
 			println("Using data-inferred priors.");
 
 		setCosts(loadCosts(ctx.getCostFile()));
-		
+
 		assert (getCosts().size() == getCategories().size() * getCategories().size());
-		
+
 		for (MisclassificationCost mcc : getCosts()) {
 			getDs().addMisclassificationCost(mcc);
 		}
 
 		setLabels(loadWorkerAssignedLabels(ctx.getInputFile()));
-		
+
 		int al = 0;
-		
+
 		for (AssignedLabel l : getLabels()) {
 			if (++al % 1000 == 0)
 				print(".");
@@ -106,7 +106,7 @@ public class Engine {
 		println("%d worker-assigned labels loaded.", getLabels().size());
 
 		setCorrect(loadGoldLabels(ctx.getCorrectFile()));
-		
+
 		int cl = 0;
 		for (CorrectLabel l : getCorrect()) {
 			if (++cl % 1000 == 0)
@@ -123,10 +123,10 @@ public class Engine {
 			getDs().addEvaluationLabel(l);
 		}
 		println(getEvaluation().size() + " evaluation labels loaded.");
-		
+
 		// We compute the evaluation-based confusion matrix for the workers
 		getDs().evaluateWorkers();
-		
+
 		//ds.estimate(1);
 		//HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);
 
@@ -414,17 +414,24 @@ public class Engine {
 		Set<Category> categories = getCategories(lines_categories);
 		return categories;
 	}
-	
+
 	public void println(String mask, Object... args) {
 		print(mask + "\n", args);
 	}
-	
+
 	public void print(String mask, Object... args) {
 		if (! ctx.isVerbose())
 			return;
-		
-		String message = String.format(mask, args);
-		
+
+		String message;
+
+		if (args.length > 0) {
+			message = String.format(mask, args);
+		} else {
+			// without format arguments, print the mask/string as-is
+			message = mask;
+		}
+
 		System.out.println(message);
 	}
 }
