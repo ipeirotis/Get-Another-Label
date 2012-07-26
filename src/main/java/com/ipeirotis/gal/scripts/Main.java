@@ -31,8 +31,12 @@ public class Main {
 			 * Currently, the hashdot stubs for launchify contain an error. 
 			 * 
 			 * It will be fixed in 2.0, but right now, we only need to shift arguments
+			 *
+			 * Argument of index 0 is always the program name... standard UNIX convention; I don't know why should
+			 * hashdot ever change this behavior
+			 *      -- Paweł Romanowski, 07-26-2012
 			 */
-			if (!argList.isEmpty() && argList.get(0).endsWith("hashdot")) {
+			if (!argList.isEmpty()) {
 				argList.remove(0);
 			}
 		}
