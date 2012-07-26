@@ -115,7 +115,7 @@ public class Engine {
 		}
 		println("%d correct labels loaded.", getCorrect().size());
 
-		setEvaluation(loadGoldLabels(ctx.getEvaluationFile()));
+		setEvaluation(loadEvaluationLabels(ctx.getEvaluationFile()));
 		int el = 0;
 		for (CorrectLabel l : getEvaluation()) {
 			if (++el % 1000 == 0)
@@ -285,6 +285,21 @@ public class Engine {
 		return correct;
 	}
 
+    /**
+     * @param evalfile
+     * @return
+     */
+    private Set<CorrectLabel> loadEvaluationLabels(String evalfile) {
+
+        // We load the "gold" cases (if any)
+        println("");
+        println("Loading file with evaluation labels. ");
+        String[] lines_correct = Utils.getFile(evalfile).split("\n");
+        println("File contained %d entries.", lines_correct.length);
+        Set<CorrectLabel> correct = getEvaluationLabels(lines_correct);
+        return correct;
+    }
+
 	public Set<AssignedLabel> getAssignedLabels(String[] lines) {
 
 		Set<AssignedLabel> labels = new HashSet<AssignedLabel>();
@@ -368,6 +383,25 @@ public class Engine {
 		}
 		return labels;
 	}
+
+    public Set<CorrectLabel> getEvaluationLabels(String[] lines) {
+
+        Set<CorrectLabel> labels = new HashSet<CorrectLabel>();
+        for (String line : lines) {
+            String[] entries = line.split("\t");
+            if (entries.length != 2) {
+                // evaluation file is optional
+                break;
+            }
+
+            String objectname = entries[0];
+            String categoryname = entries[1];
+
+            CorrectLabel cl = new CorrectLabel(objectname, categoryname);
+            labels.add(cl);
+        }
+        return labels;
+    }
 
 	/**
 	 * @param inputfile
