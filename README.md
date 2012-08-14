@@ -18,7 +18,7 @@ For details on how to run the algorithm see https://github.com/ipeirotis/Get-Ano
  
  Soon, we will make available a REST-based web service that has significant additional functionality (support for streaming and incremental updates, persistence, etc). 
  
- Stay tuned. The code, which is currently under developerment, is available at https://github.com/ipeirotis/DSaS
+ Stay tuned. The code, which is currently under developerment, is available at https://github.com/ipeirotis/Troia-server
 
 ## Miscellaneous
 

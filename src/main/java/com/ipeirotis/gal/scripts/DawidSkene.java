@@ -99,7 +99,6 @@ public class DawidSkene {
 	}
 	
 	public void addEvaluationLabel(CorrectLabel cl) {
-
 		String objectName = cl.getObjectName();
 		String correctCategory = cl.getCorrectCategory();
 		Datum d = this.objects.get(objectName);
@@ -351,11 +350,11 @@ public class DawidSkene {
 
 		String workerName = w.getName();
 
-		Double cost_naive = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
-		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
-
-		Double cost_naive_eval = w.getWorkerCost(categories, Worker.COST_NAIVE_EVAL);
-		String s_cost_naive_eval = (Double.isNaN(cost_naive_eval)) ? "---" : Utils.round(100 * cost_naive_eval, 2) + "%";
+//		Double cost_naive = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
+//		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
+//
+//		Double cost_naive_eval = w.getWorkerCost(categories, Worker.COST_NAIVE_EVAL);
+//		String s_cost_naive_eval = (Double.isNaN(cost_naive_eval)) ? "---" : Utils.round(100 * cost_naive_eval, 2) + "%";
 		
 		Double cost_exp = w.getWorkerCost(categories, Worker.EXP_COST_EST);
 		String s_cost_exp = (Double.isNaN(cost_exp)) ? "---" : Math.round(100 * (1 - cost_exp)) + "%";
@@ -374,8 +373,8 @@ public class DawidSkene {
 
 		if (detailed) {
 			sb.append("Worker: " + workerName + "\n");
-			sb.append("Est. Error Rate: " + s_cost_naive + "\n");
-			sb.append("Eval. Error Rate: " + s_cost_naive_eval + "\n");
+//			sb.append("Est. Error Rate: " + s_cost_naive + "\n");
+//			sb.append("Eval. Error Rate: " + s_cost_naive_eval + "\n");
 			sb.append("Est. Quality (Expected): " + s_cost_exp + "\n");
 			sb.append("Est. Quality (Optimized): " + s_cost_min + "\n");
 			sb.append("Eval. Quality (Expected): " + s_cost_exp_eval + "\n");
@@ -403,7 +402,7 @@ public class DawidSkene {
 			}	
 			sb.append("\n");
 		} else {
-			sb.append(workerName + "\t" + s_cost_naive + "\t" + s_cost_naive_eval + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
+			sb.append(workerName + "\t" + "NaN" /* TODO: It was s_cost_naive */ + "\t" + "NaN" /* TODO: it was s_cost_naive_eval */ + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
 					"\t" + s_cost_min_eval + "\t" + contributions + "\t" + gold_tests + "\n");
 		}
 

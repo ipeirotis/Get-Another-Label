@@ -1,9 +1,5 @@
 package com.ipeirotis.gal.scripts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
@@ -24,29 +20,10 @@ public class Main {
 	public static void main(String[] args) {
 		EngineContext ctx = new EngineContext();
 		
-		List<String> argList = new ArrayList<String>(Arrays.asList(args));
-		
-		{
-			/*
-			 * Currently, the hashdot stubs for launchify contain an error. 
-			 * 
-			 * It will be fixed in 2.0, but right now, we only need to shift arguments
-			 */
-			if (!argList.isEmpty() && argList.get(0).endsWith("hashdot")) {
-				argList.remove(0);
-			}
-		}
-		
 		CmdLineParser parser = new CmdLineParser(ctx);
 		
-		if (argList.isEmpty()) {
-			showUsage(parser);
-			
-			return;
-		}
-		
 		try {
-			parser.parseArgument(argList);
+			parser.parseArgument(args);
 		} catch (CmdLineException e) {
 			System.err.println(e);
 			

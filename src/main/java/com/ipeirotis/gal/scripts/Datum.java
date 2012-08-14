@@ -13,7 +13,7 @@ public class Datum {
 	// Defines if we have the correct category for this object
 	// and if it is gold, the correctCategory holds the name of the correct category
 	Boolean									isGold;
-	Boolean									isEvaluation;
+	Boolean									isEvaluation = false;
 	String									correctCategory;
 	String									evaluationCategory;
 
@@ -63,7 +63,7 @@ public class Datum {
 	 * @return the isEvaluation
 	 */
 	public Boolean isEvaluation() {
-	
+
 		return isEvaluation;
 	}
 
