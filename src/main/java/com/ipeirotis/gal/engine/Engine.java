@@ -139,11 +139,13 @@ public class Engine {
 		}
 		println("Done\n");
 
-		saveWorkerQuality(getDs());
+		if (!ctx.isDryRun()) {
+			saveWorkerQuality(getDs());
 
-		saveObjectResults(getDs());
+			saveObjectResults(getDs());
 
-		saveCategoryPriors(getDs());
+			saveCategoryPriors(getDs());
+		}
 
 		//HashMap<String, String> posterior_voting = saveDawidSkeneVote(verbose, ds);
 

@@ -80,4 +80,15 @@ public class EngineContext {
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
+	
+	@Option(name="--dry-run", usage="Dry Run (run, but not save results?)")
+	boolean dryRun = false;
+
+	public boolean isDryRun() {
+		return dryRun;
+	}
+
+	public void setDryRun(boolean dryRun) {
+		this.dryRun = dryRun;
+	}
 }
