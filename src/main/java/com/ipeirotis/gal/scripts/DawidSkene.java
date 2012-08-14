@@ -605,4 +605,19 @@ public class DawidSkene {
 
 	}
 
+    public HashMap<String, Category> getCategories() {
+        return categories;
+    }
+
+    public Boolean getFixedPriors() {
+        return fixedPriors;
+    }
+
+    public HashMap<String, Datum> getObjects() {
+        return objects;
+    }
+
+    public HashMap<String, Worker> getWorkers() {
+        return workers;
+    }
 }
