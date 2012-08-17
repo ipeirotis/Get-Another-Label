@@ -3,12 +3,9 @@ package com.ipeirotis.gal.scripts;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
-import br.com.ingenieux.launchify.api.LaunchifyAs;
-
 import com.ipeirotis.gal.engine.Engine;
 import com.ipeirotis.gal.engine.EngineContext;
 
-@LaunchifyAs("get-another-label")
 public class Main {
 	/**
 	 * Main Entry Point

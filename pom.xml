@@ -20,12 +20,6 @@
 			<version>2.0.16</version>
 		</dependency>
 		<dependency>
-			<groupId>br.com.ingenieux.launchify</groupId>
-			<artifactId>launchify-spi</artifactId>
-			<version>0.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
@@ -45,12 +39,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>br.com.ingenieux.launchify</groupId>
-				<artifactId>launchify-maven-plugin</artifactId>
-				<version>0.0.1</version>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -64,39 +52,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>standalone</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<configuration>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-						</configuration>
-						<executions>
-							<execution>
-								<id>package</id>
-								<phase>package</phase>
-								<goals>
-									<goal>attached</goal>
-								</goals>
-								<inherited>false</inherited>
-								<configuration>
-									<archive>
-										<manifest>
-											<mainClass>com.ipeirotis.gal.scripts.Main</mainClass>
-										</manifest>
-									</archive>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
