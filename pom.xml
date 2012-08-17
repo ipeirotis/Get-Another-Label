@@ -26,7 +26,14 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<github.global.server>github</github.global.server>
 	</properties>
+	
+	<scm>
+		<connection>scm:git:https://github.com/ipeirotis/Get-Another-Label.git</connection>
+		<developerConnection>scm:git:git@github.com:ipeirotis/Get-Another-Label.git</developerConnection>
+		<url>http://github.com/ipeirotis/Get-Another-Label</url>
+	</scm>
 	
 	<licenses>
 		<license>
@@ -84,6 +91,23 @@
 			</properties>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>downloads-maven-plugin</artifactId>
+						<version>0.6</version>
+						<configuration>
+							<description>Latest Distribution of get-another-label</description>
+							<override>true</override>
+							<includes>
+								<include>**/get-another-label-latest.zip</include>
+							</includes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<version>0.7</version>
+					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>appassembler-maven-plugin</artifactId>

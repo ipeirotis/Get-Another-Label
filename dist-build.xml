@@ -29,6 +29,14 @@
 
 	<target name="zip" depends="package">
 		<rename dest="target/get-another-label" src="target/appassembler" />
-		<zip destfile="dist/get-another-label-dist.zip" basedir="target" includes="get-another-label/**/*" />
+		<mkdir dir="target/dist" />
+		<zip destfile="target/dist/get-another-label-latest.zip" basedir="target" includes="get-another-label/**/*" />
+	</target>
+	
+	<target name="upload">
+		<mvn:mvn>
+			<arg value="-Pdist" />
+			<arg value="ghDownloads:upload" />
+		</mvn:mvn>
 	</target>
 </project>
