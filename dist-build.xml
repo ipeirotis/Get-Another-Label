@@ -23,6 +23,7 @@
 	<target name="package">
 		<mvn:mvn>
 			<arg value="-Pdist" />
+			<arg value="-Dmaven.test.skip" />
 			<arg value="package" />
 		</mvn:mvn>
 	</target>
@@ -37,6 +38,13 @@
 		<mvn:mvn>
 			<arg value="-Pdist" />
 			<arg value="ghDownloads:upload" />
+		</mvn:mvn>
+	</target>
+	
+	<target name="docs">
+		<mvn:mvn>
+			<arg value="-Pdist" />
+			<arg value="site" />
 		</mvn:mvn>
 	</target>
 </project>

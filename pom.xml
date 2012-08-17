@@ -29,6 +29,8 @@
 		<github.global.server>github</github.global.server>
 	</properties>
 	
+	<inceptionYear>2012</inceptionYear>
+	
 	<scm>
 		<connection>scm:git:https://github.com/ipeirotis/Get-Another-Label.git</connection>
 		<developerConnection>scm:git:git@github.com:ipeirotis/Get-Another-Label.git</developerConnection>
@@ -80,15 +82,51 @@
 					</archive>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<reportPlugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.5</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>2.8.1</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jxr-plugin</artifactId>
+							<version>2.3</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changes-plugin</artifactId>
+							<version>2.7.1</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changelog-plugin</artifactId>
+							<version>2.2</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-report-plugin</artifactId>
+							<version>2.12.1</version>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 	<profiles>
 		<profile>
 			<id>dist</id>
-			<properties>
-				<maven.test.skip>true</maven.test.skip>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -107,6 +145,17 @@
 						<groupId>com.github.github</groupId>
 						<artifactId>site-maven-plugin</artifactId>
 						<version>0.7</version>
+						<configuration>
+							<message>Site Update</message>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -134,4 +183,9 @@
 			</build>
 		</profile>
 	</profiles>
+	<url>http://ipeirotis.github.com/Get-Another-Label/</url>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/ipeirotis/Get-Another-Label/issues</url>
+	</issueManagement>
 </project>
