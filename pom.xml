@@ -171,6 +171,9 @@
 							</execution>
 						</executions>
 						<configuration>
+							<binFileExtensions>
+								<unix>.sh</unix>
+							</binFileExtensions>
 							<programs>
 								<program>
 									<mainClass>com.ipeirotis.gal.scripts.Main</mainClass>
