@@ -101,12 +101,15 @@ public class Engine {
 		else
 			println("Using data-inferred priors.");
 
-		setCosts(loadCosts(ctx.getCostFile()));
+		if (ctx.hasCosts()) {
+			setCosts(loadCosts(ctx.getCostFile()));
 
-		assert (getCosts().size() == getCategories().size() * getCategories().size());
+			assert (getCosts().size() == getCategories().size()
+					* getCategories().size());
 
-		for (MisclassificationCost mcc : getCosts()) {
-			getDs().addMisclassificationCost(mcc);
+			for (MisclassificationCost mcc : getCosts()) {
+				getDs().addMisclassificationCost(mcc);
+			}
 		}
 
 		setLabels(loadWorkerAssignedLabels(ctx.getInputFile()));
@@ -120,24 +123,28 @@ public class Engine {
 		}
 		println("%d worker-assigned labels loaded.", getLabels().size());
 
-		setCorrect(loadGoldLabels(ctx.getCorrectFile()));
+		if (ctx.hasCorrectFile()) {
+			setCorrect(loadGoldLabels(ctx.getCorrectFile()));
 
-		int cl = 0;
-		for (CorrectLabel l : getCorrect()) {
-			if (++cl % 1000 == 0)
-				print(".");
-			getDs().addCorrectLabel(l);
+			int cl = 0;
+			for (CorrectLabel l : getCorrect()) {
+				if (++cl % 1000 == 0)
+					print(".");
+				getDs().addCorrectLabel(l);
+			}
+			println("%d correct labels loaded.", getCorrect().size());
 		}
-		println("%d correct labels loaded.", getCorrect().size());
 
-		setEvaluation(loadEvaluationLabels(ctx.getEvaluationFile()));
-		int el = 0;
-		for (CorrectLabel l : getEvaluation()) {
-			if (++el % 1000 == 0)
-				print(".");
-			getDs().addEvaluationLabel(l);
+		if (ctx.hasEvaluations()) {
+			setEvaluation(loadEvaluationLabels(ctx.getEvaluationFile()));
+			int el = 0;
+			for (CorrectLabel l : getEvaluation()) {
+				if (++el % 1000 == 0)
+					print(".");
+				getDs().addEvaluationLabel(l);
+			}
+			println(getEvaluation().size() + " evaluation labels loaded.");
 		}
-		println(getEvaluation().size() + " evaluation labels loaded.");
 
 		// We compute the evaluation-based confusion matrix for the workers
 		getDs().evaluateWorkers();

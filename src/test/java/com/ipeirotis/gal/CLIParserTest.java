@@ -29,20 +29,21 @@ import com.ipeirotis.gal.engine.EngineContext;
 
 public class CLIParserTest {
 	private EngineContext ctx;
-	
+
 	private CmdLineParser parser;
 
 	@Before
 	public void before() {
 		ctx = new EngineContext();
-		
+
 		parser = new CmdLineParser(ctx);
 	}
-	
+
 	@Test
 	public void testHappyPath() throws Exception {
-		parser.parseArgument("data\\categories.txt data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt --iterations 10".split("\\s+"));
-		
+		parser.parseArgument("--categories data\\categories.txt --input data\\unlabeled.txt --correct data\\labeled.txt --cost data\\costs.txt --eval data\\evaluationdata.txt --iterations 10"
+				.split("\\s+"));
+
 		assertEquals("data\\categories.txt", ctx.getCategoriesFile());
 		assertEquals("data\\unlabeled.txt", ctx.getInputFile());
 		assertEquals("data\\labeled.txt", ctx.getCorrectFile());
@@ -51,19 +52,16 @@ public class CLIParserTest {
 		assertEquals(10, ctx.getNumIterations());
 	}
 
-	@Test(expected=CmdLineException.class)
+	@Test(expected = CmdLineException.class)
 	public void testMissingArgument() throws Exception {
-		parser.parseArgument("data\\unlabeled.txt data\\labeled.txt  data\\costs.txt data\\evaluationdata.txt --iterations 10".split("\\s+"));
+		parser.parseArgument("--categories data\\unlabeled.txt --cost data\\costs.txt --eval data\\evaluationdata.txt --iterations 10"
+				.split("\\s+"));
 	}
-	
-	@Test
-	public void testHelpUsage() {
-		try {
-			parser.parseArgument(Collections.<String>emptyList());
-			
-			fail();
-		} catch (CmdLineException exc) {
-			parser.printUsage(System.err);
-		}
+
+	@Test(expected = CmdLineException.class)
+	public void testHelpUsage() throws Exception {
+		parser.parseArgument(Collections.<String> emptyList());
+
+		fail();
 	}
 }
