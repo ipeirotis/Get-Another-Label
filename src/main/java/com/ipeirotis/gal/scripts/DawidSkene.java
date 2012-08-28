@@ -15,8 +15,10 @@
  ******************************************************************************/
 package com.ipeirotis.gal.scripts;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -332,18 +334,14 @@ public class DawidSkene {
 		w.setEvalConfusionMatrix(eval_cm);
 	}
 
-	public String printAllWorkerScores(boolean detailed) {
-
-		StringBuffer sb = new StringBuffer();
-
+	public void printAllWorkerScores(PrintWriter writer, boolean detailed) {
 		if (!detailed) {
-			sb.append("Worker\tEst. Error Rate\tEval. Error Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests\n");
+			writer.println("Worker\tEst. Error Rate\tEval. Error Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests");
 		}
-		for (String workername : new TreeSet<String>(this.workers.keySet())) {
-			Worker w = this.workers.get(workername);
-			sb.append(printWorkerScore(w, detailed));
+		
+		for (Map.Entry<String, Worker> entry : this.workers.entrySet()) {
+			writer.println(printWorkerScore(entry.getValue(), detailed));
 		}
-		return sb.toString();
 	}
 
 	private Integer countGoldTests(Set<AssignedLabel> labels) {
@@ -415,10 +413,9 @@ public class DawidSkene {
 				}
 				sb.append("\n");
 			}	
-			sb.append("\n");
 		} else {
 			sb.append(workerName + "\t" + "NaN" /* TODO: It was s_cost_naive */ + "\t" + "NaN" /* TODO: it was s_cost_naive_eval */ + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
-					"\t" + s_cost_min_eval + "\t" + contributions + "\t" + gold_tests + "\n");
+					"\t" + s_cost_min_eval + "\t" + contributions + "\t" + gold_tests);
 		}
 
 		return sb.toString();
@@ -427,71 +424,65 @@ public class DawidSkene {
 	/**
 	 * Prints the objects that have probability distributions with entropy
 	 * higher than the given threshold
+	 * 
+	 * @param writer PrintWriter to write into 
 	 */
-	public String printObjectClassProbabilities() {
-
-		StringBuffer sb = new StringBuffer();
-		sb.append("Object\t");
+	public void printObjectClassProbabilities(PrintWriter writer) {
+		writer.print("Object\t");
 		for (String c : this.categories.keySet()) {
-			sb.append("DS_Pr[" + c + "]\t");
+			writer.print("DS_Pr[" + c + "]\t");
 		}
-		sb.append("DS_Category\t");
+		writer.print("DS_Category\t");
 		for (String c : this.categories.keySet()) {
-			sb.append("MV_Pr[" + c + "]\t");
+			writer.print("MV_Pr[" + c + "]\t");
 		}
-		sb.append("MV_Category\t");
+		writer.print("MV_Category\t");
+		
 		// TODO: Also print majority label and the min-cost label, pre-DS and post-DS
-		sb.append("DS_Exp_Cost\tMV_Exp_Cost\tNoVote_Exp_Cost\t");
-		sb.append("DS_Opt_Cost\tMV_Opt_Cost\tNoVote_Opt_Cost\t");
-		sb.append("Correct_Category\tEval_Cost_MV_ML\tEval_Cost_DS_ML\tEval_Cost_MV_Soft\tEval_Cost_DS_Soft\n");
+		
+		writer.print("DS_Exp_Cost\tMV_Exp_Cost\tNoVote_Exp_Cost\t");
+		writer.print("DS_Opt_Cost\tMV_Opt_Cost\tNoVote_Opt_Cost\t");
+		writer.println("Correct_Category\tEval_Cost_MV_ML\tEval_Cost_DS_ML\tEval_Cost_MV_Soft\tEval_Cost_DS_Soft");
 		
 		for (String object_name : new TreeSet<String>(this.objects.keySet())) {
 			Datum d = this.objects.get(object_name);
 
-			//Double entropy = d.getEntropy();
-			//if (entropy < entropy_threshold)
-			//	continue;
-
-			sb.append(object_name + "\t");
+			writer.print(object_name + "\t");
 			for (String c : this.categories.keySet()) {
-				sb.append(Utils.round(d.getCategoryProbability(c), 3) + "\t");
+				writer.print(Utils.round(d.getCategoryProbability(c), 3) + "\t");
 			}
-			sb.append(d.getMostLikelyCategory() + "\t");
+			writer.print(d.getMostLikelyCategory() + "\t");
 			for (String c : this.categories.keySet()) {
-				sb.append(Utils.round(d.getMVCategoryProbability(c), 3) + "\t");
+				writer.print(Utils.round(d.getMVCategoryProbability(c), 3) + "\t");
 			}
-			sb.append(d.getMostLikelyCategory_MV() + "\t");
+			writer.print(d.getMostLikelyCategory_MV() + "\t");
 			
-			sb.append(Utils.round(d.getExpectedCost(categories), 3) + "\t");
-			sb.append(Utils.round(d.getExpectedMVCost(categories), 3) + "\t");
-			sb.append(Utils.round(Helper.getSpammerCost(categories),3) + "\t");
+			writer.print(Utils.round(d.getExpectedCost(categories), 3) + "\t");
+			writer.print(Utils.round(d.getExpectedMVCost(categories), 3) + "\t");
+			writer.print(Utils.round(Helper.getSpammerCost(categories),3) + "\t");
 			
-			sb.append(Utils.round(d.getMinCost(categories), 3) + "\t");
-			sb.append(Utils.round(d.getMinMVCost(categories), 3) + "\t");
-			sb.append(Utils.round(Helper.getMinSpammerCost(categories), 3) + "\t");
+			writer.print(Utils.round(d.getMinCost(categories), 3) + "\t");
+			writer.print(Utils.round(d.getMinMVCost(categories), 3) + "\t");
+			writer.print(Utils.round(Helper.getMinSpammerCost(categories), 3) + "\t");
 			
 			if (d.isEvaluation()) {
-				sb.append(d.getEvaluationCategory() + "\t");
-				sb.append(Utils.round(d.getEvalClassificationCost(Datum.MV_ML, categories), 3) + "\t");
-				sb.append(Utils.round(d.getEvalClassificationCost(Datum.DS_ML, categories), 3) + "\t");
-				sb.append(Utils.round(d.getEvalClassificationCost(Datum.MV_Soft, categories), 3) + "\t");
-				sb.append(Utils.round(d.getEvalClassificationCost(Datum.DS_Soft, categories), 3) + "\n");
+				writer.print(d.getEvaluationCategory() + "\t");
+				writer.print(Utils.round(d.getEvalClassificationCost(Datum.MV_ML, categories), 3) + "\t");
+				writer.print(Utils.round(d.getEvalClassificationCost(Datum.DS_ML, categories), 3) + "\t");
+				writer.print(Utils.round(d.getEvalClassificationCost(Datum.MV_Soft, categories), 3) + "\t");
+				writer.print(Utils.round(d.getEvalClassificationCost(Datum.DS_Soft, categories), 3));
 			} else {
-				sb.append("---\t---\t---\t---\t---\n");
+				writer.print("---\t---\t---\t---\t---");
 			}
+			
+			writer.println();
 		}
-
-		return sb.toString();
-
 	}
 
-	public String printPriors() {
-
-		StringBuffer sb = new StringBuffer();
+	public void printPriors(PrintWriter writer) {
 		for (Category c : this.categories.values()) {
-			sb.append("Prior[" + c.getName() + "]=" + c.getPrior() + "\n");
+			writer.println("Prior[" + c.getName() + "]=" + c.getPrior());
 		}
-		return sb.toString();
 	}
 
 	public String printVote() {

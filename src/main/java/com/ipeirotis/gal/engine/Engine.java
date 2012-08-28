@@ -15,9 +15,18 @@
  ******************************************************************************/
 package com.ipeirotis.gal.engine;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.ipeirotis.gal.engine.rpt.CategoryPriorsReport;
+import com.ipeirotis.gal.engine.rpt.ObjectResultReport;
+import com.ipeirotis.gal.engine.rpt.Report;
+import com.ipeirotis.gal.engine.rpt.ReportingContext;
+import com.ipeirotis.gal.engine.rpt.SummaryReport;
+import com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
 import com.ipeirotis.gal.scripts.AssignedLabel;
 import com.ipeirotis.gal.scripts.Category;
 import com.ipeirotis.gal.scripts.CorrectLabel;
@@ -40,8 +49,19 @@ public class Engine {
 
 	private EngineContext ctx;
 
+	private ReportingContext rptCtx;
+
+	private Set<Report> reports = new LinkedHashSet<Report>();
+
 	public Engine(EngineContext ctx) {
 		this.ctx = ctx;
+		this.rptCtx = new ReportingContext(this);
+		this.reports.addAll(Arrays.asList(new WorkerQualityReport(),
+				new ObjectResultReport()));
+	}
+	
+	public EngineContext getEngineContext() {
+		return ctx;
 	}
 
 	public Set<Category> getCategories() {
@@ -149,189 +169,73 @@ public class Engine {
 		// We compute the evaluation-based confusion matrix for the workers
 		getDs().evaluateWorkers();
 
-		//ds.estimate(1);
-		//HashMap<String, String> prior_voting = saveMajorityVote(verbose, ds);
-
 		println("");
 		println("Running the Dawid&Skene algorithm");
 		for (int i = 0; i < ctx.getNumIterations(); i++) {
 			println("Iteration: %d", i);
-			// ds.estimate(iterations);
 			getDs().estimate(1);
 		}
 		println("Done\n");
 
+		if (ctx.hasEvaluateResultsAgainstFile()) {
+			rptCtx.setExpectedEvaluation(loadGoldLabels(ctx
+					.getEvaluateResultsAgainstFile()));
+		}
+
 		if (!ctx.isDryRun()) {
-			saveWorkerQuality(getDs());
-
-			saveObjectResults(getDs());
-
-			saveCategoryPriors(getDs());
+			reports.add(new CategoryPriorsReport());
 		}
-
-		//HashMap<String, String> posterior_voting = saveDawidSkeneVote(verbose, ds);
-
-		//saveDifferences(verbose, ds, prior_voting, posterior_voting);
+		
+		reports.add(new SummaryReport());
+		
+		try {
+			for (Report report : reports) {
+				report.execute(rptCtx);
+			}
+		} catch (IOException exc) {
+			throw new RuntimeException(exc);
+		}
 	}
-
-
-	/*
-	private static void saveDifferences(boolean verbose, DawidSkene ds, HashMap<String, String> prior_voting,
-			HashMap<String, String> posterior_voting) {
-
-		println("");
-		System.out
-				.println("Computing the differences between naive majority vote and Dawid&Skene (see also file results/differences-with-majority-vote.txt)");
-		String differences = ds.printDiffVote(prior_voting, posterior_voting);
-		if (verbose) {
-			println("=======DIFFERENCES WITH MAJORITY VOTE========");
-			println(differences);
-			println("=============================================");
-		}
-		Utils.writeFile(differences, "results/differences-with-majority-vote.txt");
-	}
-	*/
-
-	/**
-	 * @param verbose
-	 * @param ds
-	 * @return
-	 */
-	/*
-	private static HashMap<String, String> saveDawidSkeneVote(boolean verbose, DawidSkene ds) {
-
-		// Save the vote after the D&S estimation
-		println("");
-		println("Estimating the Dawid & Skene object labels (see also file results/dawid-skene-results.txt)");
-		HashMap<String, String> posterior_voting = ds.getMajorityVote();
-		String dawidskene = ds.printVote();
-		if (verbose) {
-			println("=======DAWID&SKENE RESULTS========");
-			println(dawidskene);
-			println("==================================");
-		}
-		Utils.writeFile(dawidskene, "results/dawid-skene-results.txt");
-		return posterior_voting;
-	}
-	*/
-
-	/**
-	 * @param ds
-	 */
-	private void saveCategoryPriors(DawidSkene ds) {
-
-		// Save the probability that an object belongs to each class
-		println("");
-		println("Printing prior probabilities (see also file results/priors.txt)");
-		String priors = ds.printPriors();
-		if (ctx.isVerbose()) {
-			println("=======PRIOR PROBABILITIES========");
-			println(priors);
-			println("==================================");
-		}
-		Utils.writeFile(priors, "results/priors.txt");
-	}
-
-	/**
-	 * @param ds
-	 */
-	private void saveObjectResults(DawidSkene ds) {
-
-		// Save the probability that an object belongs to each class
-		println("");
-		println("Printing category probabilities for objects (see also file results/object-probabilities.txt)");
-		String objectProbs = ds.printObjectClassProbabilities();
-		if (ctx.isVerbose()) {
-			println("=======CATEGORY PROBABILITIES========");
-			println(objectProbs);
-			println("=====================================");
-		}
-		Utils.writeFile(objectProbs, "results/object-probabilities.txt");
-	}
-
-	/**
-	 * @param ds
-	 */
-	private void saveWorkerQuality(DawidSkene ds) {
-
-		// Save the estimated quality characteristics for each worker
-		println("");
-		print("Estimating worker quality");
-		System.out
-				.println(" (see also file results/worker-statistics-summary.txt and results/worker-statistics-detailed.txt)");
-		boolean detailed = false;
-		String summary_report = ds.printAllWorkerScores(detailed);
-		detailed = true;
-		String detailed_report = ds.printAllWorkerScores(detailed);
-		if (ctx.isVerbose()) {
-			println("=======WORKER QUALITY STATISTICS=======");
-			println(summary_report);
-			println("=======================================");
-		}
-		Utils.writeFile(summary_report, "results/worker-statistics-summary.txt");
-		Utils.writeFile(detailed_report, "results/worker-statistics-detailed.txt");
-	}
-
-	/**
-	 * @param verbose
-	 * @param ds
-	 * @return
-	 */
-	/*
-	private static HashMap<String, String> saveMajorityVote(boolean verbose, DawidSkene ds) {
-
-		// Save the majority vote before the D&S estimation
-		println("");
-		println("Estimating the naive majority vote (see also file results/naive-majority-vote.txt)");
-		HashMap<String, String> prior_voting = ds.getMajorityVote();
-		String majority = ds.printVote();
-		if (verbose) {
-			println("=======NAIVE MAJORITY VOTE========");
-			println(majority);
-			println("==================================");
-		}
-		Utils.writeFile(majority, "results/naive-majority-vote.txt");
-		return prior_voting;
-	}*/
 
 	/**
 	 * @param correctfile
 	 * @return
 	 */
 	private Set<CorrectLabel> loadGoldLabels(String correctfile) {
-
 		// We load the "gold" cases (if any)
 		println("");
 		println("Loading file with correct labels. ");
 		String[] lines_correct = Utils.getFile(correctfile).split("\n");
 		println("File contained %d entries.", lines_correct.length);
-		Set<CorrectLabel> correct = getCorrectLabels(lines_correct);
+		Set<CorrectLabel> correct = loadCorrectLabels(lines_correct);
 		return correct;
 	}
 
-    /**
-     * @param evalfile
-     * @return
-     */
-    private Set<CorrectLabel> loadEvaluationLabels(String evalfile) {
+	/**
+	 * @param evalfile
+	 * @return
+	 */
+	private Set<CorrectLabel> loadEvaluationLabels(String evalfile) {
 
-        // We load the "gold" cases (if any)
-        println("");
-        println("Loading file with evaluation labels. ");
-        String[] lines_correct = Utils.getFile(evalfile).split("\n");
-        println("File contained %d entries.", lines_correct.length);
-        Set<CorrectLabel> correct = getEvaluationLabels(lines_correct);
-        return correct;
-    }
+		// We load the "gold" cases (if any)
+		println("");
+		println("Loading file with evaluation labels. ");
+		String[] lines_correct = Utils.getFile(evalfile).split("\n");
+		println("File contained %d entries.", lines_correct.length);
+		Set<CorrectLabel> correct = loadEvaluationLabels(lines_correct);
+		return correct;
+	}
 
-	public Set<AssignedLabel> getAssignedLabels(String[] lines) {
+	public Set<AssignedLabel> loadAssignedLabels(String[] lines) {
 
 		Set<AssignedLabel> labels = new HashSet<AssignedLabel>();
 		int cnt = 1;
 		for (String line : lines) {
 			String[] entries = line.split("\t");
 			if (entries.length != 3) {
-				throw new IllegalArgumentException("Error while loading from assigned labels file (line #" + cnt + "): " + line);
+				throw new IllegalArgumentException(
+						"Error while loading from assigned labels file (line #"
+								+ cnt + "): " + line);
 			}
 			cnt++;
 
@@ -339,13 +243,14 @@ public class Engine {
 			String objectname = entries[1];
 			String categoryname = entries[2];
 
-			AssignedLabel al = new AssignedLabel(workername, objectname, categoryname);
+			AssignedLabel al = new AssignedLabel(workername, objectname,
+					categoryname);
 			labels.add(al);
 		}
 		return labels;
 	}
 
-	public Set<Category> getCategories(String[] lines) {
+	public Set<Category> loadCategories(String[] lines) {
 
 		Set<Category> categories = new HashSet<Category>();
 		for (String line : lines) {
@@ -367,14 +272,16 @@ public class Engine {
 		return categories;
 	}
 
-	public Set<MisclassificationCost> getClassificationCost(String[] lines) {
+	public Set<MisclassificationCost> loadClassificationCost(String[] lines) {
 
 		Set<MisclassificationCost> labels = new HashSet<MisclassificationCost>();
 		int cnt = 1;
 		for (String line : lines) {
 			String[] entries = line.split("\t");
 			if (entries.length != 3) {
-				throw new IllegalArgumentException("Error while loading from assigned labels file (line " + cnt + "):" + line);
+				throw new IllegalArgumentException(
+						"Error while loading from assigned labels file (line "
+								+ cnt + "):" + line);
 			}
 			cnt++;
 
@@ -382,20 +289,23 @@ public class Engine {
 			String to = entries[1];
 			Double cost = Double.parseDouble(entries[2]);
 
-			MisclassificationCost mcc = new MisclassificationCost(from, to, cost);
+			MisclassificationCost mcc = new MisclassificationCost(from, to,
+					cost);
 			labels.add(mcc);
 		}
 		return labels;
 	}
 
-	public Set<CorrectLabel> getCorrectLabels(String[] lines) {
+	public Set<CorrectLabel> loadCorrectLabels(String[] lines) {
 
 		Set<CorrectLabel> labels = new HashSet<CorrectLabel>();
 		int cnt = 1;
 		for (String line : lines) {
 			String[] entries = line.split("\t");
 			if (entries.length != 2) {
-				throw new IllegalArgumentException("Error while loading from correct labels file (line " + cnt + "):" + line);
+				throw new IllegalArgumentException(
+						"Error while loading from correct labels file (line "
+								+ cnt + "):" + line);
 			}
 			cnt++;
 
@@ -408,24 +318,24 @@ public class Engine {
 		return labels;
 	}
 
-    public Set<CorrectLabel> getEvaluationLabels(String[] lines) {
+	public Set<CorrectLabel> loadEvaluationLabels(String[] lines) {
 
-        Set<CorrectLabel> labels = new HashSet<CorrectLabel>();
-        for (String line : lines) {
-            String[] entries = line.split("\t");
-            if (entries.length != 2) {
-                // evaluation file is optional
-                break;
-            }
+		Set<CorrectLabel> labels = new HashSet<CorrectLabel>();
+		for (String line : lines) {
+			String[] entries = line.split("\t");
+			if (entries.length != 2) {
+				// evaluation file is optional
+				break;
+			}
 
-            String objectname = entries[0];
-            String categoryname = entries[1];
+			String objectname = entries[0];
+			String categoryname = entries[1];
 
-            CorrectLabel cl = new CorrectLabel(objectname, categoryname);
-            labels.add(cl);
-        }
-        return labels;
-    }
+			CorrectLabel cl = new CorrectLabel(objectname, categoryname);
+			labels.add(cl);
+		}
+		return labels;
+	}
 
 	/**
 	 * @param inputfile
@@ -438,7 +348,7 @@ public class Engine {
 		println("Loading file with assigned labels. ");
 		String[] lines_input = Utils.getFile(inputfile).split("\n");
 		println("File contains " + lines_input.length + " entries.");
-		Set<AssignedLabel> labels = getAssignedLabels(lines_input);
+		Set<AssignedLabel> labels = loadAssignedLabels(lines_input);
 		return labels;
 	}
 
@@ -450,13 +360,14 @@ public class Engine {
 
 		// We load the cost file. The file should have exactly n^2 lines
 		// where n is the number of categories.
-		// TODO: Later, we can also allow an empty file, and assume a default 0/1 loss function.
+		// TODO: Later, we can also allow an empty file, and assume a default
+		// 0/1 loss function.
 		println("");
 		println("Loading cost file.");
 		String[] lines_cost = Utils.getFile(costfile).split("\n");
 		// assert (lines_cost.length == categories.size() * categories.size());
 		println("File contains " + lines_cost.length + " entries.");
-		Set<MisclassificationCost> costs = getClassificationCost(lines_cost);
+		Set<MisclassificationCost> costs = loadClassificationCost(lines_cost);
 		return costs;
 	}
 
@@ -469,7 +380,7 @@ public class Engine {
 		println("Loading categories file.");
 		String[] lines_categories = Utils.getFile(categoriesfile).split("\n");
 		println("File contains " + lines_categories.length + " categories.");
-		Set<Category> categories = getCategories(lines_categories);
+		Set<Category> categories = loadCategories(lines_categories);
 		return categories;
 	}
 
@@ -478,7 +389,7 @@ public class Engine {
 	}
 
 	public void print(String mask, Object... args) {
-		if (! ctx.isVerbose())
+		if (!ctx.isVerbose())
 			return;
 
 		String message;

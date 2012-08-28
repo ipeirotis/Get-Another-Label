@@ -20,7 +20,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import org.kohsuke.args4j.Option;
 
 public class EngineContext {
-	@Option(name="--categories", metaVar="<categoriesfile>", required=true, usage="The <categoriesfile> can also be used to define the prior values for the different categories, instead of letting the priors be defined by the data. In that case, it becomes a tab-separated file and each line has the form <category><tab><prior>")
+	@Option(name = "--categories", metaVar = "<categoriesfile>", required = true, usage = "The <categoriesfile> can also be used to define the prior values for the different categories, instead of letting the priors be defined by the data. In that case, it becomes a tab-separated file and each line has the form <category><tab><prior>")
 	String categoriesFile = "";
 
 	public String getCategoriesFile() {
@@ -31,7 +31,7 @@ public class EngineContext {
 		this.categoriesFile = categoriesfile;
 	}
 
-	@Option(name="--input", metaVar="<inputfile>", required=true, usage="A tab-separated text file. Each line has the form <workerid><tab><objectid><tab><assigned_label> and records the label that the given worker gave to that object")
+	@Option(name = "--input", metaVar = "<inputfile>", required = true, usage = "A tab-separated text file. Each line has the form <workerid><tab><objectid><tab><assigned_label> and records the label that the given worker gave to that object")
 	String inputFile = "";
 
 	public String getInputFile() {
@@ -42,13 +42,13 @@ public class EngineContext {
 		this.inputFile = inputfile;
 	}
 
-	@Option(name="--correct", metaVar="<correctfile>", usage="A tab-separated text file. Each line has the form <objectid><tab><assigned_label> and records the correct labels for whatever objects we have them.")
+	@Option(name = "--correct", metaVar = "<correctfile>", usage = "A tab-separated text file. Each line has the form <objectid><tab><assigned_label> and records the correct labels for whatever objects we have them.")
 	String correctFile;
 
 	public String getCorrectFile() {
 		return correctFile;
 	}
-	
+
 	public boolean hasCorrectFile() {
 		return isNotBlank(correctFile);
 	}
@@ -57,13 +57,13 @@ public class EngineContext {
 		this.correctFile = correctfile;
 	}
 
-	@Option(name="--cost", metaVar="<costfile>", usage="A tab-separated text file. Each line has the form <from_class><tab><to_class><tab><classification_cost> and records the classification cost of classifying an object thatbelongs to the `from_class` into the `to_class`.")
+	@Option(name = "--cost", metaVar = "<costfile>", usage = "A tab-separated text file. Each line has the form <from_class><tab><to_class><tab><classification_cost> and records the classification cost of classifying an object thatbelongs to the `from_class` into the `to_class`.")
 	String costFile;
 
 	public String getCostFile() {
 		return costFile;
 	}
-	
+
 	public boolean hasCosts() {
 		return isNotBlank(costFile);
 	}
@@ -72,13 +72,13 @@ public class EngineContext {
 		this.costFile = costfile;
 	}
 
-	@Option(name="--eval", metaVar="<evaluationfile>", usage="Evaluation File (TBD)")
+	@Option(name = "--eval", metaVar = "<evaluationfile>", usage = "Evaluation File (TBD)")
 	String evaluationFile;
 
 	public String getEvaluationFile() {
 		return evaluationFile;
 	}
-	
+
 	public boolean hasEvaluations() {
 		return isNotBlank(evaluationFile);
 	}
@@ -87,7 +87,7 @@ public class EngineContext {
 		this.evaluationFile = evaluationfile;
 	}
 
-	@Option(name="--iterations", usage="is the number of times to run the algorithm. Even a value of 10 (the default) less often works well.", metaVar="<num-iterations>")
+	@Option(name = "--iterations", usage = "is the number of times to run the algorithm. Even a value of 10 (the default) less often works well.", metaVar = "<num-iterations>")
 	int numIterations = 10;
 
 	public int getNumIterations() {
@@ -98,7 +98,7 @@ public class EngineContext {
 		this.numIterations = iterations;
 	}
 
-	@Option(name="--verbose", usage="Verbose Mode?")
+	@Option(name = "--verbose", usage = "Verbose Mode?")
 	boolean verbose = false;
 
 	public boolean isVerbose() {
@@ -108,8 +108,8 @@ public class EngineContext {
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
-	
-	@Option(name="--dry-run", usage="Dry Run (run, but not save results?)")
+
+	@Option(name = "--dry-run", usage = "Dry Run (run, but not save results?)")
 	boolean dryRun = false;
 
 	public boolean isDryRun() {
@@ -118,5 +118,20 @@ public class EngineContext {
 
 	public void setDryRun(boolean dryRun) {
 		this.dryRun = dryRun;
+	}
+
+	@Option(name = "--evaluate-results-against", metaVar = "<era-file>", usage = "File with the correct labels for the objects. Used to evaluate the outcome of the algorithm. (In constract to the gold-data file, these labels are never used by the algorithm during the estimation process.)")
+	String evaluateResultsAgainstFile;
+
+	public String getEvaluateResultsAgainstFile() {
+		return evaluateResultsAgainstFile;
+	}
+
+	public boolean hasEvaluateResultsAgainstFile() {
+		return isNotBlank(getEvaluateResultsAgainstFile());
+	}
+
+	public void setEvaluateResultsAgainstFile(String evaluateResultsAgainstFile) {
+		this.evaluateResultsAgainstFile = evaluateResultsAgainstFile;
 	}
 }
