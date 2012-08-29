@@ -1,9 +1,7 @@
 package com.ipeirotis.gal.engine.rpt;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -42,24 +40,22 @@ public class SummaryReport extends Report {
 		return super.execute(ctx);
 	}
 
-	public Collection<Accumulator> getObjectAverages(ReportingContext ctx) {
+	public Collection<Accumulator> getObjectAverages(ReportingContext ctx) throws IOException {
 		Averages averages = new Averages();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//
+//		ctx.getDawidSkene().printObjectClassProbabilities(
+//				new PrintWriter(baos, true));
 
-		ctx.getDawidSkene().printObjectClassProbabilities(
-				new PrintWriter(baos, true));
-
-		return averages.generateFrom(new ByteArrayInputStream(baos
-				.toByteArray()));
+		return averages.generateFrom(new FileInputStream("results/object-probabilities.txt"));
 	}
 
-	public Collection<Accumulator> getWorkerAverages(ReportingContext ctx) {
+	public Collection<Accumulator> getWorkerAverages(ReportingContext ctx) throws IOException {
 		Averages averages = new Averages();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//
+//		ctx.getDawidSkene().printAllWorkerScores(new PrintWriter(baos, true), false);
 
-		ctx.getDawidSkene().printAllWorkerScores(new PrintWriter(baos, true), false);
-
-		return averages.generateFrom(new ByteArrayInputStream(baos
-				.toByteArray()));
+		return averages.generateFrom(new FileInputStream("results/worker-statistics-summary.txt"));
 	}
 }
