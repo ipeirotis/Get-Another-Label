@@ -32,7 +32,7 @@ public class SummaryReport extends Report {
 					.getEngine().getLabels().size());
 
 			for (Accumulator a : accumulators) {
-				reportTarget.println("Average[%s]: %s", a.name,
+				reportTarget.println("Average Value for %s: %s", a.name,
 						a.getFormattedAverage());
 			}
 
