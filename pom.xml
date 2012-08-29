@@ -181,7 +181,7 @@
 							</binFileExtensions>
 							<programs>
 								<program>
-									<mainClass>com.ipeirotis.gal.scripts.Main</mainClass>
+									<mainClass>com.ipeirotis.gal.Main</mainClass>
 									<name>get-another-label</name>
 								</program>
 							</programs>
