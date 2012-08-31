@@ -15,14 +15,18 @@
  ******************************************************************************/
 package com.ipeirotis.gal.scripts;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import com.ipeirotis.gal.engine.metrics.MeasureUnit;
+import com.ipeirotis.gal.engine.metrics.MeasureUnits;
+import com.ipeirotis.gal.engine.metrics.Measurements;
 import com.ipeirotis.utils.Utils;
 
 public class Datum {
-
 	String									name;
 
 	// Defines if we have the correct category for this object
@@ -33,7 +37,7 @@ public class Datum {
 	String									evaluationCategory;
 
 	// The probability estimates for the object belonging to different categories
-	HashMap<String, Double>	categoryProbability;
+	Map<String, Double>	categoryProbability;
 
 	// The labels that have been assigned to this object, together with the workers who
 	// assigned these labels. Serves mainly as a speedup, and intended to be used in
@@ -45,14 +49,18 @@ public class Datum {
 	public static int MV_Soft = 2;
 	public static int DS_Soft = 3;
 	
+	Measurements measurements = new Measurements();
 
-
+	private DawidSkene ds;
+	
+	public Measurements getMeasurements() {
+		return measurements;
+	}
 
 	/**
 	 * @return the isGold
 	 */
 	public Boolean isGold() {
-
 		return isGold;
 	}
 
@@ -156,26 +164,26 @@ public class Datum {
 	 *   
 	 * @return 
 	 */
-	public Double getExpectedCost(HashMap<String, Category>	categories) {
+	public Double getExpectedCost(Map<String, Category>	categories) {
 
 		return Helper.getExpectedSoftLabelCost(this.categoryProbability, categories);
 		
 	}
 	
-	public Double getMinCost(HashMap<String, Category>	categories) {
+	public Double getMinCost(Map<String, Category>	categories) {
 
 		return Helper.getMinSoftLabelCost(this.categoryProbability, categories);
 		
 	}
 	
-	public Double getMinMVCost(HashMap<String, Category>	categories) {
+	public Double getMinMVCost(Map<String, Category>	categories) {
 
-		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		Map<String, Double> majorityVote = this.getMVCategoryProbability();
 		return Helper.getMinSoftLabelCost(majorityVote, categories);
 		
 	}
 	
-	public Double getEvalClassificationCost(int method, HashMap<String, Category>	categories) {
+	public Double getEvalClassificationCost(int method, Map<String, Category>	categories) {
 		
 		String from  = this.getEvaluationCategory();
 		if (method == Datum.DS_ML) {
@@ -183,7 +191,7 @@ public class Datum {
 			return categories.get(from).getCost(to);
 		} else if (method == Datum.DS_Soft) {
 			Double cost = 0.0;
-			HashMap<String, Double>	probabilities = this.getCategoryProbability();
+			Map<String, Double>	probabilities = this.getCategoryProbability();
 			for (String to : probabilities.keySet()) {
 				Double prob = probabilities.get(to);
 				Double misclassification_cost = categories.get(from).getCost(to);
@@ -195,7 +203,7 @@ public class Datum {
 			return categories.get(from).getCost(to);
 		} else if (method == Datum.MV_Soft) {
 			Double cost = 0.0;
-			HashMap<String, Double>	probabilities = this.getMVCategoryProbability();
+			Map<String, Double>	probabilities = this.getMVCategoryProbability();
 			for (String to : probabilities.keySet()) {
 				Double prob = probabilities.get(to);
 				Double misclassification_cost = categories.get(from).getCost(to);
@@ -215,14 +223,15 @@ public class Datum {
 	 *   
 	 * @return 
 	 */
-	public Double getExpectedMVCost(HashMap<String, Category>	categories) {
+	public Double getExpectedMVCost(Map<String, Category>	categories) {
 
-		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		Map<String, Double> majorityVote = this.getMVCategoryProbability();
 		return Helper.getExpectedSoftLabelCost(majorityVote, categories);
 		
 	}
 	
-	public Datum(String name, Set<Category> categories) {
+	public Datum(String name, DawidSkene ds) {
+		this.ds = ds;
 
 		this.name = name;
 		this.isGold = false;
@@ -231,9 +240,18 @@ public class Datum {
 
 		// We initialize the probabilities vector to be uniform across categories
 		this.categoryProbability = new HashMap<String, Double>();
-		for (Category c : categories) {
-			this.categoryProbability.put(c.getName(), 1.0 / categories.size());
+		
+		for (Category c : getCategories()) {
+			this.categoryProbability.put(c.getName(), 1.0 / ds.getCategories().size());
 		}
+	}
+	
+	private Map<String, Category> getCategoryMap() {
+		return ds.getCategories();
+	}
+
+	private Collection<Category> getCategories() {
+		return ds.getCategories().values();
 	}
 
 	public void addAssignedLabel(AssignedLabel al) {
@@ -278,7 +296,7 @@ public class Datum {
 		double maxProbability = -1;
 		String maxLikelihoodCategory = null;
 
-		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		Map<String, Double> majorityVote = this.getMVCategoryProbability();
 		for (String category : majorityVote.keySet()) {
 			Double probability = majorityVote.get(category);
 			if (probability > maxProbability) {
@@ -305,7 +323,7 @@ public class Datum {
 	/**
 	 * @return the categoryProbability
 	 */
-	public HashMap<String, Double> getCategoryProbability() {
+	public Map<String, Double> getCategoryProbability() {
 
 		return categoryProbability;
 	}
@@ -313,8 +331,8 @@ public class Datum {
 	/**
 	 * @return the categoryProbability
 	 */
-	public HashMap<String, Double> getMVCategoryProbability() {
-		HashMap<String, Double> result = new HashMap<String, Double>();
+	public Map<String, Double> getMVCategoryProbability() {
+		Map<String, Double> result = new HashMap<String, Double>();
 		
 		for (String c : this.categoryProbability.keySet()) {
 			result.put(c, 0d);
@@ -334,7 +352,7 @@ public class Datum {
 	 * @return the categoryProbability
 	 */
 	public Double getMVCategoryProbability(String category) {
-		HashMap<String, Double> majorityVote = this.getMVCategoryProbability();
+		Map<String, Double> majorityVote = this.getMVCategoryProbability();
 		return majorityVote.get(category);
 		
 	}
@@ -391,8 +409,40 @@ public class Datum {
 	 *          the name to set
 	 */
 	public void setName(String name) {
-
 		this.name = name;
+	}
+	
+	
+	void calculateMeasurements() {
+		for (Category c : getCategories()) {
+			String key = String.format("DS_Pr[%s]", c.getName());
+			String desc = String.format("DS estimate for prior probability of category [%s]", c.getName());
+			
+			MeasureUnit measureUnit = new MeasureUnit(key, desc);
+			
+			measurements.set(measureUnit, getCategoryProbability(c.getName()));
+
+			key = String.format("MV_Pr[%s]", c.getName());
+			desc = String.format("Majority Vote estimate for prior probability of category [%s]", c.getName());
+			
+			measureUnit = new MeasureUnit(key, desc);
+			
+			measurements.set(measureUnit, getMVCategoryProbability(c.getName()));
+		}
+		
+		measurements.set(MeasureUnits.DS_Exp_Cost, getExpectedCost(getCategoryMap()));
+		measurements.set(MeasureUnits.MV_Exp_Cost, getExpectedMVCost(getCategoryMap()));
+		measurements.set(MeasureUnits.NoVote_Exp_Cost, Helper.getSpammerCost(getCategoryMap()));
+		measurements.set(MeasureUnits.DS_Opt_Cost, getMinCost(getCategoryMap()));
+		measurements.set(MeasureUnits.MV_Opt_Cost, getMinMVCost(getCategoryMap()));
+		measurements.set(MeasureUnits.NoVote_Opt_Cost, Helper.getMinSpammerCost(getCategoryMap()));
+
+		if (isEvaluation()) {
+			measurements.set(MeasureUnits.Eval_Cost_MV_ML, getEvalClassificationCost(MV_ML, getCategoryMap()));
+			measurements.set(MeasureUnits.Eval_Cost_DS_ML, getEvalClassificationCost(DS_ML, getCategoryMap()));
+			measurements.set(MeasureUnits.Eval_Cost_MV_Soft, getEvalClassificationCost(MV_Soft, getCategoryMap()));
+			measurements.set(MeasureUnits.Eval_Cost_DS_Soft, getEvalClassificationCost(DS_Soft, getCategoryMap()));
+		}
 	}
 
 }

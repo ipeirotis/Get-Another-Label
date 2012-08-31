@@ -16,6 +16,7 @@
 package com.ipeirotis.gal.scripts;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class Helper {
@@ -27,7 +28,7 @@ public class Helper {
 	 * @param p
 	 * @return The expected cost of this soft label
 	 */
-	public static Double getExpectedSoftLabelCost(HashMap<String, Double> probabilities, HashMap<String, Category>	categories) {
+	public static Double getExpectedSoftLabelCost(Map<String, Double> probabilities, Map<String, Category>	categories) {
 
 		Double c = 0.0;
 		for (String c1 : probabilities.keySet()) {
@@ -49,7 +50,7 @@ public class Helper {
 	 * @param p
 	 * @return The classification cost of this soft label if we classify in the class that has the minimum exp cost.
 	 */
-	public static Double getMinSoftLabelCost(HashMap<String, Double> probabilities, HashMap<String, Category>	categories) {
+	public static Double getMinSoftLabelCost(Map<String, Double> probabilities, Map<String, Category>	categories) {
 
 		Double min_cost = Double.NaN;
 
@@ -76,7 +77,7 @@ public class Helper {
 		return min_cost;
 	}
 
-	public static String getMinCostLabel(HashMap<String, Double> softLabel, HashMap<String, Category>	categories) {
+	public static String getMinCostLabel(Map<String, Double> softLabel, Map<String, Category>	categories) {
 
 		String result = null;
 		Double min_cost = Double.MAX_VALUE;
@@ -111,9 +112,9 @@ public class Helper {
 	 * 
 	 * @return The expected cost of a spammer worker
 	 */
-	public static Double getMinSpammerCost(HashMap<String, Category>	categories) {
+	public static Double getMinSpammerCost(Map<String, Category>	categories) {
 
-		HashMap<String, Double> prior = new HashMap<String, Double>();
+		Map<String, Double> prior = new HashMap<String, Double>();
 		for (Category c : categories.values()) {
 			prior.put(c.getName(), c.getPrior());
 		}
@@ -127,9 +128,9 @@ public class Helper {
 	 * 
 	 * @return The expected cost of a spammer worker
 	 */
-	public static Double getSpammerCost(HashMap<String, Category>	categories) {
+	public static Double getSpammerCost(Map<String, Category>	categories) {
 
-		HashMap<String, Double> prior = new HashMap<String, Double>();
+		Map<String, Double> prior = new HashMap<String, Double>();
 		for (Category c : categories.values()) {
 			prior.put(c.getName(), c.getPrior());
 		}

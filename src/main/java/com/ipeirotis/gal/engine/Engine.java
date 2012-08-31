@@ -182,6 +182,10 @@ public class Engine {
 					.getEvaluateResultsAgainstFile()));
 		}
 
+		executeReports();
+	}
+
+	private void executeReports() {
 		if (!ctx.isDryRun()) {
 			reports.add(new CategoryPriorsReport());
 		}

@@ -74,11 +74,11 @@ public class DawidSkene {
 		if (this.objects.containsKey(objectName)) {
 			d = this.objects.get(objectName);
 		} else {
-			Set<Category> categories = new HashSet<Category>(this.categories.values());
-			d = new Datum(objectName, categories);
+			d = new Datum(objectName, this);
+			this.objects.put(objectName, d);
 		}
+		
 		d.addAssignedLabel(al);
-		this.objects.put(objectName, d);
 
 		// If we already have the worker, then just add the label
 		// in the set of labels assigned by the worker.
@@ -101,18 +101,15 @@ public class DawidSkene {
 		String objectName = cl.getObjectName();
 		String correctCategory = cl.getCorrectCategory();
 
-		Datum d;
-		if (this.objects.containsKey(objectName)) {
-			d = this.objects.get(objectName);
-			d.setGold(true);
-			d.setCorrectCategory(correctCategory);
-		} else {
-			Set<Category> categories = new HashSet<Category>(this.categories.values());
-			d = new Datum(objectName, categories);
-			d.setGold(true);
-			d.setCorrectCategory(correctCategory);
+		Datum d = objects.get(objectName);
+
+		if (null == d) {
+			d = new Datum(objectName, this);
+			this.objects.put(objectName, d);
 		}
-		this.objects.put(objectName, d);
+		
+		d.setGold(true);
+		d.setCorrectCategory(correctCategory);
 	}
 	
 	public void addEvaluationLabel(CorrectLabel cl) {
@@ -152,7 +149,6 @@ public class DawidSkene {
 	 * @param iterations
 	 */
 	public void estimate(int iterations) {
-
 		for (int i = 0; i < iterations; i++) {
 			updateObjectClassProbabilities();
 			updatePriors();
@@ -521,7 +517,6 @@ public class DawidSkene {
 	}
 
 	private void updateObjectClassProbabilities() {
-
 		for (String objectName : this.objects.keySet()) {
 			this.updateObjectClassProbabilities(objectName);
 		}
@@ -537,7 +532,8 @@ public class DawidSkene {
 			Double probability = probabilities.get(category);
 			d.setCategoryProbability(category, probability);
 		}
-		this.objects.put(objectName, d);
+		
+		d.calculateMeasurements();
 	}
 
 	/**
