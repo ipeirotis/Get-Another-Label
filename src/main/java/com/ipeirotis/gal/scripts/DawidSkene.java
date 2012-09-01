@@ -15,37 +15,55 @@
  ******************************************************************************/
 package com.ipeirotis.gal.scripts;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.ipeirotis.gal.core.Memoizing;
+import com.ipeirotis.gal.csv.CSVGenerator;
+import com.ipeirotis.gal.decorator.FieldAcessors;
+import com.ipeirotis.gal.decorator.FieldAcessors.FieldAcessor;
 import com.ipeirotis.utils.Utils;
 
-public class DawidSkene {
+@SuppressWarnings("serial")
+public class DawidSkene implements Memoizing {
 
-	private HashMap<String, Category>	categories;
+	private Map<String, Category>	categories;
 
 	private Boolean										fixedPriors;
 
-	private HashMap<String, Datum>		objects;
-	private HashMap<String, Worker>		workers;
+	private Map<String, Datum>		objects;
+	private Map<String, Worker>		workers;
+
+	private Collection<FieldAcessor<Datum>> fieldAcessors;
+	
+	public Collection<FieldAcessor<Datum>> getFieldAcessors() {
+		return fieldAcessors;
+	}
 
 	public DawidSkene(Set<Category> categories) {
-
+		// TODO: Changing those kinds of maps (between hash and tree) CHANGES BEHAVIOUR. Its a bug likely
 		this.objects = new HashMap<String, Datum>();
 		this.workers = new HashMap<String, Worker>();
 
 		this.fixedPriors = false;
 		this.categories = new HashMap<String, Category>();
+		
 		for (Category c : categories) {
 			this.categories.put(c.getName(), c);
 			if (c.hasPrior()) {
 				this.fixedPriors = true;
 			}
 		}
+		
+		fieldAcessors = FieldAcessors.DATUM_ACESSORS.getFieldAcessors(this);
+
 		// We initialize the priors to be uniform across classes
 		// if the user did not pass any information about the prior values
 		if (!fixedPriors)
@@ -55,7 +73,6 @@ public class DawidSkene {
 		// assuming a 0/1 loss function. The costs can be customized
 		// using the corresponding file
 		initializeCosts();
-
 	}
 
 	public void addAssignedLabel(AssignedLabel al) {
@@ -154,7 +171,9 @@ public class DawidSkene {
 			updatePriors();
 			updateWorkerConfusionMatrices();
 		}
-	}
+
+		fieldAcessors = FieldAcessors.DATUM_ACESSORS.getFieldAcessors(this);
+}
 
 	public HashMap<String, String> getMajorityVote() {
 
@@ -422,57 +441,12 @@ public class DawidSkene {
 	 * higher than the given threshold
 	 * 
 	 * @param writer PrintWriter to write into 
+	 * @throws IOException I/O Exception
 	 */
-	public void printObjectClassProbabilities(PrintWriter writer) {
-		writer.print("Object\t");
-		for (String c : this.categories.keySet()) {
-			writer.print("DS_Pr[" + c + "]\t");
-		}
-		writer.print("DS_Category\t");
-		for (String c : this.categories.keySet()) {
-			writer.print("MV_Pr[" + c + "]\t");
-		}
-		writer.print("MV_Category\t");
+	public void printObjectClassProbabilities(PrintWriter writer) throws IOException {
+		CSVGenerator<Datum> csvGenerator = new CSVGenerator<Datum>(fieldAcessors, this.objects.values());
 		
-		// TODO: Also print majority label and the min-cost label, pre-DS and post-DS
-		
-		writer.print("DS_Exp_Cost\tMV_Exp_Cost\tNoVote_Exp_Cost\t");
-		writer.print("DS_Opt_Cost\tMV_Opt_Cost\tNoVote_Opt_Cost\t");
-		writer.println("Correct_Category\tEval_Cost_MV_ML\tEval_Cost_DS_ML\tEval_Cost_MV_Soft\tEval_Cost_DS_Soft");
-		
-		for (String object_name : new TreeSet<String>(this.objects.keySet())) {
-			Datum d = this.objects.get(object_name);
-
-			writer.print(object_name + "\t");
-			for (String c : this.categories.keySet()) {
-				writer.print(Utils.round(d.getCategoryProbability(c), 3) + "\t");
-			}
-			writer.print(d.getMostLikelyCategory() + "\t");
-			for (String c : this.categories.keySet()) {
-				writer.print(Utils.round(d.getMVCategoryProbability(c), 3) + "\t");
-			}
-			writer.print(d.getMostLikelyCategory_MV() + "\t");
-			
-			writer.print(Utils.round(d.getExpectedCost(categories), 3) + "\t");
-			writer.print(Utils.round(d.getExpectedMVCost(categories), 3) + "\t");
-			writer.print(Utils.round(Helper.getSpammerCost(categories),3) + "\t");
-			
-			writer.print(Utils.round(d.getMinCost(categories), 3) + "\t");
-			writer.print(Utils.round(d.getMinMVCost(categories), 3) + "\t");
-			writer.print(Utils.round(Helper.getMinSpammerCost(categories), 3) + "\t");
-			
-			if (d.isEvaluation()) {
-				writer.print(d.getEvaluationCategory() + "\t");
-				writer.print(Utils.round(d.getEvalClassificationCost(Datum.MV_ML, categories), 3) + "\t");
-				writer.print(Utils.round(d.getEvalClassificationCost(Datum.DS_ML, categories), 3) + "\t");
-				writer.print(Utils.round(d.getEvalClassificationCost(Datum.MV_Soft, categories), 3) + "\t");
-				writer.print(Utils.round(d.getEvalClassificationCost(Datum.DS_Soft, categories), 3));
-			} else {
-				writer.print("---\t---\t---\t---\t---");
-			}
-			
-			writer.println();
-		}
+		csvGenerator.writeTo(writer);
 	}
 
 	public void printPriors(PrintWriter writer) {
@@ -523,7 +497,6 @@ public class DawidSkene {
 	}
 
 	private void updateObjectClassProbabilities(String objectName) {
-
 		Datum d = this.objects.get(objectName);
 		HashMap<String, Double> probabilities = getObjectClassProbabilities(objectName, null);
 		if (probabilities == null)
@@ -532,8 +505,6 @@ public class DawidSkene {
 			Double probability = probabilities.get(category);
 			d.setCategoryProbability(category, probability);
 		}
-		
-		d.calculateMeasurements();
 	}
 
 	/**
@@ -606,7 +577,7 @@ public class DawidSkene {
 
 	}
 
-    public HashMap<String, Category> getCategories() {
+    public Map<String, Category> getCategories() {
         return categories;
     }
 
@@ -614,11 +585,18 @@ public class DawidSkene {
         return fixedPriors;
     }
 
-    public HashMap<String, Datum> getObjects() {
+    public Map<String, Datum> getObjects() {
         return objects;
     }
 
-    public HashMap<String, Worker> getWorkers() {
+    public Map<String, Worker> getWorkers() {
         return workers;
     }
+
+	Map<String, Object> valueMap = new TreeMap<String, Object>();
+
+	@Override
+	public Map<String, Object> getValueMap() {
+		return valueMap;
+	}
 }

@@ -17,9 +17,14 @@ package com.ipeirotis.gal.scripts;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
-public class Worker {
+import com.ipeirotis.gal.core.Memoizing;
+
+@SuppressWarnings("serial")
+public class Worker implements Memoizing {
 
 	private String										name;
 
@@ -134,7 +139,7 @@ public class Worker {
 	 * @return The expected cost of the worker, normalized to be between 0 and
 	 *         1, where 1 is the cost of a "spam" worker
 	 */
-	public Double getWorkerCost(HashMap<String, Category>	categories, int method) {
+	public Double getWorkerCost(Map<String, Category>	categories, int method) {
 
 		assert (method == Worker.EXP_COST_EST || method == Worker.EXP_COST_EVAL 
 				|| method==Worker.MIN_COST_EST || method == Worker.MIN_COST_EVAL);
@@ -179,16 +184,16 @@ public class Worker {
 			String assignedCategory = assigned.getName();
 
 			if (method == Worker.EXP_COST_EVAL) {
-				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
+				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
 				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
 			} else if (method == Worker.MIN_COST_EVAL) {
-				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
+				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
 				cost += Helper.getMinSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
 			} else if (method == Worker.EXP_COST_EST) {
-				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
+				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
 				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
 			} else if (method == Worker.MIN_COST_EST) {
-				HashMap<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
+				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
 				cost += Helper.getMinSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
 			} else {
 				// We should never reach this
@@ -217,7 +222,7 @@ public class Worker {
 	}
 	
 	
-	public HashMap<String, Double> getSoftLabelForLabel(String label, HashMap<String, Category>	categories, boolean evaluation) {
+	public Map<String, Double> getSoftLabelForLabel(String label, Map<String, Category>	categories, boolean evaluation) {
 
 		// Pr(c | label) = Pr(label | c) * Pr (c) / Pr(label)
 
@@ -341,4 +346,10 @@ public class Worker {
 		return true;
 	}
 
+	Map<String, Object> valueMap = new TreeMap<String, Object>();
+
+	@Override
+	public Map<String, Object> getValueMap() {
+		return valueMap;
+	}
 }

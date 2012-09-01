@@ -1,9 +1,10 @@
 package com.ipeirotis.gal.engine.rpt;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+
+import com.ipeirotis.gal.decorator.FieldAcessors.EvalDatumFieldAcessor;
+import com.ipeirotis.gal.decorator.FieldAcessors.FieldAcessor;
+import com.ipeirotis.gal.scripts.Datum;
 
 public class SummaryReport extends Report {
 	@Override
@@ -13,11 +14,6 @@ public class SummaryReport extends Report {
 		ReportTarget[] reportTargets = new ReportTarget[] {
 				new StreamReportTarget(System.out),
 				new FileReportTarget("results/summary.txt") };
-
-		Collection<Accumulator> accumulators = new ArrayList<Accumulator>();
-		
-		accumulators.addAll(getObjectAverages(ctx));
-		accumulators.addAll(getWorkerAverages(ctx));
 
 		for (ReportTarget reportTarget : reportTargets) {
 			reportTarget.println("Categories: %s", ctx.getEngine()
@@ -29,9 +25,11 @@ public class SummaryReport extends Report {
 			reportTarget.println("Labels Assigned by Workers: %s", ctx
 					.getEngine().getLabels().size());
 
-			for (Accumulator a : accumulators) {
-				reportTarget.println("Average Value for %s: %s", a.name,
-						a.getFormattedAverage());
+			for (FieldAcessor<Datum> a : ctx.getDawidSkene().getFieldAcessors()) {
+				if (! a.isAveraged())
+					continue;
+				
+				reportTarget.println("[%s] Average %s: %s", a.getDesc(), a.getSummaryDescription(), getAverage(a, ctx.getDawidSkene().getObjects().values()));
 			}
 
 			reportTarget.close();
@@ -40,22 +38,28 @@ public class SummaryReport extends Report {
 		return super.execute(ctx);
 	}
 
-	public Collection<Accumulator> getObjectAverages(ReportingContext ctx) throws IOException {
-		Averages averages = new Averages();
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//
-//		ctx.getDawidSkene().printObjectClassProbabilities(
-//				new PrintWriter(baos, true));
-
-		return averages.generateFrom(new FileInputStream("results/object-probabilities.txt"));
-	}
-
-	public Collection<Accumulator> getWorkerAverages(ReportingContext ctx) throws IOException {
-		Averages averages = new Averages();
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//
-//		ctx.getDawidSkene().printAllWorkerScores(new PrintWriter(baos, true), false);
-
-		return averages.generateFrom(new FileInputStream("results/worker-statistics-summary.txt"));
+	public <T> Double getAverage(FieldAcessor<T> fieldAcessor, Iterable<T> objects) {
+		Double accumulator = 0d;
+		long count = 0;
+		boolean evalP = fieldAcessor instanceof EvalDatumFieldAcessor;
+		
+		for (T object : objects) {
+			if (evalP) {
+				Datum datum = ((Datum) object);
+				
+				if (! datum.isEvaluation())
+					continue;
+			}
+			
+			
+			Double total = (Double) fieldAcessor.getValue(object);
+			
+			accumulator += total;
+			count++;
+		}
+		
+		Double result = accumulator / count;
+		
+		return result;
 	}
 }
