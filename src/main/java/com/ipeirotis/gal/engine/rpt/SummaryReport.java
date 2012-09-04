@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.ipeirotis.gal.decorator.FieldAccessors.EvalDatumFieldAccessor;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.Worker;
 
 public class SummaryReport extends Report {
 	@Override
@@ -33,9 +32,10 @@ public class SummaryReport extends Report {
 				reportTarget.println("[%s] %s: %s", a.getDesc(), a.getSummaryDescription(), getAverage(a, ctx.getDawidSkene().getObjects().values()));
 			}
 			
+			/*
 			for (FieldAccessor a : ctx.getDawidSkene().getFieldAccessors(Worker.class)) {
 				
-			}
+			}*/
 
 			reportTarget.close();
 		}

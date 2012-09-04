@@ -80,12 +80,12 @@ public class FieldAccessors {
 		}
 	}
 
-	public static class DatumFieldAccessor extends DecoratorFieldAccessor {
-		public DatumFieldAccessor(String name, String desc) {
+	public static class EntityFieldAccessor extends DecoratorFieldAccessor {
+		public EntityFieldAccessor(String name, String desc) {
 			super(name, desc, DatumDecorator.class);
 		}
 
-		public DatumFieldAccessor withSummaryAveraged(String summaryDescription) {
+		public EntityFieldAccessor withSummaryAveraged(String summaryDescription) {
 			this.summaryDescription = summaryDescription;
 			this.averaged = true;
 
@@ -93,7 +93,7 @@ public class FieldAccessors {
 		}
 	}
 
-	public static class CategoryDatumFieldAccessor extends DatumFieldAccessor {
+	public static class CategoryDatumFieldAccessor extends EntityFieldAccessor {
 		private String c;
 
 		CategoryDatumFieldAccessor(String c) {
@@ -110,7 +110,7 @@ public class FieldAccessors {
 		}
 	}
 
-	public static class MVCategoryDatumFieldAccessor extends DatumFieldAccessor {
+	public static class MVCategoryDatumFieldAccessor extends EntityFieldAccessor {
 		private String c;
 
 		MVCategoryDatumFieldAccessor(String c) {
@@ -127,7 +127,7 @@ public class FieldAccessors {
 		}
 	}
 
-	public static class EvalDatumFieldAccessor extends DatumFieldAccessor {
+	public static class EvalDatumFieldAccessor extends EntityFieldAccessor {
 		public EvalDatumFieldAccessor(String name, String desc) {
 			super(name, desc);
 		}
@@ -155,93 +155,93 @@ public class FieldAccessors {
 
 	public static final class DATUM_ACCESSORS {
 		public static final//
-		DatumFieldAccessor NAME = new DatumFieldAccessor("name", "Object");
+		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Object");
 
 		public static final//
-		DatumFieldAccessor DS_CATEGORY = new DatumFieldAccessor(
+		EntityFieldAccessor DS_CATEGORY = new EntityFieldAccessor(
 				"mostLikelyCategory", "DS_Category");
 
 		public static final//
-		DatumFieldAccessor MV_CATEGORY = new DatumFieldAccessor(
+		EntityFieldAccessor MV_CATEGORY = new EntityFieldAccessor(
 				"mostLikelyCategory_MV", "MV_Category");//.withSummaryAveraged("Majorify Vote estimate for prior probability of category");
 
 		public static final//
-		DatumFieldAccessor DS_EXP_COST = new DatumFieldAccessor("expectedCost",
+		EntityFieldAccessor DS_EXP_COST = new EntityFieldAccessor("expectedCost",
 				"DS_Exp_Cost").withSummaryAveraged("Expected misclassification cost (for EM algorithm)");
 
 		public static final//
-		DatumFieldAccessor MV_EXP_COST = new DatumFieldAccessor("expectedMVCost",
+		EntityFieldAccessor MV_EXP_COST = new EntityFieldAccessor("expectedMVCost",
 				"MV_Exp_Cost").withSummaryAveraged("Expected misclassification cost (for Majority Voting algorithm)");
 
 		public static final//
-		DatumFieldAccessor NOVOTE_EXP_COST = new DatumFieldAccessor(
+		EntityFieldAccessor NOVOTE_EXP_COST = new EntityFieldAccessor(
 				"spammerCost", "NoVote_Opt_Cost").withSummaryAveraged("Expected misclassification cost (random classification)");
 
 		public static final//
-		DatumFieldAccessor DS_OPT_COST = new DatumFieldAccessor("minCost",
+		EntityFieldAccessor DS_OPT_COST = new EntityFieldAccessor("minCost",
 				"DS_Opt_Cost").withSummaryAveraged("Minimized misclassification cost (for EM algorithm)");
 
 		public static final//
-		DatumFieldAccessor MV_OPT_COST = new DatumFieldAccessor("minMVCost",
+		EntityFieldAccessor MV_OPT_COST = new EntityFieldAccessor("minMVCost",
 				"MV_Opt_Cost").withSummaryAveraged("Minimized misclassification cost (for Majority Voting algorithm)");
 
 		public static final//
-		DatumFieldAccessor NOVOTE_OPT_COST = new DatumFieldAccessor(
+		EntityFieldAccessor NOVOTE_OPT_COST = new EntityFieldAccessor(
 				"minSpammerCost", "NoVote_Opt_Cost").withSummaryAveraged("Minimized misclassification cost (random classification)");
 		
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		CORRECT_CATEGORY = new EvalDatumFieldAccessor("evaluationCategory",
 				"Correct_Category");
 
 		// Data Quality
 
 		public static final//
-		DatumFieldAccessor DATAQUALITY_DS = new DatumFieldAccessor(
+		EntityFieldAccessor DATAQUALITY_DS = new EntityFieldAccessor(
 				"dataQualityForDS", "DataQuality_DS").withSummaryAveraged("Data quality (estimated according to DS_Exp metric)");
 
 		public static final//
-		DatumFieldAccessor DATAQUALITY_MV = new DatumFieldAccessor(
+		EntityFieldAccessor DATAQUALITY_MV = new EntityFieldAccessor(
 				"dataQualityForMV", "DataQuality_MV").withSummaryAveraged("Data quality (estimated according to Mv_Exp metric)");
 
 		public static final//
-		DatumFieldAccessor DATAQUALITY_DS_OPT = new DatumFieldAccessor(
+		EntityFieldAccessor DATAQUALITY_DS_OPT = new EntityFieldAccessor(
 				"dataQualityForDSOpt", "DataQuality_DS_OPT").withSummaryAveraged("Data quality (estimated according to DS_Opt metric)");
 
 		public static final//
-		DatumFieldAccessor DATAQUALITY_MV_OPT = new DatumFieldAccessor(
+		EntityFieldAccessor DATAQUALITY_MV_OPT = new EntityFieldAccessor(
 				"dataQualityForMVOpt", "DataQuality_MV_OPT").withSummaryAveraged("Data quality (estimated according to MV_Opt metric)");
 		
 		// Eval
 		
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		EVAL_COST_MV_ML = new EvalDatumFieldAccessor(
 				"evalClassificationCostForMVML", "Eval_Cost_MV_ML").withSummaryAveraged("Classification cost for naïve single-class classification, using majority voting (evaluation data)");
 
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		EVAL_COST_DS_ML = new EvalDatumFieldAccessor(
 				"evalClassificationCostForDSML", "Eval_Cost_DS_ML").withSummaryAveraged("Classification cost for single-class classification, using EM (evaluation data)");
 
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
 				"evalClassificationCostForMVSoft", "Eval_Cost_MV_Soft").withSummaryAveraged("Classification cost for naïve soft-label classification (evaluation data)");
 
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		EVAL_COST_DS_SOFT = new EvalDatumFieldAccessor(
 				"evalClassificationCostForDSSoft", "Eval_Cost_DS_Soft").withSummaryAveraged("Classification cost for soft-label classification, using EM (evaluation data)");
 
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_DS_ML = new EvalDatumFieldAccessor(
 				"evalDataQualityForDSML", "DataQuality_Eval_Cost_DS_ML").withSummaryAveraged("Data quality, DS algorithm, maximum likelihood");
 
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_DS_SOFT = new EvalDatumFieldAccessor(
 				"evalDataQualityForDSSoft", "DataQuality_Eval_Cost_DS_Soft").withSummaryAveraged("Data quality, DS algorithm, soft label");
 		
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_MV_ML = new EvalDatumFieldAccessor(
 				"evalDataQualityForMVML", "DataQuality_Eval_Cost_MV_ML").withSummaryAveraged("Data quality, naive majority voting algorithm");
 
-		public static final DatumFieldAccessor//
+		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
 				"evalDataQualityForMVSoft", "DataQuality_Eval_Cost_MV_Soft").withSummaryAveraged("Data quality, naive soft label");
 
