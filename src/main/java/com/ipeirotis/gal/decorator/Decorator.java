@@ -5,14 +5,14 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.text.StrLookup;
 
 @SuppressWarnings("rawtypes")
-public class Decorator extends StrLookup {
+public class Decorator<E> extends StrLookup {
 	private BeanMap decoratorBeanMap;
 
 	private BeanMap wrappedBeanMap;
 
-	protected Object object;
+	protected E object;
 
-	public Decorator(Object wrapped) {
+	public Decorator(E wrapped) {
 		this.decoratorBeanMap = new BeanMap(this);
 		this.wrappedBeanMap = new BeanMap(wrapped);
 		this.object = wrapped;
