@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ipeirotis.gal.core.Entity;
-import com.ipeirotis.utils.Utils;
 
 @SuppressWarnings("serial")
 public class Datum implements Entity {
@@ -34,7 +33,7 @@ public class Datum implements Entity {
 
 	Boolean									isEvaluation = false;
 
-	String									correctCategory;
+	String									goldCategory;
 
 	String									evaluationCategory;
 
@@ -46,123 +45,20 @@ public class Datum implements Entity {
 	// environments with persistence and caching (especially memcache)
 	Set<AssignedLabel>			labels;
 	
-	public static int MV_ML = 0;
-	public static int DS_ML = 1;
-	public static int MV_Soft = 2;
-	public static int DS_Soft = 3;
+	public enum ClassificationMethod {
+		MV_MaxLikelihood, DS_MaxLikelihood, MV_Soft, DS_Soft, MV_MinCost, DS_MinCost;
+	 }
 	
 	private DawidSkene ds;
 	
-	public Boolean isGold() {
-		return isGold;
-	}
+	Map<String, Object> valueMap = new TreeMap<String, Object>();
 
-	public void setGold(Boolean isGold) {
-		this.isGold = isGold;
-	}
-
-	public String getCorrectCategory() {
-		return correctCategory;
-	}
-
-	public Boolean isEvaluation() {
-		return isEvaluation;
-	}
-
-	public void setEvaluation(Boolean isEvaluation) {
-		this.isEvaluation = isEvaluation;
-	}
-
-	public String getEvaluationCategory() {
-		return evaluationCategory;
-	}
-
-	public void setEvaluationCategory(String evaluationCategory) {
-		this.evaluationCategory = evaluationCategory;
-	}
-
-	public void setCorrectCategory(String correctCategory) {
-		this.correctCategory = correctCategory;
-	}
-
-	public Double getCategoryProbability(String c) {
-		if (this.isGold) {
-			if (c.equals(this.correctCategory)) {
-				return 1.0;
-			} else {
-				return 0.0;
-			}
-		}
-		return categoryProbability.get(c);
-	}
-
-	public void setCategoryProbability(String c, Double prob) {
-		categoryProbability.put(c, prob);
-	}
-
-	public Double getEntropy() {
-		double[] p = new double[this.categoryProbability.size()];
-
-		int i = 0;
-		for (String c : this.categoryProbability.keySet()) {
-			p[i] = getCategoryProbability(c);
-			i++;
-		}
-
-		return Utils.entropy(p);
-	}
-	
-	public Double getEvalClassificationCost(int method) {
-		String from  = this.getEvaluationCategory();
-		Category fromMap = ds.getCategories().get(from);
-		if (method == Datum.DS_ML) {
-			String to = this.getMostLikelyCategory();
-			return fromMap.getCost(to);
-		} else if (method == Datum.DS_Soft) {
-			Double cost = 0.0;
-			Map<String, Double>	probabilities = this.getCategoryProbability();
-			for (String to : probabilities.keySet()) {
-				Double prob = probabilities.get(to);
-				Double misclassification_cost = fromMap.getCost(to);
-				cost += prob * misclassification_cost;
-			}
-			return cost;
-		} else if (method == Datum.MV_ML) {
-			String to = this.getMostLikelyCategory_MV();
-			
-			return fromMap.getCost(to);
-		} else if (method == Datum.MV_Soft) {
-			Double cost = 0.0;
-			Map<String, Double>	probabilities = this.getMVCategoryProbability();
-			for (String to : probabilities.keySet()) {
-				Double prob = probabilities.get(to);
-				Double misclassification_cost = fromMap.getCost(to);
-				cost += prob * misclassification_cost;
-			}
-			return cost;
-		}
-		
-		return -1.0;
-	}
-	
-	/**
-	 * This class computes the expected cost of the example.
-	 * 
-	 * @param categories Each Category object contains the misclassification costs, so by passing this parameter, we allow the method to compute the expected misclassification cost of the object
-	 *   
-	 * @return 
-	 */
-	public Double getExpectedMVCost() {
-		Map<String, Double> majorityVote = this.getMVCategoryProbability();
-		return Helper.getExpectedSoftLabelCost(majorityVote, ds.getCategories());
-	}
-	
 	public Datum(String name, DawidSkene ds) {
 		this.ds = ds;
 
 		this.name = name;
 		this.isGold = false;
-		this.correctCategory = null;
+		this.goldCategory = null;
 		this.labels = new HashSet<AssignedLabel>();
 
 		// We initialize the probabilities vector to be uniform across categories
@@ -172,131 +68,11 @@ public class Datum implements Entity {
 			this.categoryProbability.put(c.getName(), 1.0 / ds.getCategories().size());
 		}
 	}
-	
-	public DawidSkene getDs() {
-		return ds;
-	}
-	
-	private Collection<Category> getCategories() {
-		return ds.getCategories().values();
-	}
 
 	public void addAssignedLabel(AssignedLabel al) {
 		if (al.getObjectName().equals(name)) {
 			this.labels.add(al);
 		}
-	}
-
-	public Set<AssignedLabel> getAssignedLabels() {
-
-		return this.labels;
-	}
-
-	public String getMostLikelyCategory() {
-
-		double maxProbability = -1;
-		String maxLikelihoodCategory = null;
-
-		for (String category : this.categoryProbability.keySet()) {
-			Double probability = this.categoryProbability.get(category);
-			if (probability > maxProbability) {
-				maxProbability = probability;
-				maxLikelihoodCategory = category;
-			} else if (probability == maxProbability) {
-				// In case of a tie, break ties randomly
-				// TODO: This is a corner case. We can also break ties
-				// using the priors. But then we also need to group together
-				// all the ties, and break ties probabilistically across the
-				// group. Otherwise, we slightly favor the later comparisons.
-				if (Math.random() > 0.5) {
-					maxProbability = probability;
-					maxLikelihoodCategory = category;
-				}
-			}
-		}
-		return maxLikelihoodCategory;
-	}
-	
-	public String getMostLikelyCategory_MV() {
-
-		double maxProbability = -1;
-		String maxLikelihoodCategory = null;
-
-		Map<String, Double> majorityVote = this.getMVCategoryProbability();
-		for (String category : majorityVote.keySet()) {
-			Double probability = majorityVote.get(category);
-			if (probability > maxProbability) {
-				maxProbability = probability;
-				maxLikelihoodCategory = category;
-			} else if (probability == maxProbability) {
-				// In case of a tie, break ties randomly
-				// TODO: This is a corner case. We can also break ties
-				// using the priors. But then we also need to group together
-				// all the ties, and break ties probabilistically across the
-				// group. Otherwise, we slightly favor the later comparisons.
-				if (Math.random() > 0.5) {
-					maxProbability = probability;
-					maxLikelihoodCategory = category;
-				}
-			}
-		}
-
-		return maxLikelihoodCategory;
-	}
-
-	
-
-	/**
-	 * @return the categoryProbability
-	 */
-	public Map<String, Double> getCategoryProbability() {
-
-		return categoryProbability;
-	}
-	
-	/**
-	 * @return the categoryProbability
-	 */
-	public Map<String, Double> getMVCategoryProbability() {
-		Map<String, Double> result = new HashMap<String, Double>();
-		
-		for (String c : this.categoryProbability.keySet()) {
-			result.put(c, 0d);
-		}
-		
-		int n = this.labels.size();		
-		for (AssignedLabel al : this.labels) {
-			String c = al.getCategoryName();
-			Double current = result.get(c);
-			result.put(c, current + 1.0/n);
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * @return the categoryProbability
-	 */
-	public Double getMVCategoryProbability(String category) {
-		Map<String, Double> majorityVote = this.getMVCategoryProbability();
-		return majorityVote.get(category);
-		
-	}
-
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
 	}
 
 	/*
@@ -321,11 +97,181 @@ public class Datum implements Entity {
 		return true;
 	}
 
+	public Set<AssignedLabel> getAssignedLabels() {
+
+		return this.labels;
+	}
+
+	private Collection<Category> getCategories() {
+		return ds.getCategories().values();
+	}
+
+	public String getGoldCategory() {
+		return goldCategory;
+	}
+
+	public DawidSkene getDs() {
+		return ds;
+	}
+
+	public Double getEvalClassificationCost(ClassificationMethod method) {
+
+		String from = this.getEvaluationCategory();
+		Map<String, Double>	dest_probabilities = getProbabilityVector(method);
+		
+		Category fromCostVector = ds.getCategories().get(from);
+		Double cost = 0.0;
+		
+		for (String to : dest_probabilities.keySet()) {
+			Double prob = dest_probabilities.get(to);
+			Double misclassification_cost = fromCostVector.getCost(to);
+			cost += prob * misclassification_cost;
+		}
+
+		return cost;
+	}
+	
+	public String getEvaluationCategory() {
+		return evaluationCategory;
+	}
+	
+	/**
+	 * This class computes the expected cost of the example.
+	 * 
+	 * @param categories Each Category object contains the misclassification costs, so by passing this parameter, we allow the method to compute the expected misclassification cost of the object
+	 *   
+	 * @return 
+	 */
+	public Double getExpectedMVCost() {
+		Map<String, Double> majorityVote = getProbabilityVector(ClassificationMethod.MV_Soft);
+		return Helper.getExpectedSoftLabelCost(majorityVote, ds.getCategories());
+	}
+	
+	/**
+	 * Returns a single class classification
+	 * 
+	 * @param classificationMethod
+	 * @return
+	 */
+	public String getSingleClassClassification(ClassificationMethod method) {
+		switch (method) { 
+			case DS_MaxLikelihood: 
+			case MV_MaxLikelihood: 
+				return Helper.getMaxLikelihoodLabel(getProbabilityVector(method) , ds.getCategories());
+			case DS_MinCost:
+			case MV_MinCost:
+				return Helper.getMinCostLabel(getProbabilityVector(method) , ds.getCategories());
+			default:
+			// TODO: Should we throw an Exception here? We should not pass any other method here
+				return null;
+				
+		}
+	}
+
+	public Map<String, Double> getProbabilityVector(ClassificationMethod method) {
+		Map<String, Double> result = new HashMap<String, Double>();
+		for (String c : this.categoryProbability.keySet()) {
+			result.put(c, 0.0);
+		}
+		
+		switch (method) { 
+			case DS_MaxLikelihood:
+			case MV_MaxLikelihood: 
+			case DS_MinCost:
+			case MV_MinCost:
+				result.put(getSingleClassClassification(method), 1.0);
+				break;
+			case DS_Soft: {
+				result = new HashMap<String, Double>(categoryProbability);
+				break;
+			}
+			case MV_Soft: {
+				int n = this.labels.size();		
+				for (AssignedLabel al : this.labels) {
+					String c = al.getCategoryName();
+					Double current = result.get(c);
+					result.put(c, current + 1.0/n);
+				}
+				break;
+			}
+				
+		}
+		
+		
+		return result;
+	}
+	
+	
+
+	/**
+	 * @return the categoryProbability
+	 */
+	public Double getCategoryProbability(ClassificationMethod method, String category) {
+		if (this.isGold) {
+			if (category.equals(this.goldCategory)) {
+				return 1.0;
+			} else {
+				return 0.0;
+			}
+		}
+		return getProbabilityVector(method).get(category);
+		
+	}
+
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public Map<String, Object> getValueMap() {
+		return valueMap;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+	
+	public Boolean isEvaluation() {
+		return isEvaluation;
+	}
+	
+	public Boolean isGold() {
+		return isGold;
+	}
+
+	
+	
+	public void setCategoryProbability(String c, Double prob) {
+		categoryProbability.put(c, prob);
+	}
+
+	public void setGoldCategory(String goldCategory) {
+		this.goldCategory = goldCategory;
+	}
+
+	public void setEvaluation(Boolean isEvaluation) {
+		this.isEvaluation = isEvaluation;
+	}
+
+	public void setEvaluationCategory(String evaluationCategory) {
+		this.evaluationCategory = evaluationCategory;
+	}
+	
+	public void setGold(Boolean isGold) {
+		this.isGold = isGold;
 	}
 
 	/**
