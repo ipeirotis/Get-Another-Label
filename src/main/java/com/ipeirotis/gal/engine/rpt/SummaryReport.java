@@ -2,8 +2,8 @@ package com.ipeirotis.gal.engine.rpt;
 
 import java.io.IOException;
 
-import com.ipeirotis.gal.decorator.FieldAcessors.EvalDatumFieldAcessor;
-import com.ipeirotis.gal.decorator.FieldAcessors.FieldAcessor;
+import com.ipeirotis.gal.decorator.FieldAccessors.EvalDatumFieldAccessor;
+import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.gal.scripts.Datum;
 
 public class SummaryReport extends Report {
@@ -25,7 +25,7 @@ public class SummaryReport extends Report {
 			reportTarget.println("Labels Assigned by Workers: %s", ctx
 					.getEngine().getLabels().size());
 
-			for (FieldAcessor<Datum> a : ctx.getDawidSkene().getFieldAcessors()) {
+			for (FieldAccessor<Datum> a : ctx.getDawidSkene().getFieldAcessors()) {
 				if (! a.isAveraged())
 					continue;
 				
@@ -38,10 +38,10 @@ public class SummaryReport extends Report {
 		return super.execute(ctx);
 	}
 
-	public <T> Double getAverage(FieldAcessor<T> fieldAcessor, Iterable<T> objects) {
+	public <T> Double getAverage(FieldAccessor<T> fieldAcessor, Iterable<T> objects) {
 		Double accumulator = 0d;
 		long count = 0;
-		boolean evalP = fieldAcessor instanceof EvalDatumFieldAcessor;
+		boolean evalP = fieldAcessor instanceof EvalDatumFieldAccessor;
 		
 		for (T object : objects) {
 			if (evalP) {

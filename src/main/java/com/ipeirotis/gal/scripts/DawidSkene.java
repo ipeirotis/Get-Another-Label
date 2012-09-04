@@ -27,8 +27,8 @@ import java.util.TreeSet;
 
 import com.ipeirotis.gal.core.Memoizing;
 import com.ipeirotis.gal.csv.CSVGenerator;
-import com.ipeirotis.gal.decorator.FieldAcessors;
-import com.ipeirotis.gal.decorator.FieldAcessors.FieldAcessor;
+import com.ipeirotis.gal.decorator.FieldAccessors;
+import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.utils.Utils;
 
 @SuppressWarnings("serial")
@@ -41,9 +41,9 @@ public class DawidSkene implements Memoizing {
 	private Map<String, Datum>		objects;
 	private Map<String, Worker>		workers;
 
-	private Collection<FieldAcessor<Datum>> fieldAcessors;
+	private Collection<FieldAccessor<Datum>> fieldAcessors;
 	
-	public Collection<FieldAcessor<Datum>> getFieldAcessors() {
+	public Collection<FieldAccessor<Datum>> getFieldAcessors() {
 		return fieldAcessors;
 	}
 
@@ -62,7 +62,7 @@ public class DawidSkene implements Memoizing {
 			}
 		}
 		
-		fieldAcessors = FieldAcessors.DATUM_ACESSORS.getFieldAcessors(this);
+		fieldAcessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
 
 		// We initialize the priors to be uniform across classes
 		// if the user did not pass any information about the prior values
@@ -172,7 +172,7 @@ public class DawidSkene implements Memoizing {
 			updateWorkerConfusionMatrices();
 		}
 
-		fieldAcessors = FieldAcessors.DATUM_ACESSORS.getFieldAcessors(this);
+		fieldAcessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
 }
 
 	public HashMap<String, String> getMajorityVote() {
