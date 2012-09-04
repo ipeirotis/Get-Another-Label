@@ -20,13 +20,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import com.ipeirotis.gal.core.Memoizing;
+import com.ipeirotis.gal.core.Entity;
 import com.ipeirotis.utils.Utils;
 
 @SuppressWarnings("serial")
-public class Datum implements Memoizing {
+public class Datum implements Entity {
 	String									name;
 
 	// Defines if we have the correct category for this object
@@ -335,44 +334,5 @@ public class Datum implements Memoizing {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-//	void calculateMeasurements() {
-//		for (Category c : getCategories()) {
-//			String key = String.format("DS_Pr[%s]", c.getName());
-//			String desc = String.format("DS estimate for prior probability of category [%s]", c.getName());
-//			
-//			MeasureUnit measureUnit = new MeasureUnit(key, desc);
-//			
-//			measurements.set(measureUnit, getCategoryProbability(c.getName()));
-//
-//			key = String.format("MV_Pr[%s]", c.getName());
-//			desc = String.format("Majority Vote estimate for prior probability of category [%s]", c.getName());
-//			
-//			measureUnit = new MeasureUnit(key, desc);
-//			
-//			measurements.set(measureUnit, getMVCategoryProbability(c.getName()));
-//		}
-//		
-//		measurements.set(MeasureUnits.DS_Exp_Cost, getExpectedCost());
-//		measurements.set(MeasureUnits.MV_Exp_Cost, getExpectedMVCost());
-//		measurements.set(MeasureUnits.NoVote_Exp_Cost, getSpammerCost());
-//		measurements.set(MeasureUnits.DS_Opt_Cost, getMinCost());
-//		measurements.set(MeasureUnits.MV_Opt_Cost, getMinMVCost());
-//		measurements.set(MeasureUnits.NoVote_Opt_Cost, getMinSpammerCost());
-//
-//		if (isEvaluation()) {
-//			measurements.set(MeasureUnits.Eval_Cost_MV_ML, getClassificationCostForMVML());
-//			measurements.set(MeasureUnits.Eval_Cost_DS_ML, getClassificationCostForDSML());
-//			measurements.set(MeasureUnits.Eval_Cost_MV_Soft, getClassificationCostForMVSoft());
-//			measurements.set(MeasureUnits.Eval_Cost_DS_Soft, getClassificationCostForDSSoft());
-//		}
-//	}
-	
-	Map<String, Object> valueMap = new TreeMap<String, Object>();
-
-	@Override
-	public Map<String, Object> getValueMap() {
-		return valueMap;
 	}
 }

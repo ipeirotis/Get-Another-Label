@@ -19,12 +19,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import com.ipeirotis.gal.core.Memoizing;
+import com.ipeirotis.gal.core.Entity;
 
 @SuppressWarnings("serial")
-public class Worker implements Memoizing {
+public class Worker implements Entity {
 
 	private String										name;
 
@@ -344,12 +343,5 @@ public class Worker implements Memoizing {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-
-	Map<String, Object> valueMap = new TreeMap<String, Object>();
-
-	@Override
-	public Map<String, Object> getValueMap() {
-		return valueMap;
 	}
 }

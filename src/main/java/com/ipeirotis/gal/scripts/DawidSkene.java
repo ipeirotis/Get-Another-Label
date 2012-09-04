@@ -22,17 +22,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
-import com.ipeirotis.gal.core.Memoizing;
 import com.ipeirotis.gal.csv.CSVGenerator;
 import com.ipeirotis.gal.decorator.FieldAccessors;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.utils.Utils;
 
-@SuppressWarnings("serial")
-public class DawidSkene implements Memoizing {
+public class DawidSkene {
 
 	private Map<String, Category>	categories;
 
@@ -41,10 +38,14 @@ public class DawidSkene implements Memoizing {
 	private Map<String, Datum>		objects;
 	private Map<String, Worker>		workers;
 
-	private Collection<FieldAccessor<Datum>> fieldAcessors;
+	private Collection<FieldAccessor> datumFieldAccessors;
 	
-	public Collection<FieldAccessor<Datum>> getFieldAcessors() {
-		return fieldAcessors;
+	public Collection<FieldAccessor> getFieldAccessors(Class<?> entityClass) {
+		if (Datum.class.isAssignableFrom(entityClass)) {
+			return datumFieldAccessors;
+		}
+		
+		return null;
 	}
 
 	public DawidSkene(Set<Category> categories) {
@@ -62,7 +63,7 @@ public class DawidSkene implements Memoizing {
 			}
 		}
 		
-		fieldAcessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
+		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
 
 		// We initialize the priors to be uniform across classes
 		// if the user did not pass any information about the prior values
@@ -172,7 +173,7 @@ public class DawidSkene implements Memoizing {
 			updateWorkerConfusionMatrices();
 		}
 
-		fieldAcessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
+		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
 }
 
 	public HashMap<String, String> getMajorityVote() {
@@ -444,7 +445,7 @@ public class DawidSkene implements Memoizing {
 	 * @throws IOException I/O Exception
 	 */
 	public void printObjectClassProbabilities(PrintWriter writer) throws IOException {
-		CSVGenerator<Datum> csvGenerator = new CSVGenerator<Datum>(fieldAcessors, this.objects.values());
+		CSVGenerator<Datum> csvGenerator = new CSVGenerator<Datum>(datumFieldAccessors, this.objects.values());
 		
 		csvGenerator.writeTo(writer);
 	}
@@ -592,11 +593,4 @@ public class DawidSkene implements Memoizing {
     public Map<String, Worker> getWorkers() {
         return workers;
     }
-
-	Map<String, Object> valueMap = new TreeMap<String, Object>();
-
-	@Override
-	public Map<String, Object> getValueMap() {
-		return valueMap;
-	}
 }

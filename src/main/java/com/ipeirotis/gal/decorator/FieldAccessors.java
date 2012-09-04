@@ -11,7 +11,7 @@ import com.ipeirotis.gal.scripts.DawidSkene;
 import com.ipeirotis.utils.Utils;
 
 public class FieldAccessors {
-	public static abstract class FieldAccessor<T> {
+	public static abstract class FieldAccessor {
 		String name;
 
 		public String getName() {
@@ -24,7 +24,7 @@ public class FieldAccessors {
 			return desc;
 		}
 
-		public abstract Object getValue(T wrapped);
+		public abstract Object getValue(Object wrapped);
 
 		FieldAccessor(String name) {
 			this.name = this.desc = name;
@@ -35,7 +35,7 @@ public class FieldAccessors {
 			this.desc = desc;
 		}
 
-		public String getStringValue(T wrapped) {
+		public String getStringValue(Object wrapped) {
 			return ObjectUtils.toString(getValue(wrapped));
 		}
 
@@ -52,7 +52,7 @@ public class FieldAccessors {
 		}
 	}
 
-	public static class DecoratorFieldAccessor<T> extends FieldAccessor<T> {
+	public static class DecoratorFieldAccessor extends FieldAccessor {
 		private Class<?> decoratorClass;
 
 		public DecoratorFieldAccessor(String name, Class<?> decoratorClass) {
@@ -67,10 +67,9 @@ public class FieldAccessors {
 		}
 
 		@Override
-		public Object getValue(T wrapped) {
+		public Object getValue(Object wrapped) {
 			try {
-				@SuppressWarnings("unchecked")
-				Decorator<T> decorator = (Decorator<T>) decoratorClass
+				Decorator decorator = (Decorator) decoratorClass
 						.getConstructor(wrapped.getClass())
 						.newInstance(wrapped);
 
@@ -81,7 +80,7 @@ public class FieldAccessors {
 		}
 	}
 
-	public static class DatumFieldAccessor extends DecoratorFieldAccessor<Datum> {
+	public static class DatumFieldAccessor extends DecoratorFieldAccessor {
 		public DatumFieldAccessor(String name, String desc) {
 			super(name, desc, DatumDecorator.class);
 		}
@@ -106,8 +105,8 @@ public class FieldAccessors {
 		}
 
 		@Override
-		public Object getValue(Datum wrapped) {
-			return wrapped.getCategoryProbability(c);
+		public Object getValue(Object wrapped) {
+			return ((Datum) wrapped).getCategoryProbability(c);
 		}
 	}
 
@@ -123,8 +122,8 @@ public class FieldAccessors {
 		}
 
 		@Override
-		public Object getValue(Datum wrapped) {
-			return wrapped.getMVCategoryProbability(c);
+		public Object getValue(Object wrapped) {
+			return ((Datum) wrapped).getMVCategoryProbability(c);
 		}
 	}
 
@@ -134,7 +133,9 @@ public class FieldAccessors {
 		}
 
 		@Override
-		public String getStringValue(Datum wrapped) {
+		public String getStringValue(Object _wrapped) {
+			Datum wrapped = (Datum) _wrapped;
+			
 			if (wrapped.isEvaluation()) {
 				Object v = super.getValue(wrapped);
 
@@ -244,9 +245,9 @@ public class FieldAccessors {
 		DATAQUALITY_EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
 				"evalDataQualityForMVSoft", "DataQuality_Eval_Cost_MV_Soft").withSummaryAveraged("Data quality, naive soft label");
 
-		public static Collection<FieldAccessor<Datum>> getFieldAcessors(
+		public static Collection<FieldAccessor> getFieldAcessors(
 				DawidSkene ds) {
-			List<FieldAccessor<Datum>> result = new ArrayList<FieldAccessor<Datum>>();
+			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
 
 			result.add(NAME);
 

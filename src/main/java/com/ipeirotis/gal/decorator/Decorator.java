@@ -4,14 +4,15 @@ import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.text.StrLookup;
 
-public class Decorator<T> extends StrLookup<T> {
+@SuppressWarnings("rawtypes")
+public class Decorator extends StrLookup {
 	private BeanMap decoratorBeanMap;
 
 	private BeanMap wrappedBeanMap;
 
-	protected T object;
+	protected Object object;
 
-	public Decorator(T wrapped) {
+	public Decorator(Object wrapped) {
 		this.decoratorBeanMap = new BeanMap(this);
 		this.wrappedBeanMap = new BeanMap(wrapped);
 		this.object = wrapped;
