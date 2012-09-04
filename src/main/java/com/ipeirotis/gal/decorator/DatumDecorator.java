@@ -2,52 +2,53 @@ package com.ipeirotis.gal.decorator;
 
 import com.ipeirotis.gal.scripts.Datum;
 import com.ipeirotis.gal.scripts.Helper;
+import com.ipeirotis.gal.scripts.Datum.ClassificationMethod;
 
-public class DatumDecorator extends Decorator {
-	public DatumDecorator(Object object) {
-		super(object);
+public class DatumDecorator extends Decorator<Datum> {
+	public DatumDecorator(Datum wrapped) {
+		super(wrapped);
 	}
 
 	public Double getEvalClassificationCostForDSSoft() {
-		return ((Datum) object).getEvalClassificationCost(Datum.DS_Soft);
+		return object.getEvalClassificationCost(Datum.ClassificationMethod.DS_Soft);
 	}
 
 	public Double getEvalClassificationCostForMVSoft() {
-		return ((Datum) object).getEvalClassificationCost(Datum.MV_Soft);
+		return object.getEvalClassificationCost(Datum.ClassificationMethod.MV_Soft);
 	}
 
 	public Double getEvalClassificationCostForDSML() {
-		return ((Datum) object).getEvalClassificationCost(Datum.DS_ML);
+		return object.getEvalClassificationCost(Datum.ClassificationMethod.DS_MaxLikelihood);
 	}
 
 	public Double getEvalClassificationCostForMVML() {
-		return ((Datum) object).getEvalClassificationCost(Datum.MV_ML);
+		return object.getEvalClassificationCost(Datum.ClassificationMethod.MV_MaxLikelihood);
 	}
 	
 	public Double getSpammerCost() {
 		// TODO: Move it to a DS Decorator
-		return Helper.getSpammerCost(((Datum) object).getDs().getCategories());
+		return Helper.getSpammerCost(object.getDs().getCategories());
 	}
 	
 	public Double getMinSpammerCost() {
 		// TODO: Move it to a DS Decorator
-		return Helper.getMinSpammerCost(((Datum) object).getDs().getCategories());
+		return Helper.getMinSpammerCost(object.getDs().getCategories());
 	}
 
 	public Double getExpectedCost() {
-		return Helper.getExpectedSoftLabelCost(((Datum) object).getCategoryProbability(), ((Datum) object).getDs().getCategories());
+		return Helper.getExpectedSoftLabelCost(object.getProbabilityVector(ClassificationMethod.DS_Soft), object.getDs().getCategories());
 	}
 	
 	public Double getExpectedMVCost() {
-		return ((Datum) object).getExpectedMVCost();
+		return object.getExpectedMVCost();
 	}
 	
 	public Double getMinCost() {
-		return Helper.getMinSoftLabelCost(((Datum) object).getCategoryProbability(), ((Datum) object).getDs().getCategories());
+		return Helper.getMinSoftLabelCost(object.getProbabilityVector(ClassificationMethod.DS_Soft), object.getDs().getCategories());
 	}
 	
 	public Double getMinMVCost() {
-		return Helper.getMinSoftLabelCost(((Datum) object).getMVCategoryProbability(), ((Datum) object).getDs().getCategories());
+		return Helper.getMinSoftLabelCost(object.getProbabilityVector(ClassificationMethod.MV_Soft), object.getDs().getCategories());
 	}
 	
 	public Double getDataQualityForDS() {
