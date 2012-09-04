@@ -106,6 +106,33 @@ public class Helper {
 		return result;
 	}	
 	
+	public static String getMaxLikelihoodLabel(Map<String, Double> probabilities, Map<String, Category> categories) {
+
+		String result = null;
+		double maxProbability = -1;
+
+		for (String category : probabilities.keySet()) {
+			Double probability = probabilities.get(category);
+			if (probability > maxProbability) {
+				maxProbability = probability;
+				result = category;
+			} else if (probability == maxProbability) {
+				// In case of a tie, break ties randomly
+				// TODO: This is a corner case. We can also break ties
+				// using the priors. But then we also need to group together
+				// all the ties, and break ties probabilistically across the
+				// group. Otherwise, we slightly favor the later comparisons.
+				if (Math.random() > 0.5) {
+					maxProbability = probability;
+					result = category;
+				}
+			}
+		}
+
+		return result;
+	}
+	
+	
 	/**
 	 * Returns the minimum possible cost of a "spammer" worker, who assigns
 	 * completely random labels.
