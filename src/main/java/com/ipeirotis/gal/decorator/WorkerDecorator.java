@@ -2,10 +2,10 @@ package com.ipeirotis.gal.decorator;
 
 import com.ipeirotis.gal.scripts.Worker;
 
-public class WorkerDecorator extends Decorator {
+public class WorkerDecorator extends Decorator<Worker> {
 	private Worker worker;
 
-	public WorkerDecorator(Object wrapped) {
+	public WorkerDecorator(Worker wrapped) {
 		super(wrapped);
 		
 		this.worker = (Worker) wrapped;
