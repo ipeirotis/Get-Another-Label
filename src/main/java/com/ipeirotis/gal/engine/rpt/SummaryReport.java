@@ -29,7 +29,7 @@ public class SummaryReport extends Report {
 				if (! a.isAveraged())
 					continue;
 				
-				reportTarget.println("[%s] Average %s: %s", a.getDesc(), a.getSummaryDescription(), getAverage(a, ctx.getDawidSkene().getObjects().values()));
+				reportTarget.println("[%s] %s: %s", a.getDesc(), a.getSummaryDescription(), getAverage(a, ctx.getDawidSkene().getObjects().values()));
 			}
 
 			reportTarget.close();
