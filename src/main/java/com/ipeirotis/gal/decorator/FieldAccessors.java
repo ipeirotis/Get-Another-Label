@@ -111,7 +111,7 @@ public class FieldAccessors {
 
 		@Override
 		public Object getValue(Object wrapped) {
-			return ((Datum) wrapped).getCategoryProbability(c);
+			return ((Datum) wrapped).getCategoryProbability(Datum.ClassificationMethod.DS_Soft, c);
 		}
 	}
 
@@ -128,7 +128,7 @@ public class FieldAccessors {
 
 		@Override
 		public Object getValue(Object wrapped) {
-			return ((Datum) wrapped).getMVCategoryProbability(c);
+			return ((Datum) wrapped).getCategoryProbability(Datum.ClassificationMethod.MV_Soft, c);
 		}
 	}
 
