@@ -127,7 +127,7 @@ public class DawidSkene {
 		}
 		
 		d.setGold(true);
-		d.setCorrectCategory(correctCategory);
+		d.setGoldCategory(correctCategory);
 	}
 	
 	public void addEvaluationLabel(CorrectLabel cl) {
@@ -182,7 +182,7 @@ public class DawidSkene {
 
 		for (String objectName : this.objects.keySet()) {
 			Datum d = this.objects.get(objectName);
-			String category = d.getMostLikelyCategory();
+			String category = d.getSingleClassClassification(Datum.ClassificationMethod.DS_MaxLikelihood);
 			result.put(objectName, category);
 		}
 		return result;
@@ -204,7 +204,7 @@ public class DawidSkene {
 		// for the correct class
 		if (d.isGold()) {
 			for (String category : this.categories.keySet()) {
-				String correctCategory = d.getCorrectCategory();
+				String correctCategory = d.getGoldCategory();
 				if (category.equals(correctCategory)) {
 					result.put(category, 1.0);
 				} else {
@@ -525,7 +525,7 @@ public class DawidSkene {
 		for (Datum d : this.objects.values()) {
 			for (String c : this.categories.keySet()) {
 				Double prior = priors.get(c);
-				Double objectProb = d.getCategoryProbability(c);
+				Double objectProb = d.getCategoryProbability(Datum.ClassificationMethod.DS_Soft, c);
 				prior += objectProb / totalObjects;
 				priors.put(c, prior);
 			}
