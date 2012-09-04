@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.ipeirotis.gal.scripts;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,6 +43,12 @@ public class Worker implements Entity {
 	// environments with persistence and caching (especially memcache)
 	private Set<AssignedLabel>				labels;
 
+	private DawidSkene ds;
+	
+	public DawidSkene getDs() {
+		return ds;
+	}
+
 	/**
 	 * @return the labels
 	 */
@@ -50,7 +57,10 @@ public class Worker implements Entity {
 		return labels;
 	}
 
-	public Worker(String name, Set<Category> categories) {
+	public Worker(String name, DawidSkene ds) {
+		this.ds = ds;
+		
+		Collection<Category> categories = ds.getCategories().values();
 
 		this.name = name;
 		this.cm = new ConfusionMatrix(categories);

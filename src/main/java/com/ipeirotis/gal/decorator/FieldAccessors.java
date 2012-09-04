@@ -70,7 +70,7 @@ public class FieldAccessors {
 		public Object getValue(Object wrapped) {
 			try {
 				Decorator decorator = (Decorator) decoratorClass
-						.getConstructor(wrapped.getClass())
+						.getConstructor(Object.class)
 						.newInstance(wrapped);
 
 				return decorator.lookupObject(name);
@@ -83,6 +83,11 @@ public class FieldAccessors {
 	public static class EntityFieldAccessor extends DecoratorFieldAccessor {
 		public EntityFieldAccessor(String name, String desc) {
 			super(name, desc, DatumDecorator.class);
+		}
+		
+		public EntityFieldAccessor(String name, String desc,
+				Class<?> decoratorClass) {
+			super(name, desc, decoratorClass);
 		}
 
 		public EntityFieldAccessor withSummaryAveraged(String summaryDescription) {
@@ -288,4 +293,35 @@ public class FieldAccessors {
 		}
 	}
 
+	public static final class WORKER_ACESSORS {
+		public static final//
+		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Worker");
+		
+		public static final EntityFieldAccessor EST_QUALITY_EXP = new EntityFieldAccessor("expectedCost", "Est. Quality (Expected)", WorkerDecorator.class).withSummaryAveraged("Expected cost, according to the algorithm estimates");
+		
+		public static final EntityFieldAccessor EST_QUALITY_OPT = new EntityFieldAccessor("minCost", "Est. Quality (Optimized)", WorkerDecorator.class).withSummaryAveraged("Minimized cost, according to the algorithm estimates");
+		
+		public static final EntityFieldAccessor EVAL_QUALITY_EXP = new EntityFieldAccessor("expCostEval", "Est. Quality (Optimized)", WorkerDecorator.class).withSummaryAveraged("Expected cost, according to the evaluation data");
+		
+		public static final EntityFieldAccessor EVAL_QUALITY_OPT = new EntityFieldAccessor("minCostEval", "Est. Quality (Expected)", WorkerDecorator.class).withSummaryAveraged("Minimized cost, according to evaluation data"); 
+		
+		public static final EntityFieldAccessor COUNT_ANNOTATION = new EntityFieldAccessor("numContributions", "Number of Annotations", WorkerDecorator.class).withSummaryAveraged("Number of Annotations");
+		
+		public static final EntityFieldAccessor COUNT_GOLD_TEST = new EntityFieldAccessor("numGoldTests", "Gold Tests", WorkerDecorator.class).withSummaryAveraged("Number of Gold Tests");
+		
+		public static Collection<FieldAccessor> getFieldAcessors(
+				DawidSkene ds) {
+			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
+
+			result.add(NAME);
+			result.add(EST_QUALITY_EXP);
+			result.add(EST_QUALITY_OPT);
+			result.add(EVAL_QUALITY_EXP);
+			result.add(EVAL_QUALITY_OPT);
+			result.add(COUNT_ANNOTATION);
+			result.add(COUNT_GOLD_TEST);
+			
+			return result;
+		}
+	}
 }

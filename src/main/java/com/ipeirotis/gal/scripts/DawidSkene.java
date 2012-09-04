@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -43,6 +42,8 @@ public class DawidSkene {
 	public Collection<FieldAccessor> getFieldAccessors(Class<?> entityClass) {
 		if (Datum.class.isAssignableFrom(entityClass)) {
 			return datumFieldAccessors;
+		} else if (Worker.class.isAssignableFrom(entityClass)) {
+			return FieldAccessors.WORKER_ACESSORS.getFieldAcessors(this);
 		}
 		
 		return null;
@@ -106,8 +107,7 @@ public class DawidSkene {
 		if (this.workers.containsKey(workerName)) {
 			w = this.workers.get(workerName);
 		} else {
-			Set<Category> categories = new HashSet<Category>(this.categories.values());
-			w = new Worker(workerName, categories);
+			w = new Worker(workerName, this);
 		}
 		w.addAssignedLabel(al);
 		this.workers.put(workerName, w);
@@ -360,7 +360,7 @@ public class DawidSkene {
 		}
 	}
 
-	private Integer countGoldTests(Set<AssignedLabel> labels) {
+	public Integer countGoldTests(Set<AssignedLabel> labels) {
 
 		Integer result = 0;
 		for (AssignedLabel al : labels) {

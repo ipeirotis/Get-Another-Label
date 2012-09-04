@@ -4,7 +4,7 @@ import com.ipeirotis.gal.scripts.Datum;
 import com.ipeirotis.gal.scripts.Helper;
 
 public class DatumDecorator extends Decorator {
-	public DatumDecorator(Datum object) {
+	public DatumDecorator(Object object) {
 		super(object);
 	}
 
