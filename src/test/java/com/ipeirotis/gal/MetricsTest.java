@@ -36,7 +36,7 @@ public class MetricsTest {
 	
 	@Test
 	public void testMoreComplexPath() throws Exception {
-		parser.parseArgument("--input data/input.txt --categories data/categories.txt --eval data/evaluation.txt"
+		parser.parseArgument("--input data/input.txt --categories data/categories.txt --eval data/evaluation.txt --dry-run"
 				.split("\\s+"));
 		
 		Engine engine = new Engine(ctx);

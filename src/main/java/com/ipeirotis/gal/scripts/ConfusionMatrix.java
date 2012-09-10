@@ -80,6 +80,10 @@ public class ConfusionMatrix {
 
 	private Set<String>										categories;
 	private HashMap<CategoryPair, Double>	matrix;
+	
+	public Set<String> getCategoryNames() {
+		return categories;
+	}
 
 	public ConfusionMatrix(Collection<Category> categories) {
 
@@ -180,4 +184,30 @@ public class ConfusionMatrix {
 		matrix.put(cp, cost);
 	}
 
+	/**
+	 * Given a correct label, returns probabilistically a label that can be assigned by a worker with this confusion matrix
+	 * 
+	 * 
+	 * @param correct The correct category for the object
+	 * @return A possible assigned label for the object, assigned probabilistically according to the confusion matrix values
+	 */
+	public String getAssignedLabel(String correct) {
+		Double prob = Math.random();
+		
+		for (String assignedLabel : this.categories) {
+			CategoryPair cp = new CategoryPair(correct, assignedLabel);
+			Double p = matrix.get(cp);
+			
+			if (p>prob) {
+				return assignedLabel;
+			} else {
+				prob -= p;
+			}
+		}
+		
+		// We should not really reach this point, but it can happen in case of rounding errors in the error rates
+		// In that case, we just call again the classification method. The probability of not returning a value again
+		// gets exponentially small very quickly
+		return getAssignedLabel(correct);
+	}
 }

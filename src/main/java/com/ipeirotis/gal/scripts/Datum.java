@@ -206,12 +206,14 @@ public class Datum implements Entity {
 	private Map<String, Double> getMV_Probability() {
 
 		Map<String, Double> mv = new HashMap<String, Double>();
+		for (String c : ds.getCategories().keySet()) {
+			mv.put(c, 0.0);
+		}
 				
 		int n = this.labels.size();		
 		for (AssignedLabel al : this.labels) {
 			String c = al.getCategoryName();
 			Double current = mv.get(c);
-			if (current == null) current = 0.0;
 			mv.put(c, current + 1.0/n);
 		}
 		return mv;
