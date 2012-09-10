@@ -169,7 +169,10 @@ public class Datum implements Entity {
 		}
 	}
 
+
 	public Map<String, Double> getProbabilityVector(ClassificationMethod method) {
+		Map<String, Double> mv = getMV_Probability();
+		
 		Map<String, Double> result = new HashMap<String, Double>();
 		for (String c : this.categoryProbability.keySet()) {
 			result.put(c, 0.0);
@@ -177,30 +180,43 @@ public class Datum implements Entity {
 		
 		switch (method) { 
 			case DS_MaxLikelihood:
-			case MV_MaxLikelihood: 
+				result.put(Helper.getMaxLikelihoodLabel(categoryProbability , ds.getCategories()), 1.0);
+				return result;
+			case MV_MaxLikelihood:
+				result.put(Helper.getMaxLikelihoodLabel(getMV_Probability() , ds.getCategories()), 1.0);
+				return result;
 			case DS_MinCost:
+				result.put(Helper.getMinCostLabel(categoryProbability , ds.getCategories()), 1.0);
+				return result;
 			case MV_MinCost:
-				result.put(getSingleClassClassification(method), 1.0);
-				break;
-			case DS_Soft: {
-				result = new HashMap<String, Double>(categoryProbability);
-				break;
-			}
-			case MV_Soft: {
-				int n = this.labels.size();		
-				for (AssignedLabel al : this.labels) {
-					String c = al.getCategoryName();
-					Double current = result.get(c);
-					result.put(c, current + 1.0/n);
-				}
-				break;
+				result.put(Helper.getMinCostLabel(getMV_Probability() , ds.getCategories()), 1.0);
+				return result;
+			case DS_Soft: 
+				return categoryProbability;
+			case MV_Soft: 
+				return getMV_Probability();
+			default: 
+				return null;
 			}
 				
 		}
-		
-		
-		return result;
+
+	/**
+	 * @return
+	 */
+	private Map<String, Double> getMV_Probability() {
+
+		Map<String, Double> mv = new HashMap<String, Double>();
+				
+		int n = this.labels.size();		
+		for (AssignedLabel al : this.labels) {
+			String c = al.getCategoryName();
+			Double current = mv.get(c);
+			mv.put(c, current + 1.0/n);
+		}
+		return mv;
 	}
+		
 	
 	
 
