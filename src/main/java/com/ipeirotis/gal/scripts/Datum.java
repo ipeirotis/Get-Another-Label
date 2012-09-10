@@ -171,7 +171,6 @@ public class Datum implements Entity {
 
 
 	public Map<String, Double> getProbabilityVector(ClassificationMethod method) {
-		Map<String, Double> mv = getMV_Probability();
 		
 		Map<String, Double> result = new HashMap<String, Double>();
 		for (String c : this.categoryProbability.keySet()) {
@@ -212,6 +211,7 @@ public class Datum implements Entity {
 		for (AssignedLabel al : this.labels) {
 			String c = al.getCategoryName();
 			Double current = mv.get(c);
+			if (current == null) current = 0.0;
 			mv.put(c, current + 1.0/n);
 		}
 		return mv;
