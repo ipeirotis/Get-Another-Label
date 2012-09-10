@@ -23,7 +23,7 @@ public class EngineTest {
 
 	@Test
 	public void testHappyPath() throws Exception {
-		parser.parseArgument("--input data/test-unlabeled.txt --categories data/test-categories.txt --dry-run"
+		parser.parseArgument("--input data/test-unlabeled.txt --categories data/test-categories.txt"
 				.split("\\s+"));
 
 		assertEquals(ctx.getInputFile(), "data/test-unlabeled.txt");

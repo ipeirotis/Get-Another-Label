@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.ipeirotis.gal.core.Entity;
 
@@ -225,16 +226,6 @@ public class Datum implements Entity {
 		return name;
 	}
 	
-	@Override
-	public Map<String, Object> getValueMap() {
-		return valueMap;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 
