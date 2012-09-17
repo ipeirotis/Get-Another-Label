@@ -15,56 +15,54 @@
  ******************************************************************************/
 package com.ipeirotis.gal.scripts;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
-import com.ipeirotis.gal.csv.CSVGenerator;
 import com.ipeirotis.gal.decorator.FieldAccessors;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.utils.Utils;
 
 public class DawidSkene {
 
-	private Map<String, Category>	categories;
+	private Map<String, Category> categories;
 
-	private Boolean										fixedPriors;
+	private Boolean fixedPriors;
 
-	private Map<String, Datum>		objects;
-	private Map<String, Worker>		workers;
+	private Map<String, Datum> objects;
+	private Map<String, Worker> workers;
 
 	private Collection<FieldAccessor> datumFieldAccessors;
-	
+
 	public Collection<FieldAccessor> getFieldAccessors(Class<?> entityClass) {
 		if (Datum.class.isAssignableFrom(entityClass)) {
 			return datumFieldAccessors;
 		} else if (Worker.class.isAssignableFrom(entityClass)) {
 			return FieldAccessors.WORKER_ACESSORS.getFieldAcessors(this);
 		}
-		
+
 		return null;
 	}
 
 	public DawidSkene(Set<Category> categories) {
-		// TODO: Changing those kinds of maps (between hash and tree) CHANGES BEHAVIOUR. Its a bug likely
+		// TODO: Changing those kinds of maps (between hash and tree) CHANGES
+		// BEHAVIOUR. Its a bug likely
 		this.objects = new HashMap<String, Datum>();
 		this.workers = new HashMap<String, Worker>();
 
 		this.fixedPriors = false;
 		this.categories = new HashMap<String, Category>();
-		
+
 		for (Category c : categories) {
 			this.categories.put(c.getName(), c);
 			if (c.hasPrior()) {
 				this.fixedPriors = true;
 			}
 		}
-		
-		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
+
+		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS
+				.getFieldAcessors(this);
 
 		// We initialize the priors to be uniform across classes
 		// if the user did not pass any information about the prior values
@@ -96,7 +94,7 @@ public class DawidSkene {
 			d = new Datum(objectName, this);
 			this.objects.put(objectName, d);
 		}
-		
+
 		d.addAssignedLabel(al);
 
 		// If we already have the worker, then just add the label
@@ -125,16 +123,17 @@ public class DawidSkene {
 			d = new Datum(objectName, this);
 			this.objects.put(objectName, d);
 		}
-		
+
 		d.setGold(true);
 		d.setGoldCategory(correctCategory);
 	}
-	
+
 	public void addEvaluationLabel(CorrectLabel cl) {
 		String objectName = cl.getObjectName();
 		String correctCategory = cl.getCorrectCategory();
 		Datum d = this.objects.get(objectName);
-		assert( d != null); // All objects in the evaluation should be rated by at least one worker
+		assert (d != null); // All objects in the evaluation should be rated by
+							// at least one worker
 		d.setEvaluation(true);
 		d.setEvaluationCategory(correctCategory);
 		this.objects.put(objectName, d);
@@ -153,7 +152,7 @@ public class DawidSkene {
 		String from = cl.getCategoryFrom();
 		String to = cl.getCategoryTo();
 		Double cost = cl.getCost();
-		
+
 		Category c = this.categories.get(from);
 		c.setCost(to, cost);
 		this.categories.put(from, c);
@@ -161,8 +160,9 @@ public class DawidSkene {
 	}
 
 	/**
-	 * Runs the algorithm, iterating the specified number of times
-	 * TODO: Estimate the model log-likelihood and stop once the log-likelihood values converge
+	 * Runs the algorithm, iterating the specified number of times TODO:
+	 * Estimate the model log-likelihood and stop once the log-likelihood values
+	 * converge
 	 * 
 	 * @param iterations
 	 */
@@ -173,8 +173,9 @@ public class DawidSkene {
 			updateWorkerConfusionMatrices();
 		}
 
-		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAcessors(this);
-}
+		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS
+				.getFieldAcessors(this);
+	}
 
 	public HashMap<String, String> getMajorityVote() {
 
@@ -182,18 +183,15 @@ public class DawidSkene {
 
 		for (String objectName : this.objects.keySet()) {
 			Datum d = this.objects.get(objectName);
-			String category = d.getSingleClassClassification(Datum.ClassificationMethod.DS_MaxLikelihood);
+			String category = d
+					.getSingleClassClassification(Datum.ClassificationMethod.DS_MaxLikelihood);
 			result.put(objectName, category);
 		}
 		return result;
 	}
 
-
-
-
-
-
-	private HashMap<String, Double> getObjectClassProbabilities(String objectName, String workerToIgnore) {
+	private HashMap<String, Double> getObjectClassProbabilities(
+			String objectName, String workerToIgnore) {
 
 		HashMap<String, Double> result = new HashMap<String, Double>();
 
@@ -253,11 +251,13 @@ public class DawidSkene {
 				// to estimate the quality of a given worker, then we need to
 				// ignore
 				// the labels submitted by this worker.
-				if (workerToIgnore != null && w.getName().equals(workerToIgnore))
+				if (workerToIgnore != null
+						&& w.getName().equals(workerToIgnore))
 					continue;
 
 				String assigned_category = al.getCategoryName();
-				double evidence_for_category = w.getErrorRate(category.getName(), assigned_category);
+				double evidence_for_category = w.getErrorRate(
+						category.getName(), assigned_category);
 				if (Double.isNaN(evidence_for_category))
 					continue;
 				categoryNominator *= evidence_for_category;
@@ -281,10 +281,6 @@ public class DawidSkene {
 
 	}
 
-
-
-
-
 	public int getNumberOfWorkers() {
 		return this.workers.size();
 	}
@@ -293,11 +289,11 @@ public class DawidSkene {
 		return this.objects.size();
 	}
 
-
 	/**
 	 * We initialize the misclassification costs using the 0/1 loss
 	 * 
-	 * @param engine.getCategories()
+	 * @param engine
+	 *            .getCategories()
 	 */
 	private void initializeCosts() {
 
@@ -322,161 +318,53 @@ public class DawidSkene {
 			categories.put(cat, c);
 		}
 	}
-	
+
 	public void evaluateWorkers() {
 
 		for (Worker w : this.workers.values()) {
 			computeEvalConfusionMatrix(w);
 		}
 	}
-	
+
 	private void computeEvalConfusionMatrix(Worker w) {
 		ConfusionMatrix eval_cm = new ConfusionMatrix(this.categories.values());
 		eval_cm.empty();
-		for (AssignedLabel l : w.getAssignedLabels()){
-			
+		for (AssignedLabel l : w.getAssignedLabels()) {
+
 			String objectName = l.getObjectName();
 			Datum d = this.objects.get(objectName);
-			assert(d != null);
-			if (!d.isEvaluation()) continue;
-			
+			assert (d != null);
+			if (!d.isEvaluation())
+				continue;
+
 			String assignedCategory = l.getCategoryName();
 			String correctCategory = d.getEvaluationCategory();
-			
-			//Double currentCount = eval_cm.getErrorRate(correctCategory, assignedCategory);
+
+			// Double currentCount = eval_cm.getErrorRate(correctCategory,
+			// assignedCategory);
 			eval_cm.addError(correctCategory, assignedCategory, 1.0);
 		}
 		eval_cm.normalize();
 		w.setEvalConfusionMatrix(eval_cm);
 	}
 
-	public void printAllWorkerScores(PrintWriter writer, boolean detailed) {
-		if (!detailed) {
-			writer.println("Worker\tEst. Error Rate\tEval. Error Rate\tEst. Quality (Expected)\tEst. Quality (Optimized)\tEval. Quality (Expected)\tEval. Quality (Optimized)\tNumber of Annotations\tGold Tests");
-		}
-		
-		for (Map.Entry<String, Worker> entry : this.workers.entrySet()) {
-			writer.println(printWorkerScore(entry.getValue(), detailed));
-		}
-	}
-
 	public Integer countGoldTests(Set<AssignedLabel> labels) {
-
 		Integer result = 0;
 		for (AssignedLabel al : labels) {
 			String name = al.getObjectName();
 			Datum d = this.objects.get(name);
 			if (d.isGold())
 				result++;
-
 		}
 		return result;
 	}
 
-	public String printWorkerScore(Worker w, boolean detailed) {
-
-		StringBuffer sb = new StringBuffer();
-
-		String workerName = w.getName();
-
-//		Double cost_naive = w.getWorkerCost(categories, Worker.COST_NAIVE_EST);
-//		String s_cost_naive = (Double.isNaN(cost_naive)) ? "---" : Utils.round(100 * cost_naive, 2) + "%";
-//
-//		Double cost_naive_eval = w.getWorkerCost(categories, Worker.COST_NAIVE_EVAL);
-//		String s_cost_naive_eval = (Double.isNaN(cost_naive_eval)) ? "---" : Utils.round(100 * cost_naive_eval, 2) + "%";
-		
-		Double cost_exp = w.getWorkerCost(categories, Worker.EXP_COST_EST);
-		String s_cost_exp = (Double.isNaN(cost_exp)) ? "---" : Math.round(100 * (1 - cost_exp)) + "%";
-
-		Double cost_min = w.getWorkerCost(categories, Worker.MIN_COST_EST);
-		String s_cost_min = (Double.isNaN(cost_min)) ? "---" : Math.round(100 * (1 - cost_min)) + "%";
-
-		Double cost_exp_eval = w.getWorkerCost(categories, Worker.EXP_COST_EVAL);
-		String s_cost_exp_eval = (Double.isNaN(cost_exp_eval)) ? "---" : Math.round(100 * (1 - cost_exp_eval)) + "%";
-
-		Double cost_min_eval = w.getWorkerCost(categories, Worker.MIN_COST_EVAL);
-		String s_cost_min_eval = (Double.isNaN(cost_min_eval)) ? "---" : Math.round(100 * (1 - cost_min_eval)) + "%";
-			
-		Integer contributions = w.getAssignedLabels().size();
-		Integer gold_tests = this.countGoldTests(w.getAssignedLabels());
-
-		if (detailed) {
-			sb.append("Worker: " + workerName + "\n");
-//			sb.append("Est. Error Rate: " + s_cost_naive + "\n");
-//			sb.append("Eval. Error Rate: " + s_cost_naive_eval + "\n");
-			sb.append("Est. Quality (Expected): " + s_cost_exp + "\n");
-			sb.append("Est. Quality (Optimized): " + s_cost_min + "\n");
-			sb.append("Eval. Quality (Expected): " + s_cost_exp_eval + "\n");
-			sb.append("Eval. Quality (Optimized): " + s_cost_min_eval + "\n");
-			sb.append("Number of Annotations: " + contributions + "\n");
-			sb.append("Number of Gold Tests: " + gold_tests + "\n");
-
-			sb.append("Confusion Matrix (Estimated): \n");
-			for (String correct_name : this.categories.keySet()) {
-				for (String assigned_name : this.categories.keySet()) {
-					Double cm_entry = w.getErrorRate(correct_name, assigned_name);
-					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils.round(100 * cm_entry, 3).toString();
-					sb.append("P[" + correct_name + "->" + assigned_name + "]=" + s_cm_entry + "%\t");
-				}
-				sb.append("\n");
-			}		
-			sb.append("Confusion Matrix (Evaluation data): \n");
-			for (String correct_name : this.categories.keySet()) {
-				for (String assigned_name : this.categories.keySet()) {
-					Double cm_entry = w.getErrorRate_Eval(correct_name, assigned_name);
-					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils.round(100 * cm_entry, 3).toString();
-					sb.append("P[" + correct_name + "->" + assigned_name + "]=" + s_cm_entry + "%\t");
-				}
-				sb.append("\n");
-			}	
-		} else {
-			sb.append(workerName + "\t" + "NaN" /* TODO: It was s_cost_naive */ + "\t" + "NaN" /* TODO: it was s_cost_naive_eval */ + "\t" + s_cost_exp + "\t" + s_cost_min + "\t" + s_cost_exp_eval + 
-					"\t" + s_cost_min_eval + "\t" + contributions + "\t" + gold_tests);
-		}
-
-		return sb.toString();
-	}
-
-	/**
-	 * Prints the objects that have probability distributions with entropy
-	 * higher than the given threshold
-	 * 
-	 * @param writer PrintWriter to write into 
-	 * @throws IOException I/O Exception
-	 */
-	public void printObjectClassProbabilities(PrintWriter writer) throws IOException {
-		CSVGenerator<Datum> csvGenerator = new CSVGenerator<Datum>(datumFieldAccessors, this.objects.values());
-		
-		csvGenerator.writeTo(writer);
-	}
-
-	public void printPriors(PrintWriter writer) {
-		for (Category c : this.categories.values()) {
-			writer.println("Prior[" + c.getName() + "]=" + c.getPrior());
-		}
-	}
-
-	public String printVote() {
-
-		StringBuffer sb = new StringBuffer();
-
-		HashMap<String, String> vote = getMajorityVote();
-
-		for (String obj : (new TreeSet<String>(vote.keySet()))) {
-			String majority_vote = vote.get(obj);
-			sb.append(obj + "\t" + majority_vote + "\n");
-		}
-		return sb.toString();
-	}
-
 	public void setFixedPriors(HashMap<String, Double> priors) {
-
 		this.fixedPriors = true;
 		setPriors(priors);
 	}
 
 	private void setPriors(HashMap<String, Double> priors) {
-
 		for (String c : this.categories.keySet()) {
 			Category category = this.categories.get(c);
 			Double prior = priors.get(c);
@@ -486,7 +374,6 @@ public class DawidSkene {
 	}
 
 	public void unsetFixedPriors() {
-
 		this.fixedPriors = false;
 		updatePriors();
 	}
@@ -499,7 +386,8 @@ public class DawidSkene {
 
 	private void updateObjectClassProbabilities(String objectName) {
 		Datum d = this.objects.get(objectName);
-		HashMap<String, Double> probabilities = getObjectClassProbabilities(objectName, null);
+		HashMap<String, Double> probabilities = getObjectClassProbabilities(
+				objectName, null);
 		if (probabilities == null)
 			return;
 		for (String category : probabilities.keySet()) {
@@ -525,7 +413,8 @@ public class DawidSkene {
 		for (Datum d : this.objects.values()) {
 			for (String c : this.categories.keySet()) {
 				Double prior = priors.get(c);
-				Double objectProb = d.getCategoryProbability(Datum.ClassificationMethod.DS_Soft, c);
+				Double objectProb = d.getCategoryProbability(
+						Datum.ClassificationMethod.DS_Soft, c);
 				prior += objectProb / totalObjects;
 				priors.put(c, prior);
 			}
@@ -562,7 +451,8 @@ public class DawidSkene {
 			// We get the classification of the object
 			// based on the votes of all the other workers
 			// We treat this classification as the "correct" one
-			HashMap<String, Double> probabilities = this.getObjectClassProbabilities(objectName, workerName);
+			HashMap<String, Double> probabilities = this
+					.getObjectClassProbabilities(objectName, workerName);
 			if (probabilities == null)
 				continue; // No other worker labeled the object
 
@@ -578,19 +468,19 @@ public class DawidSkene {
 
 	}
 
-    public Map<String, Category> getCategories() {
-        return categories;
-    }
+	public Map<String, Category> getCategories() {
+		return categories;
+	}
 
-    public Boolean getFixedPriors() {
-        return fixedPriors;
-    }
+	public Boolean getFixedPriors() {
+		return fixedPriors;
+	}
 
-    public Map<String, Datum> getObjects() {
-        return objects;
-    }
+	public Map<String, Datum> getObjects() {
+		return objects;
+	}
 
-    public Map<String, Worker> getWorkers() {
-        return workers;
-    }
+	public Map<String, Worker> getWorkers() {
+		return workers;
+	}
 }
