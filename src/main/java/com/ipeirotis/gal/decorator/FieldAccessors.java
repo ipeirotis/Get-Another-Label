@@ -175,6 +175,59 @@ public class FieldAccessors {
 		}
 	}
 
+	public static final class DS_ACCESSORS {
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP = new EntityFieldAccessor(
+				"weightedQualityForEstQualityExp",
+				"Weighted Quality (Est Quality Exp)", DawidSkeneDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Weighted Quality w/ Expected cost, according to the algorithm estimates");
+
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT = new EntityFieldAccessor(
+				"weightedQualityForEstQualityOpt",
+				"Weighted Quality (Est Quality Opt)", DawidSkeneDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Weighted Quality w/ Minimized cost, according to the algorithm estimates");
+
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP = new EntityFieldAccessor(
+				"weightedQualityForEvalQualityExp",
+				"Weighted Quality (Eval Quality Exp)",
+				DawidSkeneDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Weighted Quality w/ Expected cost, according to the evaluation data");
+
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT = new EntityFieldAccessor(
+				"weightedQualityForEvalQualityOpt",
+				"Weighted Quality (Eval Quality Opt)",
+				DawidSkeneDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Weighted Quality w/ Minimized cost, according to the evaluation data");
+
+		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
+			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
+
+			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP);
+			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT);
+			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP);
+			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT);
+
+			return result;
+		}
+
+	}
+
 	public static final class DATUM_ACCESSORS {
 		public static final//
 		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Object");

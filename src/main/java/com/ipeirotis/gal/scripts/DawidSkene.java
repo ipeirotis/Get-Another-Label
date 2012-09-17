@@ -36,7 +36,9 @@ public class DawidSkene {
 	private Collection<FieldAccessor> datumFieldAccessors;
 
 	public Collection<FieldAccessor> getFieldAccessors(Class<?> entityClass) {
-		if (Datum.class.isAssignableFrom(entityClass)) {
+		if (DawidSkene.class.isAssignableFrom(entityClass)) {
+			return FieldAccessors.DS_ACCESSORS.getFieldAcessors(this);
+		} else if (Datum.class.isAssignableFrom(entityClass)) {
 			return datumFieldAccessors;
 		} else if (Worker.class.isAssignableFrom(entityClass)) {
 			return FieldAccessors.WORKER_ACESSORS.getFieldAcessors(this);
