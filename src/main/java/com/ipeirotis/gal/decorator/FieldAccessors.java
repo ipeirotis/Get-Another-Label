@@ -243,6 +243,14 @@ public class FieldAccessors {
 				"mostLikelyCategory_MV", "MV_Category");// .withSummaryAveraged("Majorify Vote estimate for prior probability of category");
 
 		public static final//
+		EntityFieldAccessor MINCOST_MV = new EntityFieldAccessor(
+				"minCostCategory_MV", "MIN_COST_Category_MV");
+
+		public static final//
+		EntityFieldAccessor MINCOST_DS = new EntityFieldAccessor(
+				"minCostCategory_DS", "MIN_COST_Category_DS");
+
+		public static final//
 		EntityFieldAccessor DS_EXP_COST = new EntityFieldAccessor(
 				"expectedCost", "DS_Exp_Cost")
 				.withSummaryAveraged("Expected misclassification cost (for EM algorithm)");
@@ -266,6 +274,25 @@ public class FieldAccessors {
 		EntityFieldAccessor MV_OPT_COST = new EntityFieldAccessor("minMVCost",
 				"MV_Opt_Cost")
 				.withSummaryAveraged("Minimized misclassification cost (for Majority Voting algorithm)");
+		
+		public static final//
+		EntityFieldAccessor EVAL_COST_MV_MIN = new EntityFieldAccessor(
+				"evalCostMVMin", "Eval_Cost_MV_Min") {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Classification cost for min-cost classification (evaluation data)");
+
+		public static final//
+		EntityFieldAccessor EVAL_COST_DS_MIN = new EntityFieldAccessor(
+				"evalCostDSMin", "Eval_Cost_DS_Min") {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}
+		.withSummaryAveraged("Classification cost for min-cost classification using EM (evaluation data)");
 
 		public static final//
 		EntityFieldAccessor NOVOTE_OPT_COST = new EntityFieldAccessor(
@@ -386,12 +413,19 @@ public class FieldAccessors {
 				result.add(new MVCategoryDatumFieldAccessor(c));
 
 			result.add(MV_CATEGORY);
+			
+			result.add(MINCOST_MV);
+			result.add(MINCOST_DS);
 
 			result.add(DS_EXP_COST);
 			result.add(MV_EXP_COST);
 			result.add(NOVOTE_EXP_COST);
 			result.add(DS_OPT_COST);
 			result.add(MV_OPT_COST);
+			
+			result.add(EVAL_COST_MV_MIN);
+			result.add(EVAL_COST_DS_MIN);
+			
 			result.add(NOVOTE_OPT_COST);
 			result.add(CORRECT_CATEGORY);
 
@@ -436,15 +470,15 @@ public class FieldAccessors {
 		}.withSummaryAveraged("Minimized cost, according to the algorithm estimates");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_EXP = new EntityFieldAccessor(
-				"expCostEval", "Est. Quality (Expected)",
-				WorkerDecorator.class) {
+				"expCostEval", "Est. Quality (Expected)", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
- 		}.withSummaryAveraged("Expected cost, according to the evaluation data");
+		}.withSummaryAveraged("Expected cost, according to the evaluation data");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_OPT = new EntityFieldAccessor(
-				"minCostEval", "Est. Quality (Optimized)", WorkerDecorator.class) {
+				"minCostEval", "Est. Quality (Optimized)",
+				WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
