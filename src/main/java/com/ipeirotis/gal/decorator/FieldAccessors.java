@@ -436,7 +436,7 @@ public class FieldAccessors {
 		}.withSummaryAveraged("Minimized cost, according to the algorithm estimates");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_EXP = new EntityFieldAccessor(
-				"expCostEval", "Est. Quality (Optimized)",
+				"expCostEval", "Est. Quality (Expected)",
 				WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
@@ -444,7 +444,7 @@ public class FieldAccessors {
  		}.withSummaryAveraged("Expected cost, according to the evaluation data");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_OPT = new EntityFieldAccessor(
-				"minCostEval", "Est. Quality (Expected)", WorkerDecorator.class) {
+				"minCostEval", "Est. Quality (Optimized)", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
