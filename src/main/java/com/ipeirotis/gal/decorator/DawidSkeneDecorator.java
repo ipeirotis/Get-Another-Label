@@ -38,8 +38,8 @@ public class DawidSkeneDecorator extends Decorator<DawidSkene> {
 			Double metricValue = getMetric(w, fieldAccessor);
 			int noOfLabels = w.getAssignedLabels().size();
 			
-			if (null == metricValue)
-				return null;
+			if (null == metricValue || metricValue.isNaN())
+				continue;
 			
 			wqN += noOfLabels * metricValue;
 			wqD += noOfLabels;

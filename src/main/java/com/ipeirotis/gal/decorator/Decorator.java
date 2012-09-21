@@ -35,8 +35,11 @@ public class Decorator<E> extends StrLookup {
 			v = decoratorBeanMap.get(key);
 		} else if (wrappedBeanMap.containsKey(key)) {
 			v = wrappedBeanMap.get(key);
+		} else {
+			throw new IllegalStateException("Unable to lookup value for key '"
+					+ key + "'");
 		}
-		
+
 		return v;
 	}
 }

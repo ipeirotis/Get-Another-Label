@@ -84,7 +84,9 @@ public class FieldAccessors {
 				Decorator<?> decorator = (Decorator<?>) ctor
 						.newInstance(wrapped);
 
-				return decorator.lookupObject(name);
+				Object result = decorator.lookupObject(name);
+
+				return result;
 			} catch (Exception exc) {
 				throw new RuntimeException(exc);
 			}
@@ -317,7 +319,7 @@ public class FieldAccessors {
 		public static final EntityFieldAccessor//
 		EVAL_COST_MV_ML = new EvalDatumFieldAccessor(
 				"evalClassificationCostForMVML", "Eval_Cost_MV_ML")
-				.withSummaryAveraged("Classification cost for naïve single-class classification, using majority voting (evaluation data)");
+				.withSummaryAveraged("Classification cost for naive single-class classification, using majority voting (evaluation data)");
 
 		public static final EntityFieldAccessor//
 		EVAL_COST_DS_ML = new EvalDatumFieldAccessor(
@@ -327,7 +329,7 @@ public class FieldAccessors {
 		public static final EntityFieldAccessor//
 		EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
 				"evalClassificationCostForMVSoft", "Eval_Cost_MV_Soft")
-				.withSummaryAveraged("Classification cost for naïve soft-label classification (evaluation data)");
+				.withSummaryAveraged("Classification cost for naive soft-label classification (evaluation data)");
 
 		public static final EntityFieldAccessor//
 		EVAL_COST_DS_SOFT = new EvalDatumFieldAccessor(
@@ -439,8 +441,7 @@ public class FieldAccessors {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
-
-		}.withSummaryAveraged("Expected cost, according to the evaluation data");
+ 		}.withSummaryAveraged("Expected cost, according to the evaluation data");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_OPT = new EntityFieldAccessor(
 				"minCostEval", "Est. Quality (Expected)", WorkerDecorator.class) {

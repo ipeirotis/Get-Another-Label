@@ -43,4 +43,14 @@ public class EngineTest {
 		
 		engine.execute();
 	}
+	
+	@Test
+	public void testFullCase() throws Exception {
+		parser.parseArgument("--input data/input.txt --categories data/categories-prior.txt --correct data/gold-30items.txt --cost data/costs.txt --eval data/evaluation.txt"
+				.split("\\s+"));
+		
+		Engine engine = new Engine(ctx);
+		
+		engine.execute();
+	}
 }

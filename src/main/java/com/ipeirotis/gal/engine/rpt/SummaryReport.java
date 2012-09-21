@@ -70,9 +70,12 @@ public class SummaryReport extends Report {
 			}
 			
 			
-			Double total = (Double) fieldAcessor.getValue(object);
+			Double value = (Double) fieldAcessor.getValue(object);
 			
-			accumulator += total;
+ 			if (null == value || value.isNaN())
+				continue;
+			
+			accumulator += value;
 			count++;
 		}
 		
