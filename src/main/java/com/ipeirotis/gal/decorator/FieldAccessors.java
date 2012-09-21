@@ -277,22 +277,11 @@ public class FieldAccessors {
 		
 		public static final//
 		EntityFieldAccessor EVAL_COST_MV_MIN = new EntityFieldAccessor(
-				"evalCostMVMin", "Eval_Cost_MV_Min") {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-
-		}.withSummaryAveraged("Classification cost for min-cost classification (evaluation data)");
+				"evalCostMVMin", "Eval_Cost_MV_Min").withSummaryAveraged("Classification cost for min-cost classification (evaluation data)");
 
 		public static final//
 		EntityFieldAccessor EVAL_COST_DS_MIN = new EntityFieldAccessor(
-				"evalCostDSMin", "Eval_Cost_DS_Min") {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-
-		}
-		.withSummaryAveraged("Classification cost for min-cost classification using EM (evaluation data)");
+				"evalCostDSMin", "Eval_Cost_DS_Min")		.withSummaryAveraged("Classification cost for min-cost classification using EM (evaluation data)");
 
 		public static final//
 		EntityFieldAccessor NOVOTE_OPT_COST = new EntityFieldAccessor(
