@@ -115,9 +115,21 @@ public class Datum implements Entity {
 		return ds;
 	}
 
+	/**
+	 * Computes the actual classification cost for this object, compared to the evaluation data for this datum
+	 * when classification done according to the passed ClassificationMethod
+	 * 
+	 * Returns null when we do not have evaluation data for this datum. 
+	 * 
+	 * @param method
+	 * @return
+	 */
 	public Double getEvalClassificationCost(ClassificationMethod method) {
 
+		if (!this.isEvaluation()) return null;
+		
 		String from = this.getEvaluationCategory();
+		
 		Map<String, Double>	dest_probabilities = getProbabilityVector(method);
 		
 		Category fromCostVector = ds.getCategories().get(from);

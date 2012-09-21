@@ -243,12 +243,12 @@ public class FieldAccessors {
 				"mostLikelyCategory_MV", "MV_Category");// .withSummaryAveraged("Majorify Vote estimate for prior probability of category");
 
 		public static final//
-		EntityFieldAccessor MINCOST_MV = new EntityFieldAccessor(
-				"minCostCategory_MV", "MIN_COST_Category_MV");
+		EntityFieldAccessor MV_MINCOST = new EntityFieldAccessor(
+				"minCostCategory_MV", "MV_MIN_COST_Category");
 
 		public static final//
-		EntityFieldAccessor MINCOST_DS = new EntityFieldAccessor(
-				"minCostCategory_DS", "MIN_COST_Category_DS");
+		EntityFieldAccessor DS_MINCOST = new EntityFieldAccessor(
+				"minCostCategory_DS", "DS_MIN_COST_Category");
 
 		public static final//
 		EntityFieldAccessor DS_EXP_COST = new EntityFieldAccessor(
@@ -281,7 +281,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor EVAL_COST_DS_MIN = new EntityFieldAccessor(
-				"evalCostDSMin", "Eval_Cost_DS_Min")		.withSummaryAveraged("Classification cost for min-cost classification using EM (evaluation data)");
+				"evalCostDSMin", "Eval_Cost_DS_Min").withSummaryAveraged("Classification cost for min-cost classification using EM (evaluation data)");
 
 		public static final//
 		EntityFieldAccessor NOVOTE_OPT_COST = new EntityFieldAccessor(
@@ -362,6 +362,16 @@ public class FieldAccessors {
 		}.withSummaryAveraged("Data quality, DS algorithm, maximum likelihood");
 
 		public static final EntityFieldAccessor//
+		DATAQUALITY_EVAL_COST_DS_MINCOST = new EvalDatumFieldAccessor(
+				"evalDataQualityForDSMinCost", "DataQuality_Eval_Cost_DS_MINCOST") {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Data quality, DS algorithm, mincost");
+		
+		
+		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_DS_SOFT = new EvalDatumFieldAccessor(
 				"evalDataQualityForDSSoft", "DataQuality_Eval_Cost_DS_Soft") {
 			{
@@ -378,6 +388,15 @@ public class FieldAccessors {
 			}
 
 		}.withSummaryAveraged("Data quality, naive majority voting algorithm");
+		
+		public static final EntityFieldAccessor//
+		DATAQUALITY_EVAL_COST_MV_MINCOST = new EvalDatumFieldAccessor(
+				"evalDataQualityForMVMinCost", "DataQuality_Eval_Cost_MV_MINCOST") {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Data quality, naive soft label, mincost algorithm");
 
 		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
@@ -393,44 +412,45 @@ public class FieldAccessors {
 
 			result.add(NAME);
 
+			result.add(CORRECT_CATEGORY);
+			result.add(DS_CATEGORY);
+			result.add(MV_CATEGORY);
+			result.add(DS_MINCOST);
+			result.add(MV_MINCOST);
+
 			for (String c : ds.getCategories().keySet())
 				result.add(new CategoryDatumFieldAccessor(c));
 
-			result.add(DS_CATEGORY);
-
+			
 			for (String c : ds.getCategories().keySet())
 				result.add(new MVCategoryDatumFieldAccessor(c));
 
-			result.add(MV_CATEGORY);
-			
-			result.add(MINCOST_MV);
-			result.add(MINCOST_DS);
 
 			result.add(DS_EXP_COST);
 			result.add(MV_EXP_COST);
 			result.add(NOVOTE_EXP_COST);
 			result.add(DS_OPT_COST);
 			result.add(MV_OPT_COST);
-			
-			result.add(EVAL_COST_MV_MIN);
-			result.add(EVAL_COST_DS_MIN);
-			
 			result.add(NOVOTE_OPT_COST);
-			result.add(CORRECT_CATEGORY);
 
 			result.add(DATAQUALITY_DS);
 			result.add(DATAQUALITY_MV);
 			result.add(DATAQUALITY_DS_OPT);
 			result.add(DATAQUALITY_MV_OPT);
 
-			result.add(EVAL_COST_MV_ML);
 			result.add(EVAL_COST_DS_ML);
-			result.add(EVAL_COST_MV_SOFT);
+			result.add(EVAL_COST_MV_ML);
+			result.add(EVAL_COST_DS_MIN);
+			result.add(EVAL_COST_MV_MIN);
 			result.add(EVAL_COST_DS_SOFT);
-
+			result.add(EVAL_COST_MV_SOFT);
+			
 			result.add(DATAQUALITY_EVAL_COST_DS_ML);
-			result.add(DATAQUALITY_EVAL_COST_DS_SOFT);
 			result.add(DATAQUALITY_EVAL_COST_MV_ML);
+			result.add(DATAQUALITY_EVAL_COST_DS_MINCOST);
+			result.add(DATAQUALITY_EVAL_COST_MV_MINCOST);
+	
+			result.add(DATAQUALITY_EVAL_COST_DS_SOFT);
 			result.add(DATAQUALITY_EVAL_COST_MV_SOFT);
 
 			return result;
@@ -487,6 +507,7 @@ public class FieldAccessors {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
 
 			result.add(NAME);
+
 			result.add(EST_QUALITY_EXP);
 			result.add(EST_QUALITY_OPT);
 			result.add(EVAL_QUALITY_EXP);

@@ -106,4 +106,13 @@ public class DatumDecorator extends Decorator<Datum> {
 	public Double getEvalDataQualityForMVSoft() {
 		return 1 - getEvalClassificationCostForMVSoft() / getMinSpammerCost();
 	}
+	
+	public Double getEvalDataQualityForMVMinCost() {
+		return 1 - getEvalCostMVMin() / getMinSpammerCost();
+	}
+
+	public Double getEvalDataQualityForDSMinCost() {
+		return 1 - getEvalCostDSMin() / getMinSpammerCost();
+	}
+
 }
