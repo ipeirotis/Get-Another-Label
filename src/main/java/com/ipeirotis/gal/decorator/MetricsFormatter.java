@@ -12,7 +12,7 @@ public abstract class MetricsFormatter {
 			if (null == result || Double.isNaN(result))
 				return "N/A";
 
-			return String.format("%s%%", Utils.round(100 * result, 2));
+			return String.format("%3.2f%%", Utils.round(100 * result, 2));
 		}
 	};
 	

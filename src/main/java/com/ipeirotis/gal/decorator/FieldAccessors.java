@@ -235,6 +235,10 @@ public class FieldAccessors {
 		public static final//
 		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Object");
 
+		public static final EntityFieldAccessor//
+		CORRECT_CATEGORY = new EvalDatumFieldAccessor("evaluationCategory",
+				"Correct_Category");
+		
 		public static final//
 		EntityFieldAccessor DS_CATEGORY = new EntityFieldAccessor(
 				"mostLikelyCategory", "DS_MaxLikelihood_Category");
@@ -253,7 +257,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DS_EXP_COST = new EntityFieldAccessor(
-				"expectedCost", "DS_Exp_Cost"){
+				"expectedCost", "DataCost_Estm_DS_Exp"){
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
@@ -261,7 +265,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor MV_EXP_COST = new EntityFieldAccessor(
-				"expectedMVCost", "MV_Exp_Cost"){
+				"expectedMVCost", "DataCost_Estm_MV_Exp"){
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
@@ -269,7 +273,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor NOVOTE_EXP_COST = new EntityFieldAccessor(
-				"spammerCost", "NoVote_Exp_Cost"){
+				"spammerCost", "DataCost_Estm_NoVote_Exp"){
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
@@ -277,7 +281,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DS_MIN_COST = new EntityFieldAccessor("minCost",
-				"DS_Min_Cost"){
+				"DataCost_Estm_DS_Min"){
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
@@ -285,7 +289,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor MV_MIN_COST = new EntityFieldAccessor("minMVCost",
-				"MV_Min_Cost"){
+				"DataCost_Estm_MV_Min"){
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
@@ -294,21 +298,19 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor NOVOTE_MIN_COST = new EntityFieldAccessor(
-				"minSpammerCost", "NoVote_Min_Cost"){
+				"minSpammerCost", "DataCost_Estm_NoVote_Min"){
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
 		}.withSummaryAveraged("Baseline classification cost (strategic spammer)");
 
-		public static final EntityFieldAccessor//
-		CORRECT_CATEGORY = new EvalDatumFieldAccessor("evaluationCategory",
-				"Correct_Category");
+
 
 		// Data Quality
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_DS = new EntityFieldAccessor(
-				"dataQualityForDS", "DataQuality_Est_DS_Exp") {
+				"dataQualityForDS", "DataQuality_Estm_DS_Exp") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
@@ -317,7 +319,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_MV = new EntityFieldAccessor(
-				"dataQualityForMV", "DataQuality_Est_MV_Exp") {
+				"dataQualityForMV", "DataQuality_Estm_MV_Exp") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
@@ -326,7 +328,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_DS_OPT = new EntityFieldAccessor(
-				"dataQualityForDSOpt", "DataQuality_Est_DS_Min") {
+				"dataQualityForDSOpt", "DataQuality_Estm_DS_Min") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
@@ -335,7 +337,7 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_MV_OPT = new EntityFieldAccessor(
-				"dataQualityForMVOpt", "DataQuality_Est_MV_Min") {
+				"dataQualityForMVOpt", "DataQuality_Estm_MV_Min") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}

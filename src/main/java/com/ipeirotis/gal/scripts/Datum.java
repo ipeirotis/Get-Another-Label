@@ -177,6 +177,11 @@ public class Datum implements Entity {
 			result.put(c, 0.0);
 		}
 		
+		if (this.isGold) {
+			result.put(this.goldCategory, 1.0);
+			return result;
+		}
+		
 		switch (method) { 
 			case DS_MaxLikelihood:
 				result.put(Helper.getMaxLikelihoodLabel(categoryProbability , ds.getCategories()), 1.0);
@@ -226,13 +231,7 @@ public class Datum implements Entity {
 	 * @return the categoryProbability
 	 */
 	public Double getCategoryProbability(ClassificationMethod method, String category) {
-		if (this.isGold) {
-			if (category.equals(this.goldCategory)) {
-				return 1.0;
-			} else {
-				return 0.0;
-			}
-		}
+
 		return getProbabilityVector(method).get(category);
 		
 	}
