@@ -15,4 +15,15 @@ public abstract class MetricsFormatter {
 			return String.format("%s%%", Utils.round(100 * result, 2));
 		}
 	};
+	
+	public static final MetricsFormatter DECIMAL_FORMATTER = new MetricsFormatter() {
+		@Override
+		public
+		String format(Double result) {
+			if (null == result || Double.isNaN(result))
+				return "N/A";
+
+			return String.format("%2.4f", Utils.round(result, 4));
+		}
+	};
 }

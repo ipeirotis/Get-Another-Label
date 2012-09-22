@@ -149,18 +149,6 @@ public class Datum implements Entity {
 	}
 	
 	/**
-	 * This class computes the expected cost of the example.
-	 * 
-	 * @param categories Each Category object contains the misclassification costs, so by passing this parameter, we allow the method to compute the expected misclassification cost of the object
-	 *   
-	 * @return 
-	 */
-	public Double getExpectedMVCost() {
-		Map<String, Double> majorityVote = getProbabilityVector(ClassificationMethod.MV_Soft);
-		return Helper.getExpectedSoftLabelCost(majorityVote, ds.getCategories());
-	}
-	
-	/**
 	 * Returns a single class classification
 	 * 
 	 * @param classificationMethod

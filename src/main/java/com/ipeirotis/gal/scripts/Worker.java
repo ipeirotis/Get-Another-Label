@@ -128,27 +128,16 @@ public class Worker implements Entity {
 	public static int	EXP_COST_EST	= 1; // Expected cost, according to the algorithm estimates
 	public static int	MIN_COST_EVAL	= 2; // Minimized cost, according to evaluation data	
 	public static int	MIN_COST_EST	= 3; // Minimized cost, according to the algorithm estimates
-	public static int	COST_NAIVE_EST = 4; // Expected cost, according to the algorithm estimates, before fixing bias
-	public static int	COST_NAIVE_EVAL = 5; // Expected cost, according to the algorithm estimates, before fixing bias
+	public static int	COST_NAIVE_EST = 4; // Error rate, multiplied by cost
+	public static int	COST_NAIVE_EVAL = 5; // Error rate, multiplied by cost, actual
 	
 	/**
 	 * 
-	 * Estimates the cost for worker using various methods: COST_NAIVE: We do
-	 * not adjust the label assigned by the worker (i.e., use the "hard" label)
-	 * COST_ADJUSTED: We use the error rates of the worker and compute the
-	 * posterior probability vector for each object COST_MINIMIZED: Like
-	 * COST_ADJUSTED but we also assign the object to the category that
-	 * generates the minimum expected error
-	 * 
-	 * @param w
-	 *          The worker object
 	 * @param method
-	 *          One of DawidSkene.COST_NAIVE, DawidSkene.COST_ADJUSTED,
-	 *          DawidSkene.COST_MINIMIZED
-	 * @return The expected cost of the worker, normalized to be between 0 and
-	 *         1, where 1 is the cost of a "spam" worker
+
+	 * @return The quality of a worker, normalized to be 1 for a perfect worker, 0 for a spammer
 	 */
-	public Double getWorkerCost(Map<String, Category>	categories, int method) {
+	public Double getWorkerQuality(Map<String, Category>	categories, int method) {
 
 		assert (method == Worker.EXP_COST_EST || method == Worker.EXP_COST_EVAL 
 				|| method==Worker.MIN_COST_EST || method == Worker.MIN_COST_EVAL);
@@ -192,6 +181,8 @@ public class Worker implements Entity {
 			// Let's find the soft label that corresponds to assigned_label
 			String assignedCategory = assigned.getName();
 
+			// And add the cost of this label, weighted with the prior of seeing
+			// this label.
 			if (method == Worker.EXP_COST_EVAL) {
 				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
 				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
@@ -209,19 +200,18 @@ public class Worker implements Entity {
 				System.err.println("Error: Incorrect method for cost");
 			}
 
-			// And add the cost of this label, weighted with the prior of seeing
-			// this label.
+
 
 		}
 
 		if (method == Worker.EXP_COST_EVAL) {
-			return cost / Helper.getSpammerCost(categories);
+			return 1 - cost / Helper.getMinSpammerCost(categories);
 		} else if (method == Worker.MIN_COST_EVAL) {
-			return cost / Helper.getMinSpammerCost(categories);
+			return 1- cost / Helper.getMinSpammerCost(categories);
 		} else if (method == Worker.EXP_COST_EST) {
-			return cost / Helper.getSpammerCost(categories);
+			return 1 - cost / Helper.getMinSpammerCost(categories);
 		} else if (method == Worker.MIN_COST_EST) {
-			return cost / Helper.getMinSpammerCost(categories);
+			return 1-cost / Helper.getMinSpammerCost(categories);
 		} else {
 			// We should never reach this
 			System.err.println("Error: We should have never reached this in getWorkerCost");

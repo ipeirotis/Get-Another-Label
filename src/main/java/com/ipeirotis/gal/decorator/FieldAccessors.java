@@ -118,7 +118,7 @@ public class FieldAccessors {
 			super(String.format("DS_PR[%s]", c), String.format("DS_Pr[%s]", c));
 
 			this.c = c;
-
+			setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			withSummaryAveraged(String.format(
 					"DS estimate for prior probability of category %s", c));
 		}
@@ -138,7 +138,7 @@ public class FieldAccessors {
 			super(String.format("MV_PR[%s]", c), String.format("MV_Pr[%s]", c));
 
 			this.c = c;
-
+			setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			withSummaryAveraged(String
 					.format("Majority Vote estimate for prior probability of category %s",
 							c));
@@ -181,41 +181,42 @@ public class FieldAccessors {
 		public static final//
 		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP = new EntityFieldAccessor(
 				"weightedQualityForEstQualityExp",
-				"Weighted Quality (Est Quality Exp)", DawidSkeneDecorator.class) {
+				"WorkerQuality_Estm_Weighted_DS_Exp", DawidSkeneDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
-		}.withSummaryAveraged("Weighted Quality w/ Expected cost, according to the algorithm estimates");
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
 
 		public static final//
 		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT = new EntityFieldAccessor(
 				"weightedQualityForEstQualityOpt",
-				"Weighted Quality (Est Quality Opt)", DawidSkeneDecorator.class) {
+				"WorkerQuality_Estm_Weighted_DS_Min", DawidSkeneDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
-		}.withSummaryAveraged("Weighted Quality w/ Minimized cost, according to the algorithm estimates");
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Min metric)");
 
 		public static final//
 		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP = new EntityFieldAccessor(
 				"weightedQualityForEvalQualityExp",
-				"Weighted Quality (Eval Quality Exp)",
+				"WorkerQuality_Eval_Weighted_DS_Exp",
 				DawidSkeneDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
-		}.withSummaryAveraged("Weighted Quality w/ Expected cost, according to the evaluation data");
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
 
 		public static final//
 		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT = new EntityFieldAccessor(
 				"weightedQualityForEvalQualityOpt",
-				"Weighted Quality (Eval Quality Opt)",
+				"WorkerQuality_Eval_Weighted_DS_Min",
 				DawidSkeneDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+				
 			}
 
-		}.withSummaryAveraged("Weighted Quality w/ Minimized cost, according to the evaluation data");
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
 
 		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
@@ -236,57 +237,68 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DS_CATEGORY = new EntityFieldAccessor(
-				"mostLikelyCategory", "DS_Category");
+				"mostLikelyCategory", "DS_MaxLikelihood_Category");
 
 		public static final//
 		EntityFieldAccessor MV_CATEGORY = new EntityFieldAccessor(
-				"mostLikelyCategory_MV", "MV_Category");// .withSummaryAveraged("Majorify Vote estimate for prior probability of category");
+				"mostLikelyCategory_MV", "MV_MaxLikelihood_Category");
 
 		public static final//
 		EntityFieldAccessor MV_MINCOST = new EntityFieldAccessor(
-				"minCostCategory_MV", "MV_MIN_COST_Category");
+				"minCostCategory_MV", "MV_MinCost_Category");
 
 		public static final//
 		EntityFieldAccessor DS_MINCOST = new EntityFieldAccessor(
-				"minCostCategory_DS", "DS_MIN_COST_Category");
+				"minCostCategory_DS", "DS_MinCost_Category");
 
 		public static final//
 		EntityFieldAccessor DS_EXP_COST = new EntityFieldAccessor(
-				"expectedCost", "DS_Exp_Cost")
-				.withSummaryAveraged("Expected misclassification cost (for EM algorithm)");
+				"expectedCost", "DS_Exp_Cost"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated classification cost (DS_Exp metric)");
 
 		public static final//
 		EntityFieldAccessor MV_EXP_COST = new EntityFieldAccessor(
-				"expectedMVCost", "MV_Exp_Cost")
-				.withSummaryAveraged("Expected misclassification cost (for Majority Voting algorithm)");
+				"expectedMVCost", "MV_Exp_Cost"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated classification cost (MV_Exp metric)");
 
 		public static final//
 		EntityFieldAccessor NOVOTE_EXP_COST = new EntityFieldAccessor(
-				"spammerCost", "NoVote_Opt_Cost")
-				.withSummaryAveraged("Expected misclassification cost (random classification)");
+				"spammerCost", "NoVote_Exp_Cost"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Baseline classification cost (random spammer)");
 
 		public static final//
-		EntityFieldAccessor DS_OPT_COST = new EntityFieldAccessor("minCost",
-				"DS_Opt_Cost")
-				.withSummaryAveraged("Minimized misclassification cost (for EM algorithm)");
+		EntityFieldAccessor DS_MIN_COST = new EntityFieldAccessor("minCost",
+				"DS_Min_Cost"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated classification cost (DS_Min metric)");
 
 		public static final//
-		EntityFieldAccessor MV_OPT_COST = new EntityFieldAccessor("minMVCost",
-				"MV_Opt_Cost")
-				.withSummaryAveraged("Minimized misclassification cost (for Majority Voting algorithm)");
+		EntityFieldAccessor MV_MIN_COST = new EntityFieldAccessor("minMVCost",
+				"MV_Min_Cost"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated classification cost (MV_Min metric)");
 		
-		public static final//
-		EntityFieldAccessor EVAL_COST_MV_MIN = new EntityFieldAccessor(
-				"evalCostMVMin", "Eval_Cost_MV_Min").withSummaryAveraged("Classification cost for min-cost classification (evaluation data)");
 
 		public static final//
-		EntityFieldAccessor EVAL_COST_DS_MIN = new EntityFieldAccessor(
-				"evalCostDSMin", "Eval_Cost_DS_Min").withSummaryAveraged("Classification cost for min-cost classification using EM (evaluation data)");
-
-		public static final//
-		EntityFieldAccessor NOVOTE_OPT_COST = new EntityFieldAccessor(
-				"minSpammerCost", "NoVote_Opt_Cost")
-				.withSummaryAveraged("Minimized misclassification cost (random classification)");
+		EntityFieldAccessor NOVOTE_MIN_COST = new EntityFieldAccessor(
+				"minSpammerCost", "NoVote_Min_Cost"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Baseline classification cost (strategic spammer)");
 
 		public static final EntityFieldAccessor//
 		CORRECT_CATEGORY = new EvalDatumFieldAccessor("evaluationCategory",
@@ -296,116 +308,145 @@ public class FieldAccessors {
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_DS = new EntityFieldAccessor(
-				"dataQualityForDS", "DataQuality_DS") {
+				"dataQualityForDS", "DataQuality_Est_DS_Exp") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality (estimated according to DS_Exp metric)");
+		}.withSummaryAveraged("Estimated data quality, EM algorithm, soft label");
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_MV = new EntityFieldAccessor(
-				"dataQualityForMV", "DataQuality_MV") {
+				"dataQualityForMV", "DataQuality_Est_MV_Exp") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality (estimated according to Mv_Exp metric)");
+		}.withSummaryAveraged("Estimated data quality, naive soft label");
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_DS_OPT = new EntityFieldAccessor(
-				"dataQualityForDSOpt", "DataQuality_DS_OPT") {
+				"dataQualityForDSOpt", "DataQuality_Est_DS_Min") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality (estimated according to DS_Opt metric)");
+		}.withSummaryAveraged("Estimated data quality, EM algorithm, mincost");
 
 		public static final//
 		EntityFieldAccessor DATAQUALITY_MV_OPT = new EntityFieldAccessor(
-				"dataQualityForMVOpt", "DataQuality_MV_OPT") {
+				"dataQualityForMVOpt", "DataQuality_Est_MV_Min") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality (estimated according to MV_Opt metric)");
+		}.withSummaryAveraged("Estimated data quality, naive mincost label");
 
 		// Eval
 
 		public static final EntityFieldAccessor//
 		EVAL_COST_MV_ML = new EvalDatumFieldAccessor(
-				"evalClassificationCostForMVML", "Eval_Cost_MV_ML")
-				.withSummaryAveraged("Classification cost for naive single-class classification, using majority voting (evaluation data)");
+				"evalClassificationCostForMVML", "DataCost_Eval_MV_ML"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual classification cost for majority vote classification");
 
 		public static final EntityFieldAccessor//
 		EVAL_COST_DS_ML = new EvalDatumFieldAccessor(
-				"evalClassificationCostForDSML", "Eval_Cost_DS_ML")
-				.withSummaryAveraged("Classification cost for single-class classification, using EM (evaluation data)");
+				"evalClassificationCostForDSML", "DataCost_Eval_DS_ML"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual classification cost for EM, maximum likelihood classification");
 
 		public static final EntityFieldAccessor//
 		EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
-				"evalClassificationCostForMVSoft", "Eval_Cost_MV_Soft")
-				.withSummaryAveraged("Classification cost for naive soft-label classification (evaluation data)");
+				"evalClassificationCostForMVSoft", "DataCost_Eval_MV_Soft"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual classification cost for naive soft-label classification");
 
 		public static final EntityFieldAccessor//
 		EVAL_COST_DS_SOFT = new EvalDatumFieldAccessor(
-				"evalClassificationCostForDSSoft", "Eval_Cost_DS_Soft")
-				.withSummaryAveraged("Classification cost for soft-label classification, using EM (evaluation data)");
+				"evalClassificationCostForDSSoft", "DataCost_Eval_DS_Soft"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual classification cost for EM, soft-label classification");
 
 		public static final EntityFieldAccessor//
+		EVAL_COST_MV_MIN = new EntityFieldAccessor(
+				"evalCostMVMin", "DataCost_Eval_MV_Min"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual classification cost for naive min-cost classification,");
+
+		public static final	EntityFieldAccessor//
+		EVAL_COST_DS_MIN = new EntityFieldAccessor(
+				"evalCostDSMin", "DataCost_Eval_DS_Min"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual classification cost for EM, min-cost classification");
+
+		
+		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_DS_ML = new EvalDatumFieldAccessor(
-				"evalDataQualityForDSML", "DataQuality_Eval_Cost_DS_ML") {
+				"evalDataQualityForDSML", "DataQuality_Eval_DS_ML") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality, DS algorithm, maximum likelihood");
+		}.withSummaryAveraged("Actual data quality, EM algorithm, maximum likelihood");
 
 		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_DS_MINCOST = new EvalDatumFieldAccessor(
-				"evalDataQualityForDSMinCost", "DataQuality_Eval_Cost_DS_MINCOST") {
+				"evalDataQualityForDSMinCost", "DataQuality_Eval_DS_Min") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality, DS algorithm, mincost");
+		}.withSummaryAveraged("Actual data quality, EM algorithm, mincost");
 		
 		
 		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_DS_SOFT = new EvalDatumFieldAccessor(
-				"evalDataQualityForDSSoft", "DataQuality_Eval_Cost_DS_Soft") {
+				"evalDataQualityForDSSoft", "DataQuality_Eval_DS_Soft") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality, DS algorithm, soft label");
+		}.withSummaryAveraged("Actual data quality, EM algorithm, soft label");
 
 		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_MV_ML = new EvalDatumFieldAccessor(
-				"evalDataQualityForMVML", "DataQuality_Eval_Cost_MV_ML") {
+				"evalDataQualityForMVML", "DataQuality_Eval_MV_ML") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality, naive majority voting algorithm");
+		}.withSummaryAveraged("Actual data quality, naive majority label");
 		
 		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_MV_MINCOST = new EvalDatumFieldAccessor(
-				"evalDataQualityForMVMinCost", "DataQuality_Eval_Cost_MV_MINCOST") {
+				"evalDataQualityForMVMinCost", "DataQuality_Eval_MV_Min") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality, naive soft label, mincost algorithm");
+		}.withSummaryAveraged("Actual data quality, naive mincost label");
 
 		public static final EntityFieldAccessor//
 		DATAQUALITY_EVAL_COST_MV_SOFT = new EvalDatumFieldAccessor(
-				"evalDataQualityForMVSoft", "DataQuality_Eval_Cost_MV_Soft") {
+				"evalDataQualityForMVSoft", "DataQuality_Eval_MV_Soft") {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Data quality, naive soft label");
+		}.withSummaryAveraged("Actual data quality, naive soft label");
 
 		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
@@ -429,14 +470,10 @@ public class FieldAccessors {
 			result.add(DS_EXP_COST);
 			result.add(MV_EXP_COST);
 			result.add(NOVOTE_EXP_COST);
-			result.add(DS_OPT_COST);
-			result.add(MV_OPT_COST);
-			result.add(NOVOTE_OPT_COST);
+			result.add(DS_MIN_COST);
+			result.add(MV_MIN_COST);
+			result.add(NOVOTE_MIN_COST);
 
-			result.add(DATAQUALITY_DS);
-			result.add(DATAQUALITY_MV);
-			result.add(DATAQUALITY_DS_OPT);
-			result.add(DATAQUALITY_MV_OPT);
 
 			result.add(EVAL_COST_DS_ML);
 			result.add(EVAL_COST_MV_ML);
@@ -445,11 +482,15 @@ public class FieldAccessors {
 			result.add(EVAL_COST_DS_SOFT);
 			result.add(EVAL_COST_MV_SOFT);
 			
+			result.add(DATAQUALITY_DS);
+			result.add(DATAQUALITY_MV);
+			result.add(DATAQUALITY_DS_OPT);
+			result.add(DATAQUALITY_MV_OPT);
+
 			result.add(DATAQUALITY_EVAL_COST_DS_ML);
 			result.add(DATAQUALITY_EVAL_COST_MV_ML);
 			result.add(DATAQUALITY_EVAL_COST_DS_MINCOST);
 			result.add(DATAQUALITY_EVAL_COST_MV_MINCOST);
-	
 			result.add(DATAQUALITY_EVAL_COST_DS_SOFT);
 			result.add(DATAQUALITY_EVAL_COST_MV_SOFT);
 
@@ -462,46 +503,88 @@ public class FieldAccessors {
 		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Worker");
 
 		public static final EntityFieldAccessor EST_QUALITY_EXP = new EntityFieldAccessor(
-				"expectedCost", "Est. Quality (Expected)",
+				"expectedCost", "WorkerQuality_Estm_DS_Exp_n",
 				WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Expected cost, according to the algorithm estimates");
+		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_Exp metric)");
+		
+		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_EXP = new EntityFieldAccessor(
+				"weightedExpectedCost", "WorkerQuality_Estm_DS_Exp_w",
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
 
 		public static final EntityFieldAccessor EST_QUALITY_OPT = new EntityFieldAccessor(
-				"minCost", "Est. Quality (Optimized)", WorkerDecorator.class) {
+				"minCost", "WorkerQuality_Estm_DS_Min_n", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Minimized cost, according to the algorithm estimates");
+		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_Min metric)");
+		
+		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_OPT = new EntityFieldAccessor(
+				"weightedMinCost", "WorkerQuality_Estm_DS_Min_w", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Min metric)");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_EXP = new EntityFieldAccessor(
-				"expCostEval", "Est. Quality (Expected)", WorkerDecorator.class) {
+				"expCostEval", "WorkerQuality_Eval_DS_Exp_n", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
-		}.withSummaryAveraged("Expected cost, according to the evaluation data");
+		}.withSummaryAveraged("Actual worker quality (non-weighted, DS_Exp metric)");
+		
+		public static final EntityFieldAccessor WEIGHTED_EVAL_QUALITY_EXP = new EntityFieldAccessor(
+				"weightedExpCostEval", "WorkerQuality_Eval_DS_Exp_w", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
 
 		public static final EntityFieldAccessor EVAL_QUALITY_OPT = new EntityFieldAccessor(
-				"minCostEval", "Est. Quality (Optimized)",
+				"minCostEval", "WorkerQuality_Eval_DS_Min_n",
 				WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Minimized cost, according to evaluation data");
+		}.withSummaryAveraged("Actual worker quality (non-weighted, DS_Min metric)");
+		
+		public static final EntityFieldAccessor WEIGHTED_EVAL_QUALITY_OPT = new EntityFieldAccessor(
+				"weightedMinCostEval", "WorkerQuality_Eval_DS_Min_w",
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
+
 
 		public static final EntityFieldAccessor COUNT_ANNOTATION = new EntityFieldAccessor(
-				"numContributions", "Number of Annotations",
-				WorkerDecorator.class)
-				.withSummaryAveraged("Number of Annotations");
+				"numContributions", "Number of labels",
+				WorkerDecorator.class)  {
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Labels per worker");
 
 		public static final EntityFieldAccessor COUNT_GOLD_TEST = new EntityFieldAccessor(
-				"numGoldTests", "Gold Tests", WorkerDecorator.class)
-				.withSummaryAveraged("Number of Gold Tests");
+				"numGoldTests", "Gold Tests", WorkerDecorator.class)  {
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Gold tests per worker");
 
 		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
@@ -509,9 +592,18 @@ public class FieldAccessors {
 			result.add(NAME);
 
 			result.add(EST_QUALITY_EXP);
+			result.add(WEIGHTED_EST_QUALITY_EXP);
+			
 			result.add(EST_QUALITY_OPT);
+			result.add(WEIGHTED_EST_QUALITY_OPT);
+			
 			result.add(EVAL_QUALITY_EXP);
+			result.add(WEIGHTED_EVAL_QUALITY_EXP);
+			
 			result.add(EVAL_QUALITY_OPT);
+			result.add(WEIGHTED_EVAL_QUALITY_OPT);
+			
+			
 			result.add(COUNT_ANNOTATION);
 			result.add(COUNT_GOLD_TEST);
 

@@ -48,7 +48,7 @@ public class DatumDecorator extends Decorator<Datum> {
 	}
 	
 	public Double getExpectedMVCost() {
-		return object.getExpectedMVCost();
+		return Helper.getExpectedSoftLabelCost(object.getProbabilityVector(ClassificationMethod.MV_Soft), object.getDs().getCategories());
 	}
 	
 	public Double getMinCost() {
@@ -76,11 +76,11 @@ public class DatumDecorator extends Decorator<Datum> {
 	}
 	
 	public Double getDataQualityForDS() {
-		return 1 - getExpectedCost() / getSpammerCost();
+		return 1 - getExpectedCost() / getMinSpammerCost();
 	}
 	
 	public Double getDataQualityForMV() {
-		return 1 - getExpectedMVCost() / getSpammerCost();
+		return 1 - getExpectedMVCost() / getMinSpammerCost();
 	}
 	
 	public Double getDataQualityForDSOpt() {
