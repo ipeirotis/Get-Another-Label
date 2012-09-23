@@ -526,10 +526,13 @@ public class FieldAccessors {
 			result.add(EVAL_COST_DS_SOFT);
 			result.add(EVAL_COST_MV_SOFT);
 			
+			result.add(DATAQUALITY_DS_ML);
+			result.add(DATAQUALITY_MV_ML);
 			result.add(DATAQUALITY_DS);
 			result.add(DATAQUALITY_MV);
 			result.add(DATAQUALITY_DS_OPT);
 			result.add(DATAQUALITY_MV_OPT);
+			
 
 			result.add(DATAQUALITY_EVAL_COST_DS_ML);
 			result.add(DATAQUALITY_EVAL_COST_MV_ML);
