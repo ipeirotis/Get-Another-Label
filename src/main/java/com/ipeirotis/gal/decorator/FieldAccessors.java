@@ -530,7 +530,7 @@ public class FieldAccessors {
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_Exp metric)");
+		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_ML metric)");
 		
 		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_ML = new EntityFieldAccessor(
 				"weightedMaxLikelihoodCost", "WorkerQuality_Estm_DS_ML_w",
@@ -539,7 +539,7 @@ public class FieldAccessors {
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 
-		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_ML metric)");
 
 		public static final EntityFieldAccessor EST_QUALITY_OPT = new EntityFieldAccessor(
 				"minCost", "WorkerQuality_Estm_DS_Min_n", WorkerDecorator.class) {

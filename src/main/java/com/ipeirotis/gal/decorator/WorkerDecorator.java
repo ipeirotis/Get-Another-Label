@@ -60,7 +60,7 @@ public class WorkerDecorator extends Decorator<Worker> {
 	}
 	
 	public Double getWeightedMaxLikelihoodCostEval() {
-		return worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Eval);
+		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Eval);
 	}
 
 	

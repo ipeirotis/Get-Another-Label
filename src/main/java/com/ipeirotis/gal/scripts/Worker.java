@@ -135,14 +135,6 @@ public class Worker implements Entity {
 		//TODO: Allow for using both the empirical and the ideal conf matrix in evaluation
 	 }
 	
-	/*
-	public static int	EXP_COST_EVAL	= 0; // Expected cost, according to evaluation data
-	public static int	EXP_COST_EST	= 1; // Expected cost, according to the algorithm estimates
-	public static int	MIN_COST_EVAL	= 2; // Minimized cost, according to evaluation data	
-	public static int	MIN_COST_EST	= 3; // Minimized cost, according to the algorithm estimates
-	public static int	COST_NAIVE_EST = 4; // Error rate, multiplied by cost
-	public static int	COST_NAIVE_EVAL = 5; // Error rate, multiplied by cost, actual
-	*/
 	
 	/**
 	 * 
@@ -152,50 +144,14 @@ public class Worker implements Entity {
 	 */
 	public Double getWorkerQuality(Map<String, Category>	categories, ClassificationMethod method) {
 
-		/*
-		assert (method == Worker.EXP_COST_EST || method == Worker.EXP_COST_EVAL 
-				|| method==Worker.MIN_COST_EST || method == Worker.MIN_COST_EVAL);
-				*/
-
 
 		Double cost = 0.0;
 		
-		/*
-		if (method == Worker.COST_NAIVE_EST) {
-			Double c = 0.0;
-			Double s = 0.0;
-			for (Category from : categories.values()) {
-				for (Category to : categories.values()) {
-					c += from.getPrior() * from.getCost(to.getName()) * getErrorRate(from.getName(), to.getName());
-					s += from.getPrior() * from.getCost(to.getName());
-				}
-			}
-			return (s > 0) ? c / s : 0.0;
-		}
-		
-		if (method == Worker.COST_NAIVE_EVAL) {
-			Double c = 0.0;
-			Double s = 0.0;
-			for (Category from : categories.values()) {
-				for (Category to : categories.values()) {
-					c += from.getPrior() * from.getCost(to.getName()) * getErrorRate_Eval(from.getName(), to.getName());
-					s += from.getPrior() * from.getCost(to.getName());
-				}
-			}
-			return (s > 0) ? c / s : 0.0;
-		}
-		*/
-
 		// We estimate first how often the worker assigns each category label
-
 		HashMap<String, Double> worker_prior = getPrior();
 
-		// We now know the frequency with which we will see a label
-		// "assigned_label" from worker
-		// Each of this "hard" labels from the annotator k will correspond to a
-		// corrected
-		// "soft" label
 		for (Category assigned : categories.values()) {
+			
 			// Let's find the soft label that corresponds to assigned_label
 			String assignedCategory = assigned.getName();
 			Map<String, Double> softLabel;
@@ -217,7 +173,6 @@ public class Worker implements Entity {
 					break;
 			}
 				
-			
 			// Add the cost of this label
 			switch (method) {
 				case DS_MaxLikelihood_Estm:
@@ -236,26 +191,6 @@ public class Worker implements Entity {
 					// should never happen
 			}
 			
-			/*
-			if (method == Worker.EXP_COST_EVAL) {
-				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
-				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
-			} else if (method == Worker.MIN_COST_EVAL) {
-				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
-				cost += Helper.getMinCostLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
-			} else if (method == Worker.EXP_COST_EST) {
-				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
-				cost += Helper.getExpectedSoftLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
-			} else if (method == Worker.MIN_COST_EST) {
-				Map<String, Double> softLabel = getSoftLabelForLabel(assignedCategory, categories, false);
-				cost += Helper.getMinCostLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
-			} else {
-				// We should never reach this
-				System.err.println("Error: Incorrect method for cost");
-			}
-			*/
-
-
 
 		}
 
