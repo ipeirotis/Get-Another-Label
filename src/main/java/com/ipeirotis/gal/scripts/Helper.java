@@ -50,31 +50,26 @@ public class Helper {
 	 * @param p
 	 * @return The classification cost of this soft label if we classify in the class that has the minimum exp cost.
 	 */
-	public static Double getMinSoftLabelCost(Map<String, Double> probabilities, Map<String, Category>	categories) {
+	public static Double getMinCostLabelCost(Map<String, Double> probabilities, Map<String, Category>	categories) {
 
-		Double min_cost = Double.NaN;
+		Double cost  = 0.0;
 
 		// We know that the classification cost is minimized if we pick *one* category, as opposed to a mixture.
 		// What is the category that has the lowest cost in this case?
-		for (String c1 : probabilities.keySet()) {
-			// So, with probability p1 the object belongs to class c1
-			// Double p1 = probabilities.get(c1);
-			
-			Double costfor_c2 = 0.0;
-			for (String c2 : probabilities.keySet()) {
-				// With probability p2 it actually belongs to class c2
-				Double p2 = probabilities.get(c2);
-				Double cost = categories.get(c1).getCost(c2);
-				costfor_c2 += p2 * cost;
-			}
-
-			if (Double.isNaN(min_cost) || costfor_c2 < min_cost) {
-				min_cost = costfor_c2;
-			}
-
+		String to = getMinCostLabel(probabilities, categories);
+		if (to == null) {
+			return Double.NaN;
 		}
+		
+			for (String from : probabilities.keySet()) {
+				// With probability p it actually belongs to class from
+				Double p = probabilities.get(from);
+				Double c = categories.get(from).getCost(to);
+				
+				cost += p * c;
+			}
 
-		return min_cost;
+		return cost;
 	}
 
 	public static String getMinCostLabel(Map<String, Double> softLabel, Map<String, Category>	categories) {
@@ -91,7 +86,7 @@ public class Helper {
 			for (String c2 : softLabel.keySet()) {
 				// With probability p2 it actually belongs to class c2
 				Double p2 = softLabel.get(c2);
-				Double cost = categories.get(c1).getCost(c2);
+				Double cost = categories.get(c2).getCost(c1);
 				costfor_c1 += p2 * cost;
 
 			}
@@ -134,6 +129,31 @@ public class Helper {
 	
 	
 	/**
+	 * Gets as input a "soft label" (i.e., a distribution of probabilities over
+	 * classes) and returns the expected cost for the maximum likelihood label.
+	 * 
+	 * @param p
+	 * @return The classification cost of this soft label if we classify in the max likelihood class
+	 */
+	public static Double getMaxLikelihoodCost(Map<String, Double> probabilities, Map<String, Category>	categories) {
+
+		Double cost = 0.0;
+
+		String to = getMaxLikelihoodLabel(probabilities, categories);
+			
+			for (String from : probabilities.keySet()) {
+				// With probability p it actually belongs to class from
+				Double p = probabilities.get(from);
+				Double c = categories.get(from).getCost(to);
+				cost += p * c;
+			}
+
+		return cost;
+	}
+
+	
+	
+	/**
 	 * Returns the minimum possible cost of a "spammer" worker, who assigns
 	 * completely random labels.
 	 * 
@@ -145,7 +165,7 @@ public class Helper {
 		for (Category c : categories.values()) {
 			prior.put(c.getName(), c.getPrior());
 		}
-		return getMinSoftLabelCost(prior, categories);
+		return getMinCostLabelCost(prior, categories);
 	}
 	
 

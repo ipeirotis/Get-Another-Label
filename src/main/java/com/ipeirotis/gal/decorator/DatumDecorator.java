@@ -52,11 +52,11 @@ public class DatumDecorator extends Decorator<Datum> {
 	}
 	
 	public Double getMinCost() {
-		return Helper.getMinSoftLabelCost(object.getProbabilityVector(ClassificationMethod.DS_Soft), object.getDs().getCategories());
+		return Helper.getMinCostLabelCost(object.getProbabilityVector(ClassificationMethod.DS_Soft), object.getDs().getCategories());
 	}
 	
 	public Double getMinMVCost() {
-		return Helper.getMinSoftLabelCost(object.getProbabilityVector(ClassificationMethod.MV_Soft), object.getDs().getCategories());
+		return Helper.getMinCostLabelCost(object.getProbabilityVector(ClassificationMethod.MV_Soft), object.getDs().getCategories());
 	}
 	
 	public String getMinCostCategory_MV() {

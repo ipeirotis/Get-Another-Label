@@ -70,23 +70,23 @@ public class WorkerQualityReport extends Report {
 
 		Map<String, Category> categories = w.getDs().getCategories();
 		
-		Double cost_exp = w.getWorkerQuality(categories, Worker.EXP_COST_EST);
+		Double cost_exp = w.getWorkerQuality(categories, Worker.ClassificationMethod.DS_Soft_Estm);
 		String s_cost_exp = (Double.isNaN(cost_exp)) ? "---" : Math
-				.round(100 * (1 - cost_exp)) + "%";
+				.round(100 * cost_exp) + "%";
 
-		Double cost_min = w.getWorkerQuality(categories, Worker.MIN_COST_EST);
+		Double cost_min = w.getWorkerQuality(categories, Worker.ClassificationMethod.DS_MinCost_Estm);
 		String s_cost_min = (Double.isNaN(cost_min)) ? "---" : Math
-				.round(100 * (1 - cost_min)) + "%";
+				.round(100 * cost_min) + "%";
 
 		Double cost_exp_eval = w
-				.getWorkerQuality(categories, Worker.EXP_COST_EVAL);
+				.getWorkerQuality(categories, Worker.ClassificationMethod.DS_Soft_Eval);
 		String s_cost_exp_eval = (Double.isNaN(cost_exp_eval)) ? "---" : Math
-				.round(100 * (1 - cost_exp_eval)) + "%";
+				.round(100 * cost_exp_eval) + "%";
 
 		Double cost_min_eval = w
-				.getWorkerQuality(categories, Worker.MIN_COST_EVAL);
+				.getWorkerQuality(categories, Worker.ClassificationMethod.DS_MinCost_Eval);
 		String s_cost_min_eval = (Double.isNaN(cost_min_eval)) ? "---" : Math
-				.round(100 * (1 - cost_min_eval)) + "%";
+				.round(100 * cost_min_eval) + "%";
 
 		Integer contributions = w.getAssignedLabels().size();
 		Integer gold_tests = w.getDs().countGoldTests(w.getAssignedLabels());

@@ -521,6 +521,25 @@ public class FieldAccessors {
 			}
 
 		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
+		
+		
+		public static final EntityFieldAccessor EST_QUALITY_ML = new EntityFieldAccessor(
+				"maxLikelihoodCost", "WorkerQuality_Estm_DS_ML_n",
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_Exp metric)");
+		
+		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_ML = new EntityFieldAccessor(
+				"weightedMaxLikelihoodCost", "WorkerQuality_Estm_DS_ML_w",
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
 
 		public static final EntityFieldAccessor EST_QUALITY_OPT = new EntityFieldAccessor(
 				"minCost", "WorkerQuality_Estm_DS_Min_n", WorkerDecorator.class) {
@@ -552,6 +571,22 @@ public class FieldAccessors {
 			}
 		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
 
+		public static final EntityFieldAccessor EVAL_QUALITY_ML = new EntityFieldAccessor(
+				"maxLikelihoodCostEval", "WorkerQuality_Eval_DS_ML_n", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual worker quality (non-weighted, DS_ML metric)");
+		
+		public static final EntityFieldAccessor WEIGHTED_EVAL_QUALITY_ML = new EntityFieldAccessor(
+				"weightedMaxLikelihoodCostEval", "WorkerQuality_Eval_DS_ML_w", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_ML metric)");
+
+		
+		
 		public static final EntityFieldAccessor EVAL_QUALITY_OPT = new EntityFieldAccessor(
 				"minCostEval", "WorkerQuality_Eval_DS_Min_n",
 				WorkerDecorator.class) {
@@ -595,13 +630,19 @@ public class FieldAccessors {
 
 			result.add(EST_QUALITY_EXP);
 			result.add(WEIGHTED_EST_QUALITY_EXP);
-			
+
+			result.add(EST_QUALITY_ML);
+			result.add(WEIGHTED_EST_QUALITY_ML);
+
 			result.add(EST_QUALITY_OPT);
 			result.add(WEIGHTED_EST_QUALITY_OPT);
 			
 			result.add(EVAL_QUALITY_EXP);
 			result.add(WEIGHTED_EVAL_QUALITY_EXP);
 			
+			result.add(EVAL_QUALITY_ML);
+			result.add(WEIGHTED_EVAL_QUALITY_ML);
+		
 			result.add(EVAL_QUALITY_OPT);
 			result.add(WEIGHTED_EVAL_QUALITY_OPT);
 			
