@@ -51,6 +51,14 @@ public class DatumDecorator extends Decorator<Datum> {
 		return Helper.getExpectedSoftLabelCost(object.getProbabilityVector(ClassificationMethod.MV_Soft), object.getDs().getCategories());
 	}
 	
+	public Double getDSMLCost() {
+		return Helper.getMaxLikelihoodCost(object.getProbabilityVector(ClassificationMethod.DS_Soft), object.getDs().getCategories());
+	}
+	
+	public Double getMVMLCost() {
+		return Helper.getMaxLikelihoodCost(object.getProbabilityVector(ClassificationMethod.MV_Soft), object.getDs().getCategories());
+	}
+	
 	public Double getMinCost() {
 		return Helper.getMinCostLabelCost(object.getProbabilityVector(ClassificationMethod.DS_Soft), object.getDs().getCategories());
 	}

@@ -297,6 +297,26 @@ public class FieldAccessors {
 		
 
 		public static final//
+		EntityFieldAccessor DS_ML_COST = new EntityFieldAccessor("DSMLCost",
+				"DataCost_Estm_DS_ML"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated classification cost (DS_ML metric)");
+
+		public static final//
+		EntityFieldAccessor MV_ML_COST = new EntityFieldAccessor("MVMLCost",
+				"DataCost_Estm_MV_ML"){
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated classification cost (MV_ML metric)");
+		
+
+		
+		
+		
+		public static final//
 		EntityFieldAccessor NOVOTE_MIN_COST = new EntityFieldAccessor(
 				"minSpammerCost", "DataCost_Estm_NoVote_Min"){
 			{
@@ -471,9 +491,12 @@ public class FieldAccessors {
 
 			result.add(DS_EXP_COST);
 			result.add(MV_EXP_COST);
-			result.add(NOVOTE_EXP_COST);
+			result.add(DS_ML_COST);
+			result.add(MV_ML_COST);
 			result.add(DS_MIN_COST);
 			result.add(MV_MIN_COST);
+			
+			result.add(NOVOTE_EXP_COST);
 			result.add(NOVOTE_MIN_COST);
 
 
