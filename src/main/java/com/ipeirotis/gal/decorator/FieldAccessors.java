@@ -363,6 +363,25 @@ public class FieldAccessors {
 			}
 
 		}.withSummaryAveraged("Estimated data quality, naive mincost label");
+		
+		public static final//
+		EntityFieldAccessor DATAQUALITY_DS_ML = new EntityFieldAccessor(
+				"dataQualityForDSML", "DataQuality_Estm_DS_ML") {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Estimated data quality, EM algorithm, maximum likelihood");
+
+		public static final//
+		EntityFieldAccessor DATAQUALITY_MV_ML = new EntityFieldAccessor(
+				"dataQualityForMVML", "DataQuality_Estm_MV_ML") {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+
+		}.withSummaryAveraged("Estimated data quality, naive majority label");
+		
 
 		// Eval
 

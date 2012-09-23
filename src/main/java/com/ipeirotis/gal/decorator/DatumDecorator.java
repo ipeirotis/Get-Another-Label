@@ -99,6 +99,14 @@ public class DatumDecorator extends Decorator<Datum> {
 		return 1 - getMinMVCost() / getMinSpammerCost();
 	}
 	
+	public Double getDataQualityForDSML() {
+		return 1 - getDSMLCost() / getMinSpammerCost();
+	}
+
+	public Double getDataQualityForMVML() {
+		return 1 - getMVMLCost() / getMinSpammerCost();
+	}
+	
 	public Double getEvalDataQualityForDSML() {
 		return 1 - getEvalClassificationCostForDSML() / getMinSpammerCost();
 	}
