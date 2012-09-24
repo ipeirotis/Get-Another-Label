@@ -45,6 +45,7 @@ public class ConfusionMatrixReport extends Report {
 				}
 				reportTarget.println("");
 			}
+			reportTarget.println("");
 		}
 	}
 
