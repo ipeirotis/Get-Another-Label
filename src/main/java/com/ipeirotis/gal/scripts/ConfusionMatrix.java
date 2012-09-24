@@ -20,10 +20,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 class CategoryPair {
 
-	private String	from;
-	private String	to;
+	private String from;
+	private String to;
 
 	public CategoryPair(String from, String to) {
 
@@ -74,13 +76,19 @@ class CategoryPair {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("from", this.from)
+				.append("to", this.to).toString();
+	}
+
 }
 
 public class ConfusionMatrix {
 
-	private Set<String>										categories;
-	private HashMap<CategoryPair, Double>	matrix;
-	
+	private Set<String> categories;
+	private HashMap<CategoryPair, Double> matrix;
+
 	public Set<String> getCategoryNames() {
 		return categories;
 	}
@@ -118,8 +126,8 @@ public class ConfusionMatrix {
 	}
 
 	/**
-	 * Makes the matrix to be row-stochastic: In other words, for a given "from" category,
-	 * if we sum the errors across all the "to" categories, we get 1.0
+	 * Makes the matrix to be row-stochastic: In other words, for a given "from"
+	 * category, if we sum the errors across all the "to" categories, we get 1.0
 	 */
 	public void normalize() {
 
@@ -133,7 +141,8 @@ public class ConfusionMatrix {
 				double error_rate;
 
 				// If the marginal across the "from" category is 0
-				// this means that the worker has not even seen an object of the "from"
+				// this means that the worker has not even seen an object of the
+				// "from"
 				// category. In this case, we set the value to NaN
 				if (from_marginal == 0.0) {
 					error_rate = Double.NaN;
@@ -146,8 +155,9 @@ public class ConfusionMatrix {
 	}
 
 	/**
-	 * Makes the matrix to be row-stochastic: In other words, for a given "from" category,
-	 * if we sum the errors across all the "to" categories, we get 1.0.
+	 * Makes the matrix to be row-stochastic: In other words, for a given "from"
+	 * category, if we sum the errors across all the "to" categories, we get
+	 * 1.0.
 	 * 
 	 * We use Laplace smoothing
 	 */
@@ -160,7 +170,8 @@ public class ConfusionMatrix {
 			}
 			for (String to : this.categories) {
 				double error = getErrorRate(from, to);
-				setErrorRate(from, to, (error + 1) / (from_marginal + this.categories.size()));
+				setErrorRate(from, to, (error + 1)
+						/ (from_marginal + this.categories.size()));
 			}
 		}
 	}
@@ -185,29 +196,35 @@ public class ConfusionMatrix {
 	}
 
 	/**
-	 * Given a correct label, returns probabilistically a label that can be assigned by a worker with this confusion matrix
+	 * Given a correct label, returns probabilistically a label that can be
+	 * assigned by a worker with this confusion matrix
 	 * 
 	 * 
-	 * @param correct The correct category for the object
-	 * @return A possible assigned label for the object, assigned probabilistically according to the confusion matrix values
+	 * @param correct
+	 *            The correct category for the object
+	 * @return A possible assigned label for the object, assigned
+	 *         probabilistically according to the confusion matrix values
 	 */
 	public String getAssignedLabel(String correct) {
 		Double prob = Math.random();
-		
+
 		for (String assignedLabel : this.categories) {
 			CategoryPair cp = new CategoryPair(correct, assignedLabel);
 			Double p = matrix.get(cp);
-			
-			if (p>prob) {
+
+			if (p > prob) {
 				return assignedLabel;
 			} else {
 				prob -= p;
 			}
 		}
-		
-		// We should not really reach this point, but it can happen in case of rounding errors in the error rates
-		// In that case, we just call again the classification method. The probability of not returning a value again
+
+		// We should not really reach this point, but it can happen in case of
+		// rounding errors in the error rates
+		// In that case, we just call again the classification method. The
+		// probability of not returning a value again
 		// gets exponentially small very quickly
 		return getAssignedLabel(correct);
 	}
+
 }

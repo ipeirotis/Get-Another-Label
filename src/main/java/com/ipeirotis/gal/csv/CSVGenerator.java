@@ -11,13 +11,13 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 
 public class CSVGenerator<T> {
-	final Collection<FieldAccessor> fieldAcessors;
+	final Collection<FieldAccessor> fieldAccessors;
 
 	final Iterable<T> iterable;
 
-	public CSVGenerator(Collection<FieldAccessor> fieldAcessors, Iterable<T> iterable) {
+	public CSVGenerator(Collection<FieldAccessor> fieldAccessors, Iterable<T> iterable) {
 		super();
-		this.fieldAcessors = fieldAcessors;
+		this.fieldAccessors = fieldAccessors;
 		this.iterable = iterable;
 	}
 	
@@ -40,8 +40,8 @@ public class CSVGenerator<T> {
 	private String[] getHeaderLineFor() {
 		List<String> result = new ArrayList<String>();
 		
-		for (FieldAccessor fieldAcessor : fieldAcessors)
-			result.add(fieldAcessor.getDesc());
+		for (FieldAccessor fieldAccessor : fieldAccessors)
+			result.add(fieldAccessor.getDesc());
 		
 		return (String[]) result.toArray(new String[result.size()]);
 	}
@@ -49,7 +49,7 @@ public class CSVGenerator<T> {
 	private String[] getRecordLineFor(T object) {
 		List<String> result = new ArrayList<String>();
 		
-		for (FieldAccessor fieldAcessor : fieldAcessors)
+		for (FieldAccessor fieldAcessor : fieldAccessors)
 			result.add(fieldAcessor.getStringValue(object));
 		
 		return (String[]) result.toArray(new String[result.size()]);

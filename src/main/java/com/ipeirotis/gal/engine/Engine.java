@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.ipeirotis.gal.engine.rpt.CategoryPriorsReport;
+import com.ipeirotis.gal.engine.rpt.ConfusionMatrixReport;
 import com.ipeirotis.gal.engine.rpt.ObjectResultReport;
 import com.ipeirotis.gal.engine.rpt.Report;
 import com.ipeirotis.gal.engine.rpt.ReportingContext;
@@ -191,6 +192,7 @@ public class Engine {
 		}
 		
 		reports.add(new SummaryReport());
+		reports.add(new ConfusionMatrixReport());
 		
 		try {
 			for (Report report : reports) {
