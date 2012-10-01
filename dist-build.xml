@@ -13,38 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project name="get-another-label" default="package" xmlns:mvn="antlib:org.apache.maven.artifact.ant">
-	<target name="clean">
-		<mvn:mvn>
-			<arg value="clean" />
-		</mvn:mvn>
-	</target>
-
-	<target name="package">
-		<mvn:mvn>
-			<arg value="-Pdist" />
-			<arg value="-Dmaven.test.skip" />
-			<arg value="package" />
-		</mvn:mvn>
-	</target>
-
-	<target name="zip" depends="package">
+<project name="get-another-label">
+	<target name="zip">
 		<rename dest="target/get-another-label" src="target/appassembler" />
 		<mkdir dir="target/dist" />
 		<zip destfile="target/dist/get-another-label-latest.zip" basedir="target" includes="get-another-label/**/*" />
-	</target>
-	
-	<target name="upload">
-		<mvn:mvn>
-			<arg value="-Pdist" />
-			<arg value="ghDownloads:upload" />
-		</mvn:mvn>
-	</target>
-	
-	<target name="docs">
-		<mvn:mvn>
-			<arg value="-Pdist" />
-			<arg value="site" />
-		</mvn:mvn>
 	</target>
 </project>
