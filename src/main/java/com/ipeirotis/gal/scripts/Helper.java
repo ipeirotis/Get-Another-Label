@@ -140,6 +140,9 @@ public class Helper {
 		Double cost = 0.0;
 
 		String to = getMaxLikelihoodLabel(probabilities, categories);
+		if (to == null) {
+			return Double.NaN;
+		}
 			
 			for (String from : probabilities.keySet()) {
 				// With probability p it actually belongs to class from

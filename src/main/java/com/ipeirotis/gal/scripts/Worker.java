@@ -239,14 +239,6 @@ public class Worker implements Entity {
 	}
 
 
-	/**
-	 * @return the priorCounts
-	 */
-	public HashMap<String, Integer> getPriorCounts() {
-
-		return priorCounts;
-	}
-
 	public void setErrorRate(String categoryFrom, String categoryTo, Double error) {
 
 		this.cm.setErrorRate(categoryFrom, categoryTo, error);
