@@ -423,7 +423,7 @@ public class FieldAccessors {
 			{
 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
 			}
-		}.withSummaryAveraged("Actual classification cost for naive min-cost classification,");
+		}.withSummaryAveraged("Actual classification cost for naive min-cost classification");
 
 		public static final	EntityFieldAccessor//
 		EVAL_COST_DS_MIN = new EntityFieldAccessor(
