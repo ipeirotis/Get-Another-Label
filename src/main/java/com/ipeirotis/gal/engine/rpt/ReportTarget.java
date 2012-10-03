@@ -3,6 +3,7 @@ package com.ipeirotis.gal.engine.rpt;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 public class ReportTarget {
 	protected PrintWriter writer;
@@ -16,7 +17,7 @@ public class ReportTarget {
 	}
 	
 	public void print(String mask, Object... args) {
-		this.writer.write(String.format(mask, args));
+		this.writer.write(String.format(Locale.ENGLISH, mask, args));
 	}
 	
 	public void println(String mask, Object... args) {

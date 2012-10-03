@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.ipeirotis.gal.engine;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -195,6 +196,12 @@ public class Engine {
 		reports.add(new ConfusionMatrixReport());
 		
 		try {
+			File outputDir = new File("results");
+			
+			if (! outputDir.exists())
+				outputDir.mkdir();
+			
+			
 			for (Report report : reports) {
 				report.execute(rptCtx);
 			}

@@ -1,5 +1,7 @@
 package com.ipeirotis.gal.decorator;
 
+import java.util.Locale;
+
 import com.ipeirotis.utils.Utils;
 
 public abstract class MetricsFormatter {
@@ -12,7 +14,7 @@ public abstract class MetricsFormatter {
 			if (null == result || Double.isNaN(result))
 				return "N/A";
 
-			return String.format("%3.2f%%", Utils.round(100 * result, 2));
+			return String.format(Locale.ENGLISH, "%3.2f%%", Utils.round(100 * result, 2));
 		}
 	};
 	
@@ -22,8 +24,8 @@ public abstract class MetricsFormatter {
 		String format(Double result) {
 			if (null == result || Double.isNaN(result))
 				return "N/A";
-
-			return String.format("%2.4f", Utils.round(result, 4));
+			
+			return String.format(Locale.ENGLISH, "%2.4f", Utils.round(result, 4)).toString();
 		}
 	};
 }

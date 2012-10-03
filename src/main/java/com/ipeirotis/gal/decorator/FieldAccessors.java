@@ -547,7 +547,7 @@ public class FieldAccessors {
 
 	public static final class WORKER_ACESSORS {
 		public static final//
-		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Worker");
+		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Worker", WorkerDecorator.class);
 
 		public static final EntityFieldAccessor EST_QUALITY_EXP = new EntityFieldAccessor(
 				"expectedCost", "WorkerQuality_Estm_DS_Exp_n",
@@ -653,20 +653,10 @@ public class FieldAccessors {
 
 		public static final EntityFieldAccessor COUNT_ANNOTATION = new EntityFieldAccessor(
 				"numContributions", "Number of labels",
-				WorkerDecorator.class)  {
-			{
-				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
-			}
-
-		}.withSummaryAveraged("Labels per worker");
+				WorkerDecorator.class).withSummaryAveraged("Labels per worker");
 
 		public static final EntityFieldAccessor COUNT_GOLD_TEST = new EntityFieldAccessor(
-				"numGoldTests", "Gold Tests", WorkerDecorator.class)  {
-			{
-				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
-			}
-
-		}.withSummaryAveraged("Gold tests per worker");
+				"numGoldTests", "Gold Tests", WorkerDecorator.class).withSummaryAveraged("Gold tests per worker");
 
 		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
