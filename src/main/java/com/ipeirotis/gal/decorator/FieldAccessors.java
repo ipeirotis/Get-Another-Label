@@ -218,7 +218,7 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
 
-		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
+		public static Collection<FieldAccessor> getFieldAccessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
 
 			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP);
@@ -489,7 +489,7 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Actual data quality, naive soft label");
 
-		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
+		public static Collection<FieldAccessor> getFieldAccessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
 
 			result.add(NAME);
@@ -545,7 +545,7 @@ public class FieldAccessors {
 		}
 	}
 
-	public static final class WORKER_ACESSORS {
+	public static final class WORKER_ACCESSORS {
 		public static final//
 		EntityFieldAccessor NAME = new EntityFieldAccessor("name", "Worker", WorkerDecorator.class);
 
@@ -658,7 +658,7 @@ public class FieldAccessors {
 		public static final EntityFieldAccessor COUNT_GOLD_TEST = new EntityFieldAccessor(
 				"numGoldTests", "Gold Tests", WorkerDecorator.class).withSummaryAveraged("Gold tests per worker");
 
-		public static Collection<FieldAccessor> getFieldAcessors(DawidSkene ds) {
+		public static Collection<FieldAccessor> getFieldAccessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
 
 			result.add(NAME);

@@ -16,22 +16,22 @@ public class DawidSkeneDecorator extends Decorator<DawidSkene> {
 
 	public Double getWeightedQualityForEstQualityExp() {
 		return getWeightedQualityFor(object,
-				FieldAccessors.WORKER_ACESSORS.EST_QUALITY_EXP);
+				FieldAccessors.WORKER_ACCESSORS.EST_QUALITY_EXP);
 	}
 
 	public Double getWeightedQualityForEstQualityOpt() {
 		return getWeightedQualityFor(object,
-				FieldAccessors.WORKER_ACESSORS.EST_QUALITY_OPT);
+				FieldAccessors.WORKER_ACCESSORS.EST_QUALITY_OPT);
 	}
 
 	public Double getWeightedQualityForEvalQualityExp() {
 		return getWeightedQualityFor(object,
-				FieldAccessors.WORKER_ACESSORS.EVAL_QUALITY_EXP);
+				FieldAccessors.WORKER_ACCESSORS.EVAL_QUALITY_EXP);
 	}
 
 	public Double getWeightedQualityForEvalQualityOpt() {
 		return getWeightedQualityFor(object,
-				FieldAccessors.WORKER_ACESSORS.EVAL_QUALITY_OPT);
+				FieldAccessors.WORKER_ACCESSORS.EVAL_QUALITY_OPT);
 	}
 
 	private Double getWeightedQualityFor(DawidSkene object,

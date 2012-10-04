@@ -56,10 +56,10 @@ public class SummaryReport extends Report {
 		return super.execute(ctx);
 	}
 
-	public <T> Object getAverage(FieldAccessor fieldAcessor, Iterable<T> objects) {
+	public <T> Object getAverage(FieldAccessor fieldAccessor, Iterable<T> objects) {
 		Double accumulator = 0d;
 		long count = 0;
-		boolean evalP = fieldAcessor instanceof EvalDatumFieldAccessor;
+		boolean evalP = fieldAccessor instanceof EvalDatumFieldAccessor;
 		
 		for (T object : objects) {
 			if (evalP) {
@@ -70,7 +70,7 @@ public class SummaryReport extends Report {
 			}
 			
 			
-			Double value = (Double) fieldAcessor.getValue(object);
+			Double value = (Double) fieldAccessor.getValue(object);
 			
  			if (null == value || value.isNaN())
 				continue;
@@ -81,8 +81,8 @@ public class SummaryReport extends Report {
 		
 		Double result = accumulator / count;
 		
-		if (null != fieldAcessor.getFormatter()) {
-			return fieldAcessor.getFormatter().format(result);
+		if (null != fieldAccessor.getFormatter()) {
+			return fieldAccessor.getFormatter().format(result);
 		}
 		
 		return result;

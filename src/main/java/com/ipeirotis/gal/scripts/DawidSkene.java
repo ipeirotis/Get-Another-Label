@@ -37,11 +37,11 @@ public class DawidSkene {
 
 	public Collection<FieldAccessor> getFieldAccessors(Class<?> entityClass) {
 		if (DawidSkene.class.isAssignableFrom(entityClass)) {
-			return FieldAccessors.DS_ACCESSORS.getFieldAcessors(this);
+			return FieldAccessors.DS_ACCESSORS.getFieldAccessors(this);
 		} else if (Datum.class.isAssignableFrom(entityClass)) {
 			return datumFieldAccessors;
 		} else if (Worker.class.isAssignableFrom(entityClass)) {
-			return FieldAccessors.WORKER_ACESSORS.getFieldAcessors(this);
+			return FieldAccessors.WORKER_ACCESSORS.getFieldAccessors(this);
 		}
 
 		return null;
@@ -64,7 +64,7 @@ public class DawidSkene {
 		}
 
 		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS
-				.getFieldAcessors(this);
+				.getFieldAccessors(this);
 
 		// We initialize the priors to be uniform across classes
 		// if the user did not pass any information about the prior values
@@ -176,7 +176,7 @@ public class DawidSkene {
 		}
 
 		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS
-				.getFieldAcessors(this);
+				.getFieldAccessors(this);
 	}
 
 	public HashMap<String, String> getMajorityVote() {
