@@ -72,7 +72,9 @@ public class WorkerQualityReport extends Report {
 				reportTarget.println("%s: %s", a.getDesc(), value);
 			}
 			
-			writeConfusionMatrix(reportTarget, w);
+			writeEstimatedConfusionMatrix(reportTarget, w);
+
+			writeEvalConfusionMatrix(reportTarget, w);
 			
 			reportTarget.println("");
 		}
@@ -81,11 +83,29 @@ public class WorkerQualityReport extends Report {
 	/**
 	 * TODO Smells bad
 	 */
-	private void writeConfusionMatrix(ReportTarget reportTarget, Worker w) {
+	private void writeEvalConfusionMatrix(ReportTarget reportTarget, Worker w) {
 		reportTarget.println("Confusion Matrix (Evaluation data):");
 		for (String correct_name : w.getDs().getCategories().keySet()) {
 			for (String assigned_name : w.getDs().getCategories().keySet()) {
 				Double cm_entry = w.getErrorRate_Eval(correct_name,
+						assigned_name);
+				String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils
+						.round(100 * cm_entry, 3).toString();
+				reportTarget.print("P[" + correct_name + "->" + assigned_name + "]="
+						+ s_cm_entry + "%%\t");
+			}
+			reportTarget.println("");
+		}
+	}
+
+	/**
+	 * TODO Smells bad
+	 */
+	private void writeEstimatedConfusionMatrix(ReportTarget reportTarget, Worker w) {
+		reportTarget.println("Confusion Matrix (Estimated data):");
+		for (String correct_name : w.getDs().getCategories().keySet()) {
+			for (String assigned_name : w.getDs().getCategories().keySet()) {
+				Double cm_entry = w.getErrorRate(correct_name,
 						assigned_name);
 				String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils
 						.round(100 * cm_entry, 3).toString();
