@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.ipeirotis.gal.decorator.FieldAccessors.EvalDatumFieldAccessor;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.DawidSkene;
 import com.ipeirotis.gal.scripts.Worker;
 
 public class SummaryReport extends Report {
@@ -27,15 +26,6 @@ public class SummaryReport extends Report {
 			reportTarget.println("Labels Assigned by Workers: %s", ctx
 					.getEngine().getLabels().size());
 			
-			for (FieldAccessor a : ctx.getDawidSkene().getFieldAccessors(DawidSkene.class)) {
-				Object value = a.getValue(ctx.getDawidSkene());
-				
-				if (null == value)
-					continue;
-				
-				reportTarget.println("[%s] %s: %s", a.getDesc(), a.getSummaryDescription(), a.getFormatter().format((Double) value));
-			}
-
 			for (FieldAccessor a : ctx.getDawidSkene().getFieldAccessors(Datum.class)) {
 				if (! a.isAveraged())
 					continue;
@@ -71,12 +61,13 @@ public class SummaryReport extends Report {
 			
 			
 			Double value = (Double) fieldAccessor.getValue(object);
+			Integer weight = fieldAccessor.getWeight(object);
 			
  			if (null == value || value.isNaN())
 				continue;
 			
 			accumulator += value;
-			count++;
+			count += weight;
 		}
 		
 		Double result = accumulator / count;

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import com.ipeirotis.gal.scripts.Datum;
 import com.ipeirotis.gal.scripts.DawidSkene;
+import com.ipeirotis.gal.scripts.Worker;
 import com.ipeirotis.utils.Utils;
 
 public class FieldAccessors {
@@ -53,6 +54,14 @@ public class FieldAccessors {
 		}
 
 		MetricsFormatter formatter = null;
+		
+		public Integer getWeight(Object o) {
+			if (name.startsWith("weightedQualityFor")) {
+				return ((Worker) o).getAssignedLabels().size();
+			}
+			
+			return 1;
+		}
 
 		public MetricsFormatter getFormatter() {
 			return formatter;
@@ -175,60 +184,6 @@ public class FieldAccessors {
 
 			return "---";
 		}
-	}
-
-	public static final class DS_ACCESSORS {
-		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP = new EntityFieldAccessor(
-				"weightedQualityForEstQualityExp",
-				"WorkerQuality_Estm_Weighted_DS_Exp", DawidSkeneDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
-
-		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT = new EntityFieldAccessor(
-				"weightedQualityForEstQualityOpt",
-				"WorkerQuality_Estm_Weighted_DS_Min", DawidSkeneDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Min metric)");
-
-		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP = new EntityFieldAccessor(
-				"weightedQualityForEvalQualityExp",
-				"WorkerQuality_Eval_Weighted_DS_Exp",
-				DawidSkeneDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
-
-		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT = new EntityFieldAccessor(
-				"weightedQualityForEvalQualityOpt",
-				"WorkerQuality_Eval_Weighted_DS_Min",
-				DawidSkeneDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-				
-			}
-
-		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
-
-		public static Collection<FieldAccessor> getFieldAccessors(DawidSkene ds) {
-			List<FieldAccessor> result = new ArrayList<FieldAccessor>();
-
-			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP);
-			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT);
-			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP);
-			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT);
-
-			return result;
-		}
-
 	}
 
 	public static final class DATUM_ACCESSORS {
@@ -650,6 +605,43 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
 
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP = new EntityFieldAccessor(
+				"weightedQualityForEstQualityExp",
+				"WorkerQuality_Estm_Weighted_DS_Exp", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
+
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT = new EntityFieldAccessor(
+				"weightedQualityForEstQualityOpt",
+				"WorkerQuality_Estm_Weighted_DS_Min", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Min metric)");
+
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP = new EntityFieldAccessor(
+				"weightedQualityForEvalQualityExp",
+				"WorkerQuality_Eval_Weighted_DS_Exp",
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
+
+		public static final//
+		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT = new EntityFieldAccessor(
+				"weightedQualityForEvalQualityOpt",
+				"WorkerQuality_Eval_Weighted_DS_Min",
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
+			}
+		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
 
 		public static final EntityFieldAccessor COUNT_ANNOTATION = new EntityFieldAccessor(
 				"numContributions", "Number of labels",
@@ -681,6 +673,10 @@ public class FieldAccessors {
 			result.add(EVAL_QUALITY_OPT);
 			result.add(WEIGHTED_EVAL_QUALITY_OPT);
 			
+			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP);
+			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT);
+			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP);
+			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT);
 			
 			result.add(COUNT_ANNOTATION);
 			result.add(COUNT_GOLD_TEST);

@@ -1,5 +1,6 @@
 package com.ipeirotis.gal.decorator;
 
+import com.ipeirotis.gal.decorator.FieldAccessors.EntityFieldAccessor;
 import com.ipeirotis.gal.scripts.Worker;
 import com.ipeirotis.gal.scripts.Worker.ClassificationMethod;
 
@@ -11,7 +12,6 @@ public class WorkerDecorator extends Decorator<Worker> {
 		
 		this.worker = (Worker) wrapped;
 	}
-	
 	
 	public Double getExpectedCost() {
 		return worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_Soft_Estm);
@@ -63,6 +63,36 @@ public class WorkerDecorator extends Decorator<Worker> {
 		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Eval);
 	}
 
+	public Double getWeightedQualityForEstQualityExp() {
+		return getWeightedQualityFor(FieldAccessors.WORKER_ACCESSORS.EST_QUALITY_EXP);
+	}
+
+	public Double getWeightedQualityForEstQualityOpt() {
+		return getWeightedQualityFor(FieldAccessors.WORKER_ACCESSORS.EST_QUALITY_OPT);
+	}
+
+	public Double getWeightedQualityForEvalQualityExp() {
+		return getWeightedQualityFor(FieldAccessors.WORKER_ACCESSORS.EVAL_QUALITY_EXP);
+	}
+
+	public Double getWeightedQualityForEvalQualityOpt() {
+		return getWeightedQualityFor(FieldAccessors.WORKER_ACCESSORS.EVAL_QUALITY_OPT);
+	}
+
+	private Double getWeightedQualityFor(EntityFieldAccessor fieldAccessor) {
+		Double metricValue = getMetric(object, fieldAccessor);
+		
+		if (metricValue.isNaN())
+			return null;
+		
+		return metricValue;
+	}
+
+	private Double getMetric(Worker w, EntityFieldAccessor fieldAccessor) {
+		Object objVal = fieldAccessor.getValue(w);
+		
+		return (null == objVal ? null : ((Double) objVal));
+	}
 	
 	public Double getNumContributions() {
 		return 0d + worker.getAssignedLabels().size();
