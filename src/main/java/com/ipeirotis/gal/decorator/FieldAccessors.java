@@ -56,7 +56,7 @@ public class FieldAccessors {
 		MetricsFormatter formatter = null;
 		
 		public Integer getWeight(Object o) {
-			if (name.startsWith("weightedQualityFor")) {
+			if (name.startsWith("weighted")) {
 				return ((Worker) o).getAssignedLabels().size();
 			}
 			
@@ -513,16 +513,6 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_Exp metric)");
 		
-		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_EXP = new EntityFieldAccessor(
-				"weightedExpectedCost", "WorkerQuality_Estm_DS_Exp_w",
-				WorkerDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-
-		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
-		
-		
 		public static final EntityFieldAccessor EST_QUALITY_ML = new EntityFieldAccessor(
 				"maxLikelihoodCost", "WorkerQuality_Estm_DS_ML_n",
 				WorkerDecorator.class) {
@@ -532,7 +522,7 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_ML metric)");
 		
-		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_ML = new EntityFieldAccessor(
+		public static final EntityFieldAccessor EST_QUALITY_ML_W = new EntityFieldAccessor(
 				"weightedMaxLikelihoodCost", "WorkerQuality_Estm_DS_ML_w",
 				WorkerDecorator.class) {
 			{
@@ -549,14 +539,6 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Estimated worker quality (non-weighted, DS_Min metric)");
 		
-		public static final EntityFieldAccessor WEIGHTED_EST_QUALITY_OPT = new EntityFieldAccessor(
-				"weightedMinCost", "WorkerQuality_Estm_DS_Min_w", WorkerDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-
-		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Min metric)");
-
 		public static final EntityFieldAccessor EVAL_QUALITY_EXP = new EntityFieldAccessor(
 				"expCostEval", "WorkerQuality_Eval_DS_Exp_n", WorkerDecorator.class) {
 			{
@@ -564,13 +546,6 @@ public class FieldAccessors {
 			}
 		}.withSummaryAveraged("Actual worker quality (non-weighted, DS_Exp metric)");
 		
-		public static final EntityFieldAccessor WEIGHTED_EVAL_QUALITY_EXP = new EntityFieldAccessor(
-				"weightedExpCostEval", "WorkerQuality_Eval_DS_Exp_w", WorkerDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
-
 		public static final EntityFieldAccessor EVAL_QUALITY_ML = new EntityFieldAccessor(
 				"maxLikelihoodCostEval", "WorkerQuality_Eval_DS_ML_n", WorkerDecorator.class) {
 			{
@@ -578,7 +553,7 @@ public class FieldAccessors {
 			}
 		}.withSummaryAveraged("Actual worker quality (non-weighted, DS_ML metric)");
 		
-		public static final EntityFieldAccessor WEIGHTED_EVAL_QUALITY_ML = new EntityFieldAccessor(
+		public static final EntityFieldAccessor EVAL_QUALITY_ML_W = new EntityFieldAccessor(
 				"weightedMaxLikelihoodCostEval", "WorkerQuality_Eval_DS_ML_w", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
@@ -596,37 +571,28 @@ public class FieldAccessors {
 
 		}.withSummaryAveraged("Actual worker quality (non-weighted, DS_Min metric)");
 		
-		public static final EntityFieldAccessor WEIGHTED_EVAL_QUALITY_OPT = new EntityFieldAccessor(
-				"weightedMinCostEval", "WorkerQuality_Eval_DS_Min_w",
-				WorkerDecorator.class) {
-			{
-				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
-			}
-
-		}.withSummaryAveraged("Actual worker quality (weighted, DS_Min metric)");
-
 		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP = new EntityFieldAccessor(
+		EntityFieldAccessor EST_QUALITY_EXP_W = new EntityFieldAccessor(
 				"weightedQualityForEstQualityExp",
-				"WorkerQuality_Estm_Weighted_DS_Exp", WorkerDecorator.class) {
+				"WorkerQuality_Estm_DS_Exp_w", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Exp metric)");
 
 		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT = new EntityFieldAccessor(
+		EntityFieldAccessor EST_QUALITY_OPT_W = new EntityFieldAccessor(
 				"weightedQualityForEstQualityOpt",
-				"WorkerQuality_Estm_Weighted_DS_Min", WorkerDecorator.class) {
+				"WorkerQuality_Estm_DS_Min_w", WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
 			}
 		}.withSummaryAveraged("Estimated worker quality (weighted, DS_Min metric)");
 
 		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP = new EntityFieldAccessor(
+		EntityFieldAccessor EVAL_QUALITY_EXP_W = new EntityFieldAccessor(
 				"weightedQualityForEvalQualityExp",
-				"WorkerQuality_Eval_Weighted_DS_Exp",
+				"WorkerQuality_Eval_DS_Exp_w",
 				WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
@@ -634,9 +600,9 @@ public class FieldAccessors {
 		}.withSummaryAveraged("Actual worker quality (weighted, DS_Exp metric)");
 
 		public static final//
-		EntityFieldAccessor WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT = new EntityFieldAccessor(
+		EntityFieldAccessor EVAL_QUALITY_OPT_W = new EntityFieldAccessor(
 				"weightedQualityForEvalQualityOpt",
-				"WorkerQuality_Eval_Weighted_DS_Min",
+				"WorkerQuality_Eval_DS_Min_w",
 				WorkerDecorator.class) {
 			{
 				setFormatter(MetricsFormatter.PERCENT_FORMATTER);
@@ -656,27 +622,22 @@ public class FieldAccessors {
 			result.add(NAME);
 
 			result.add(EST_QUALITY_EXP);
-			result.add(WEIGHTED_EST_QUALITY_EXP);
+			result.add(EST_QUALITY_EXP_W);
 
 			result.add(EST_QUALITY_ML);
-			result.add(WEIGHTED_EST_QUALITY_ML);
+			result.add(EST_QUALITY_ML_W);
 
 			result.add(EST_QUALITY_OPT);
-			result.add(WEIGHTED_EST_QUALITY_OPT);
+			result.add(EST_QUALITY_OPT_W);
 			
 			result.add(EVAL_QUALITY_EXP);
-			result.add(WEIGHTED_EVAL_QUALITY_EXP);
+			result.add(EVAL_QUALITY_EXP_W);
 			
 			result.add(EVAL_QUALITY_ML);
-			result.add(WEIGHTED_EVAL_QUALITY_ML);
+			result.add(EVAL_QUALITY_ML_W);
 		
 			result.add(EVAL_QUALITY_OPT);
-			result.add(WEIGHTED_EVAL_QUALITY_OPT);
-			
-			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_EXP);
-			result.add(WEIGHTED_QUALITY_FOR_EST_QUALITY_OPT);
-			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_EXP);
-			result.add(WEIGHTED_QUALITY_FOR_EVAL_QUALITY_OPT);
+			result.add(EVAL_QUALITY_OPT_W);
 			
 			result.add(COUNT_ANNOTATION);
 			result.add(COUNT_GOLD_TEST);

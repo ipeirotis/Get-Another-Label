@@ -37,30 +37,12 @@ public class WorkerDecorator extends Decorator<Worker> {
 		return worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Eval);
 	}
 
-	
-	public Double getWeightedExpectedCost() {
-		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_Soft_Estm);
-	}
-
-	public Double getWeightedMinCost() {
-		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MinCost_Estm);
-	}
-	
 	public Double getWeightedMaxLikelihoodCost() {
-		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Estm);
-	}
-	
-	
-	public Double getWeightedExpCostEval() {
-		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_Soft_Eval);
-	}
-
-	public Double getWeightedMinCostEval() {
-		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MinCost_Eval);
+		return worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Estm);
 	}
 	
 	public Double getWeightedMaxLikelihoodCostEval() {
-		return getNumContributions() * worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Eval);
+		return worker.getWorkerQuality(worker.getDs().getCategories(), ClassificationMethod.DS_MaxLikelihood_Eval);
 	}
 
 	public Double getWeightedQualityForEstQualityExp() {
