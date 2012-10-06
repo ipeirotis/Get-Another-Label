@@ -32,24 +32,24 @@
 <a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> java.util.LinkedHashSet;
 <a class="jxr_linenumber" name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  
-<a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.CategoryPriorsReport;
-<a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ConfusionMatrixReport;
-<a class="jxr_linenumber" name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ObjectResultReport;
-<a class="jxr_linenumber" name="28" href="#28">28</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.Report;
-<a class="jxr_linenumber" name="29" href="#29">29</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ReportingContext;
-<a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.SummaryReport;
-<a class="jxr_linenumber" name="31" href="#31">31</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
-<a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.AssignedLabel;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Category;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.CorrectLabel;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.DawidSkene;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.MisclassificationCost;
+<a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.algorithms.DawidSkene;
+<a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.AssignedLabel;
+<a class="jxr_linenumber" name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Category;
+<a class="jxr_linenumber" name="28" href="#28">28</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.CorrectLabel;
+<a class="jxr_linenumber" name="29" href="#29">29</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.MisclassificationCost;
+<a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.CategoryPriorsReport;
+<a class="jxr_linenumber" name="31" href="#31">31</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ConfusionMatrixReport;
+<a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ObjectResultReport;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.Report;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ReportingContext;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.SummaryReport;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/engine/Engine.html">Engine</a> {
 <a class="jxr_linenumber" name="40" href="#40">40</a>  	<strong class="jxr_keyword">private</strong> Set&lt;Category&gt; categories;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  
-<a class="jxr_linenumber" name="42" href="#42">42</a>  	<strong class="jxr_keyword">private</strong> <a href="../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> ds;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  	<strong class="jxr_keyword">private</strong> <a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds;
 <a class="jxr_linenumber" name="43" href="#43">43</a>  
 <a class="jxr_linenumber" name="44" href="#44">44</a>  	<strong class="jxr_keyword">private</strong> Set&lt;MisclassificationCost&gt; costs;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  
@@ -84,11 +84,11 @@
 <a class="jxr_linenumber" name="74" href="#74">74</a>  		<strong class="jxr_keyword">this</strong>.categories = categories;
 <a class="jxr_linenumber" name="75" href="#75">75</a>  	}
 <a class="jxr_linenumber" name="76" href="#76">76</a>  
-<a class="jxr_linenumber" name="77" href="#77">77</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> getDs() {
+<a class="jxr_linenumber" name="77" href="#77">77</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> getDs() {
 <a class="jxr_linenumber" name="78" href="#78">78</a>  		<strong class="jxr_keyword">return</strong> ds;
 <a class="jxr_linenumber" name="79" href="#79">79</a>  	}
 <a class="jxr_linenumber" name="80" href="#80">80</a>  
-<a class="jxr_linenumber" name="81" href="#81">81</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDs(<a href="../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> ds) {
+<a class="jxr_linenumber" name="81" href="#81">81</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDs(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
 <a class="jxr_linenumber" name="82" href="#82">82</a>  		<strong class="jxr_keyword">this</strong>.ds = ds;
 <a class="jxr_linenumber" name="83" href="#83">83</a>  	}
 <a class="jxr_linenumber" name="84" href="#84">84</a>  
@@ -127,7 +127,7 @@
 <a class="jxr_linenumber" name="117" href="#117">117</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> execute() {
 <a class="jxr_linenumber" name="118" href="#118">118</a> 		setCategories(loadCategories(ctx.getCategoriesFile()));
 <a class="jxr_linenumber" name="119" href="#119">119</a> 
-<a class="jxr_linenumber" name="120" href="#120">120</a> 		setDs(<strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a>(getCategories()));
+<a class="jxr_linenumber" name="120" href="#120">120</a> 		setDs(<strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a>(getCategories()));
 <a class="jxr_linenumber" name="121" href="#121">121</a> 		<strong class="jxr_keyword">if</strong> (getDs().fixedPriors() == <strong class="jxr_keyword">true</strong>)
 <a class="jxr_linenumber" name="122" href="#122">122</a> 			println(<span class="jxr_string">"Using fixed priors."</span>);
 <a class="jxr_linenumber" name="123" href="#123">123</a> 		<strong class="jxr_keyword">else</strong>
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="218" href="#218">218</a> 		<em class="jxr_comment">// We load the "gold" cases (if any)</em>
 <a class="jxr_linenumber" name="219" href="#219">219</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="220" href="#220">220</a> 		println(<span class="jxr_string">"Loading file with correct labels. "</span>);
-<a class="jxr_linenumber" name="221" href="#221">221</a> 		String[] lines_correct = Utils.getFile(correctfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="221" href="#221">221</a> 		String[] lines_correct = Utils.readFile(correctfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="222" href="#222">222</a> 		println(<span class="jxr_string">"File contained %d entries."</span>, lines_correct.length);
 <a class="jxr_linenumber" name="223" href="#223">223</a> 		Set&lt;CorrectLabel&gt; correct = loadCorrectLabels(lines_correct);
 <a class="jxr_linenumber" name="224" href="#224">224</a> 		<strong class="jxr_keyword">return</strong> correct;
@@ -243,7 +243,7 @@
 <a class="jxr_linenumber" name="233" href="#233">233</a> 		<em class="jxr_comment">// We load the "gold" cases (if any)</em>
 <a class="jxr_linenumber" name="234" href="#234">234</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="235" href="#235">235</a> 		println(<span class="jxr_string">"Loading file with evaluation labels. "</span>);
-<a class="jxr_linenumber" name="236" href="#236">236</a> 		String[] lines_correct = Utils.getFile(evalfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="236" href="#236">236</a> 		String[] lines_correct = Utils.readFile(evalfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="237" href="#237">237</a> 		println(<span class="jxr_string">"File contained %d entries."</span>, lines_correct.length);
 <a class="jxr_linenumber" name="238" href="#238">238</a> 		Set&lt;CorrectLabel&gt; correct = loadEvaluationLabels(lines_correct);
 <a class="jxr_linenumber" name="239" href="#239">239</a> 		<strong class="jxr_keyword">return</strong> correct;
@@ -266,7 +266,7 @@
 <a class="jxr_linenumber" name="256" href="#256">256</a> 			String objectname = entries[1];
 <a class="jxr_linenumber" name="257" href="#257">257</a> 			String categoryname = entries[2];
 <a class="jxr_linenumber" name="258" href="#258">258</a> 
-<a class="jxr_linenumber" name="259" href="#259">259</a> 			AssignedLabel al = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/AssignedLabel.html">AssignedLabel</a>(workername, objectname,
+<a class="jxr_linenumber" name="259" href="#259">259</a> 			AssignedLabel al = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/core/AssignedLabel.html">AssignedLabel</a>(workername, objectname,
 <a class="jxr_linenumber" name="260" href="#260">260</a> 					categoryname);
 <a class="jxr_linenumber" name="261" href="#261">261</a> 			labels.add(al);
 <a class="jxr_linenumber" name="262" href="#262">262</a> 		}
@@ -282,12 +282,12 @@
 <a class="jxr_linenumber" name="272" href="#272">272</a> 			<em class="jxr_comment">// after the name of each category, followed by the prior value</em>
 <a class="jxr_linenumber" name="273" href="#273">273</a> 			String[] l = line.split(<span class="jxr_string">"\t"</span>);
 <a class="jxr_linenumber" name="274" href="#274">274</a> 			<strong class="jxr_keyword">if</strong> (l.length == 1) {
-<a class="jxr_linenumber" name="275" href="#275">275</a> 				Category c = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/Category.html">Category</a>(line);
+<a class="jxr_linenumber" name="275" href="#275">275</a> 				Category c = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/core/Category.html">Category</a>(line);
 <a class="jxr_linenumber" name="276" href="#276">276</a> 				categories.add(c);
 <a class="jxr_linenumber" name="277" href="#277">277</a> 			} <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (l.length == 2) {
 <a class="jxr_linenumber" name="278" href="#278">278</a> 				String name = l[0];
 <a class="jxr_linenumber" name="279" href="#279">279</a> 				Double prior = <strong class="jxr_keyword">new</strong> Double(l[1]);
-<a class="jxr_linenumber" name="280" href="#280">280</a> 				Category c = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/Category.html">Category</a>(name);
+<a class="jxr_linenumber" name="280" href="#280">280</a> 				Category c = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/core/Category.html">Category</a>(name);
 <a class="jxr_linenumber" name="281" href="#281">281</a> 				c.setPrior(prior);
 <a class="jxr_linenumber" name="282" href="#282">282</a> 				categories.add(c);
 <a class="jxr_linenumber" name="283" href="#283">283</a> 			}
@@ -312,7 +312,7 @@
 <a class="jxr_linenumber" name="302" href="#302">302</a> 			String to = entries[1];
 <a class="jxr_linenumber" name="303" href="#303">303</a> 			Double cost = Double.parseDouble(entries[2]);
 <a class="jxr_linenumber" name="304" href="#304">304</a> 
-<a class="jxr_linenumber" name="305" href="#305">305</a> 			MisclassificationCost mcc = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/MisclassificationCost.html">MisclassificationCost</a>(from, to,
+<a class="jxr_linenumber" name="305" href="#305">305</a> 			MisclassificationCost mcc = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/core/MisclassificationCost.html">MisclassificationCost</a>(from, to,
 <a class="jxr_linenumber" name="306" href="#306">306</a> 					cost);
 <a class="jxr_linenumber" name="307" href="#307">307</a> 			labels.add(mcc);
 <a class="jxr_linenumber" name="308" href="#308">308</a> 		}
@@ -335,7 +335,7 @@
 <a class="jxr_linenumber" name="325" href="#325">325</a> 			String objectname = entries[0];
 <a class="jxr_linenumber" name="326" href="#326">326</a> 			String categoryname = entries[1];
 <a class="jxr_linenumber" name="327" href="#327">327</a> 
-<a class="jxr_linenumber" name="328" href="#328">328</a> 			CorrectLabel cl = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/CorrectLabel.html">CorrectLabel</a>(objectname, categoryname);
+<a class="jxr_linenumber" name="328" href="#328">328</a> 			CorrectLabel cl = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/core/CorrectLabel.html">CorrectLabel</a>(objectname, categoryname);
 <a class="jxr_linenumber" name="329" href="#329">329</a> 			labels.add(cl);
 <a class="jxr_linenumber" name="330" href="#330">330</a> 		}
 <a class="jxr_linenumber" name="331" href="#331">331</a> 		<strong class="jxr_keyword">return</strong> labels;
@@ -354,7 +354,7 @@
 <a class="jxr_linenumber" name="344" href="#344">344</a> 			String objectname = entries[0];
 <a class="jxr_linenumber" name="345" href="#345">345</a> 			String categoryname = entries[1];
 <a class="jxr_linenumber" name="346" href="#346">346</a> 
-<a class="jxr_linenumber" name="347" href="#347">347</a> 			CorrectLabel cl = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/scripts/CorrectLabel.html">CorrectLabel</a>(objectname, categoryname);
+<a class="jxr_linenumber" name="347" href="#347">347</a> 			CorrectLabel cl = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/core/CorrectLabel.html">CorrectLabel</a>(objectname, categoryname);
 <a class="jxr_linenumber" name="348" href="#348">348</a> 			labels.add(cl);
 <a class="jxr_linenumber" name="349" href="#349">349</a> 		}
 <a class="jxr_linenumber" name="350" href="#350">350</a> 		<strong class="jxr_keyword">return</strong> labels;
@@ -369,7 +369,7 @@
 <a class="jxr_linenumber" name="359" href="#359">359</a> 		<em class="jxr_comment">// We load the labels assigned by the workers on the different objects</em>
 <a class="jxr_linenumber" name="360" href="#360">360</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="361" href="#361">361</a> 		println(<span class="jxr_string">"Loading file with assigned labels. "</span>);
-<a class="jxr_linenumber" name="362" href="#362">362</a> 		String[] lines_input = Utils.getFile(inputfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="362" href="#362">362</a> 		String[] lines_input = Utils.readFile(inputfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="363" href="#363">363</a> 		println(<span class="jxr_string">"File contains "</span> + lines_input.length + <span class="jxr_string">" entries."</span>);
 <a class="jxr_linenumber" name="364" href="#364">364</a> 		Set&lt;AssignedLabel&gt; labels = loadAssignedLabels(lines_input);
 <a class="jxr_linenumber" name="365" href="#365">365</a> 		<strong class="jxr_keyword">return</strong> labels;
@@ -387,7 +387,7 @@
 <a class="jxr_linenumber" name="377" href="#377">377</a> 		<em class="jxr_comment">// 0/1 loss function.</em>
 <a class="jxr_linenumber" name="378" href="#378">378</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="379" href="#379">379</a> 		println(<span class="jxr_string">"Loading cost file."</span>);
-<a class="jxr_linenumber" name="380" href="#380">380</a> 		String[] lines_cost = Utils.getFile(costfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="380" href="#380">380</a> 		String[] lines_cost = Utils.readFile(costfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="381" href="#381">381</a> 		<em class="jxr_comment">// assert (lines_cost.length == categories.size() * categories.size());</em>
 <a class="jxr_linenumber" name="382" href="#382">382</a> 		println(<span class="jxr_string">"File contains "</span> + lines_cost.length + <span class="jxr_string">" entries."</span>);
 <a class="jxr_linenumber" name="383" href="#383">383</a> 		Set&lt;MisclassificationCost&gt; costs = loadClassificationCost(lines_cost);
@@ -401,7 +401,7 @@
 <a class="jxr_linenumber" name="391" href="#391">391</a> 	<strong class="jxr_keyword">private</strong> Set&lt;Category&gt; loadCategories(String categoriesfile) {
 <a class="jxr_linenumber" name="392" href="#392">392</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="393" href="#393">393</a> 		println(<span class="jxr_string">"Loading categories file."</span>);
-<a class="jxr_linenumber" name="394" href="#394">394</a> 		String[] lines_categories = Utils.getFile(categoriesfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="394" href="#394">394</a> 		String[] lines_categories = Utils.readFile(categoriesfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="395" href="#395">395</a> 		println(<span class="jxr_string">"File contains "</span> + lines_categories.length + <span class="jxr_string">" categories."</span>);
 <a class="jxr_linenumber" name="396" href="#396">396</a> 		Set&lt;Category&gt; categories = loadCategories(lines_categories);
 <a class="jxr_linenumber" name="397" href="#397">397</a> 		<strong class="jxr_keyword">return</strong> categories;

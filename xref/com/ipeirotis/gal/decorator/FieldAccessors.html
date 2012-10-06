@@ -17,9 +17,9 @@
 <a class="jxr_linenumber" name="7" href="#7">7</a>   
 <a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.ObjectUtils;
 <a class="jxr_linenumber" name="9" href="#9">9</a>   
-<a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Datum;
-<a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.DawidSkene;
-<a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Worker;
+<a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.algorithms.DawidSkene;
+<a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Datum;
+<a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Worker;
 <a class="jxr_linenumber" name="13" href="#13">13</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
 <a class="jxr_linenumber" name="14" href="#14">14</a>  
 <a class="jxr_linenumber" name="15" href="#15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">FieldAccessors</a> {
@@ -454,7 +454,7 @@
 <a class="jxr_linenumber" name="444" href="#444">444</a> 
 <a class="jxr_linenumber" name="445" href="#445">445</a> 		}.withSummaryAveraged(<span class="jxr_string">"Actual data quality, naive soft label"</span>);
 <a class="jxr_linenumber" name="446" href="#446">446</a> 
-<a class="jxr_linenumber" name="447" href="#447">447</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Collection&lt;FieldAccessor&gt; getFieldAccessors(<a href="../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> ds) {
+<a class="jxr_linenumber" name="447" href="#447">447</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Collection&lt;FieldAccessor&gt; getFieldAccessors(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
 <a class="jxr_linenumber" name="448" href="#448">448</a> 			List&lt;FieldAccessor&gt; result = <strong class="jxr_keyword">new</strong> ArrayList&lt;FieldAccessor&gt;();
 <a class="jxr_linenumber" name="449" href="#449">449</a> 
 <a class="jxr_linenumber" name="450" href="#450">450</a> 			result.add(NAME);
@@ -626,7 +626,7 @@
 <a class="jxr_linenumber" name="616" href="#616">616</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a> COUNT_GOLD_TEST = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a>(
 <a class="jxr_linenumber" name="617" href="#617">617</a> 				<span class="jxr_string">"numGoldTests"</span>, <span class="jxr_string">"Gold Tests"</span>, WorkerDecorator.<strong class="jxr_keyword">class</strong>).withSummaryAveraged(<span class="jxr_string">"Gold tests per worker"</span>);
 <a class="jxr_linenumber" name="618" href="#618">618</a> 
-<a class="jxr_linenumber" name="619" href="#619">619</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Collection&lt;FieldAccessor&gt; getFieldAccessors(<a href="../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> ds) {
+<a class="jxr_linenumber" name="619" href="#619">619</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Collection&lt;FieldAccessor&gt; getFieldAccessors(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
 <a class="jxr_linenumber" name="620" href="#620">620</a> 			List&lt;FieldAccessor&gt; result = <strong class="jxr_keyword">new</strong> ArrayList&lt;FieldAccessor&gt;();
 <a class="jxr_linenumber" name="621" href="#621">621</a> 
 <a class="jxr_linenumber" name="622" href="#622">622</a> 			result.add(NAME);

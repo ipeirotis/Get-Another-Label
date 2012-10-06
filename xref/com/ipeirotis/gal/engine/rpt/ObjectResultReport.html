@@ -13,9 +13,9 @@
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> java.io.PrintWriter;
 <a class="jxr_linenumber" name="5" href="#5">5</a>   
-<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.csv.CSVGenerator;
-<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Datum;
-<a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.DawidSkene;
+<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.algorithms.DawidSkene;
+<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Datum;
+<a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.csv.CSVGenerator;
 <a class="jxr_linenumber" name="9" href="#9">9</a>   
 <a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/ObjectResultReport.html">ObjectResultReport</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/Report.html">Report</a> {
 <a class="jxr_linenumber" name="11" href="#11">11</a>  	@Override
@@ -44,7 +44,7 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <em class="jxr_javadoccomment">	 * @throws IOException</em>
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <em class="jxr_javadoccomment">	 *             I/O Exception</em>
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="37" href="#37">37</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> printObjectClassProbabilities(<a href="../../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> dawidSkene,
+<a class="jxr_linenumber" name="37" href="#37">37</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> printObjectClassProbabilities(<a href="../../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> dawidSkene,
 <a class="jxr_linenumber" name="38" href="#38">38</a>  			PrintWriter writer) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="39" href="#39">39</a>  		CSVGenerator&lt;Datum&gt; csvGenerator = <strong class="jxr_keyword">new</strong> CSVGenerator&lt;Datum&gt;(
 <a class="jxr_linenumber" name="40" href="#40">40</a>  				dawidSkene.getFieldAccessors(Datum.<strong class="jxr_keyword">class</strong>), dawidSkene

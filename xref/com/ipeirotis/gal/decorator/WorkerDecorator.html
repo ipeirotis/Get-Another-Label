@@ -10,14 +10,14 @@
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <strong class="jxr_keyword">package</strong> com.ipeirotis.gal.decorator;
 <a class="jxr_linenumber" name="2" href="#2">2</a>   
-<a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.decorator.FieldAccessors.EntityFieldAccessor;
-<a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Worker;
-<a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Worker.ClassificationMethod;
+<a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Worker;
+<a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Worker.ClassificationMethod;
+<a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.decorator.FieldAccessors.EntityFieldAccessor;
 <a class="jxr_linenumber" name="6" href="#6">6</a>   
 <a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/decorator/WorkerDecorator.html">WorkerDecorator</a> <strong class="jxr_keyword">extends</strong> Decorator&lt;Worker&gt; {
-<a class="jxr_linenumber" name="8" href="#8">8</a>   	<strong class="jxr_keyword">private</strong> <a href="../../../../com/ipeirotis/gal/scripts/Worker.html">Worker</a> worker;
+<a class="jxr_linenumber" name="8" href="#8">8</a>   	<strong class="jxr_keyword">private</strong> <a href="../../../../com/ipeirotis/gal/core/Worker.html">Worker</a> worker;
 <a class="jxr_linenumber" name="9" href="#9">9</a>   	
-<a class="jxr_linenumber" name="10" href="#10">10</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../com/ipeirotis/gal/decorator/WorkerDecorator.html">WorkerDecorator</a>(<a href="../../../../com/ipeirotis/gal/scripts/Worker.html">Worker</a> wrapped) {
+<a class="jxr_linenumber" name="10" href="#10">10</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../com/ipeirotis/gal/decorator/WorkerDecorator.html">WorkerDecorator</a>(<a href="../../../../com/ipeirotis/gal/core/Worker.html">Worker</a> wrapped) {
 <a class="jxr_linenumber" name="11" href="#11">11</a>  		<strong class="jxr_keyword">super</strong>(wrapped);
 <a class="jxr_linenumber" name="12" href="#12">12</a>  		
 <a class="jxr_linenumber" name="13" href="#13">13</a>  		<strong class="jxr_keyword">this</strong>.worker = (Worker) wrapped;
@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="70" href="#70">70</a>  		<strong class="jxr_keyword">return</strong> metricValue;
 <a class="jxr_linenumber" name="71" href="#71">71</a>  	}
 <a class="jxr_linenumber" name="72" href="#72">72</a>  
-<a class="jxr_linenumber" name="73" href="#73">73</a>  	<strong class="jxr_keyword">private</strong> Double getMetric(<a href="../../../../com/ipeirotis/gal/scripts/Worker.html">Worker</a> w, <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a> fieldAccessor) {
+<a class="jxr_linenumber" name="73" href="#73">73</a>  	<strong class="jxr_keyword">private</strong> Double getMetric(<a href="../../../../com/ipeirotis/gal/core/Worker.html">Worker</a> w, <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a> fieldAccessor) {
 <a class="jxr_linenumber" name="74" href="#74">74</a>  		Object objVal = fieldAccessor.getValue(w);
 <a class="jxr_linenumber" name="75" href="#75">75</a>  		
 <a class="jxr_linenumber" name="76" href="#76">76</a>  		<strong class="jxr_keyword">return</strong> (<strong class="jxr_keyword">null</strong> == objVal ? <strong class="jxr_keyword">null</strong> : ((Double) objVal));

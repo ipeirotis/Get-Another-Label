@@ -13,8 +13,8 @@
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> java.io.PrintWriter;
 <a class="jxr_linenumber" name="5" href="#5">5</a>   
-<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.Category;
-<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.scripts.DawidSkene;
+<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.algorithms.DawidSkene;
+<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Category;
 <a class="jxr_linenumber" name="8" href="#8">8</a>   
 <a class="jxr_linenumber" name="9" href="#9">9</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/CategoryPriorsReport.html">CategoryPriorsReport</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/Report.html">Report</a> {
 <a class="jxr_linenumber" name="10" href="#10">10</a>  	@Override
@@ -28,7 +28,7 @@
 <a class="jxr_linenumber" name="18" href="#18">18</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.execute(ctx);
 <a class="jxr_linenumber" name="19" href="#19">19</a>  	}
 <a class="jxr_linenumber" name="20" href="#20">20</a>  
-<a class="jxr_linenumber" name="21" href="#21">21</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> printPriors(<a href="../../../../../com/ipeirotis/gal/scripts/DawidSkene.html">DawidSkene</a> dawidSkene, PrintWriter writer) {
+<a class="jxr_linenumber" name="21" href="#21">21</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> printPriors(<a href="../../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> dawidSkene, PrintWriter writer) {
 <a class="jxr_linenumber" name="22" href="#22">22</a>  		<strong class="jxr_keyword">for</strong> (Category c : dawidSkene.getCategories().values()) {
 <a class="jxr_linenumber" name="23" href="#23">23</a>  			writer.println(<span class="jxr_string">"Prior["</span> + c.getName() + <span class="jxr_string">"]="</span> + c.getPrior());
 <a class="jxr_linenumber" name="24" href="#24">24</a>  		}
