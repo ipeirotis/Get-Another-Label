@@ -36,7 +36,7 @@ public class EngineTest {
 	
 	@Test
 	public void testMoreComplexPath() throws Exception {
-		parser.parseArgument("--input data/input.txt --categories data/categories.txt --eval data/evaluation.txt"
+		parser.parseArgument("--input data/input.txt --categories data/categories-prior.txt --eval data/evaluation.txt"
 				.split("\\s+"));
 		
 		Engine engine = new Engine(ctx);

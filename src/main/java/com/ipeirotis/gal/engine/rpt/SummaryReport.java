@@ -48,7 +48,7 @@ public class SummaryReport extends Report {
 
 	public <T> Object getAverage(FieldAccessor fieldAccessor, Iterable<T> objects) {
 		Double accumulator = 0d;
-		long count = 0;
+		double count = 0;
 		boolean evalP = fieldAccessor instanceof EvalDatumFieldAccessor;
 		
 		for (T object : objects) {
@@ -66,8 +66,8 @@ public class SummaryReport extends Report {
  			if (null == value || value.isNaN())
 				continue;
 			
-			accumulator += value;
-			count += weight;
+			accumulator += weight*value;
+				count += weight;
 		}
 		
 		Double result = accumulator / count;
@@ -78,4 +78,7 @@ public class SummaryReport extends Report {
 		
 		return result;
 	}
+	
+	
+	
 }
