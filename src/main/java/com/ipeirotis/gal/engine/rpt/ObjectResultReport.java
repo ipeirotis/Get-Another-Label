@@ -3,9 +3,9 @@ package com.ipeirotis.gal.engine.rpt;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.Datum;
 import com.ipeirotis.gal.csv.CSVGenerator;
-import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.DawidSkene;
 
 public class ObjectResultReport extends Report {
 	@Override

@@ -22,6 +22,11 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.AssignedLabel;
+import com.ipeirotis.gal.core.Category;
+import com.ipeirotis.gal.core.CorrectLabel;
+import com.ipeirotis.gal.core.MisclassificationCost;
 import com.ipeirotis.gal.engine.rpt.CategoryPriorsReport;
 import com.ipeirotis.gal.engine.rpt.ConfusionMatrixReport;
 import com.ipeirotis.gal.engine.rpt.ObjectResultReport;
@@ -29,11 +34,6 @@ import com.ipeirotis.gal.engine.rpt.Report;
 import com.ipeirotis.gal.engine.rpt.ReportingContext;
 import com.ipeirotis.gal.engine.rpt.SummaryReport;
 import com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
-import com.ipeirotis.gal.scripts.AssignedLabel;
-import com.ipeirotis.gal.scripts.Category;
-import com.ipeirotis.gal.scripts.CorrectLabel;
-import com.ipeirotis.gal.scripts.DawidSkene;
-import com.ipeirotis.gal.scripts.MisclassificationCost;
 import com.ipeirotis.utils.Utils;
 
 public class Engine {
@@ -218,7 +218,7 @@ public class Engine {
 		// We load the "gold" cases (if any)
 		println("");
 		println("Loading file with correct labels. ");
-		String[] lines_correct = Utils.getFile(correctfile).split("\n");
+		String[] lines_correct = Utils.readFile(correctfile).split("\n");
 		println("File contained %d entries.", lines_correct.length);
 		Set<CorrectLabel> correct = loadCorrectLabels(lines_correct);
 		return correct;
@@ -233,7 +233,7 @@ public class Engine {
 		// We load the "gold" cases (if any)
 		println("");
 		println("Loading file with evaluation labels. ");
-		String[] lines_correct = Utils.getFile(evalfile).split("\n");
+		String[] lines_correct = Utils.readFile(evalfile).split("\n");
 		println("File contained %d entries.", lines_correct.length);
 		Set<CorrectLabel> correct = loadEvaluationLabels(lines_correct);
 		return correct;
@@ -359,7 +359,7 @@ public class Engine {
 		// We load the labels assigned by the workers on the different objects
 		println("");
 		println("Loading file with assigned labels. ");
-		String[] lines_input = Utils.getFile(inputfile).split("\n");
+		String[] lines_input = Utils.readFile(inputfile).split("\n");
 		println("File contains " + lines_input.length + " entries.");
 		Set<AssignedLabel> labels = loadAssignedLabels(lines_input);
 		return labels;
@@ -377,7 +377,7 @@ public class Engine {
 		// 0/1 loss function.
 		println("");
 		println("Loading cost file.");
-		String[] lines_cost = Utils.getFile(costfile).split("\n");
+		String[] lines_cost = Utils.readFile(costfile).split("\n");
 		// assert (lines_cost.length == categories.size() * categories.size());
 		println("File contains " + lines_cost.length + " entries.");
 		Set<MisclassificationCost> costs = loadClassificationCost(lines_cost);
@@ -391,7 +391,7 @@ public class Engine {
 	private Set<Category> loadCategories(String categoriesfile) {
 		println("");
 		println("Loading categories file.");
-		String[] lines_categories = Utils.getFile(categoriesfile).split("\n");
+		String[] lines_categories = Utils.readFile(categoriesfile).split("\n");
 		println("File contains " + lines_categories.length + " categories.");
 		Set<Category> categories = loadCategories(lines_categories);
 		return categories;

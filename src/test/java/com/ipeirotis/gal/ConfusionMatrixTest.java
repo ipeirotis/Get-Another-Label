@@ -7,8 +7,8 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ipeirotis.gal.scripts.Category;
-import com.ipeirotis.gal.scripts.ConfusionMatrix;
+import com.ipeirotis.gal.core.Category;
+import com.ipeirotis.gal.core.ConfusionMatrix;
 import com.ipeirotis.utils.Utils;
 
 public class ConfusionMatrixTest {

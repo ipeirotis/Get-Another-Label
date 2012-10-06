@@ -2,9 +2,9 @@ package com.ipeirotis.gal.engine.rpt;
 
 import java.util.Set;
 
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.CorrectLabel;
 import com.ipeirotis.gal.engine.Engine;
-import com.ipeirotis.gal.scripts.CorrectLabel;
-import com.ipeirotis.gal.scripts.DawidSkene;
 
 public class ReportingContext {
 	private Engine engine;

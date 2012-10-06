@@ -3,8 +3,8 @@ package com.ipeirotis.gal.engine.rpt;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import com.ipeirotis.gal.scripts.Category;
-import com.ipeirotis.gal.scripts.DawidSkene;
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.Category;
 
 public class CategoryPriorsReport extends Report {
 	@Override

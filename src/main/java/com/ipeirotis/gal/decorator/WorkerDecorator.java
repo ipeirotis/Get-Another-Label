@@ -1,8 +1,8 @@
 package com.ipeirotis.gal.decorator;
 
+import com.ipeirotis.gal.core.Worker;
+import com.ipeirotis.gal.core.Worker.ClassificationMethod;
 import com.ipeirotis.gal.decorator.FieldAccessors.EntityFieldAccessor;
-import com.ipeirotis.gal.scripts.Worker;
-import com.ipeirotis.gal.scripts.Worker.ClassificationMethod;
 
 public class WorkerDecorator extends Decorator<Worker> {
 	private Worker worker;

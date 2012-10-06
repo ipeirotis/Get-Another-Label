@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.DawidSkene;
-import com.ipeirotis.gal.scripts.Worker;
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.Datum;
+import com.ipeirotis.gal.core.Worker;
 import com.ipeirotis.utils.Utils;
 
 public class FieldAccessors {

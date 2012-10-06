@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ipeirotis.gal.scripts;
+package com.ipeirotis.gal.core;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,7 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.ipeirotis.gal.core.Entity;
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.algorithms.Helper;
 
 @SuppressWarnings("serial")
 public class Datum implements Entity {

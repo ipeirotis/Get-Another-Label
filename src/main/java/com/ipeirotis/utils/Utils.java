@@ -24,21 +24,7 @@ import java.math.BigDecimal;
 
 public class Utils {
 
-	public static String cleanLine(String line) {
-
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < line.length(); i++) {
-			char c = line.charAt(i);
-			if (c < 128 && (Character.isLetter(c) || Character.isDigit(c))) {
-				buffer.append(c);
-			} else {
-				// buffer.append('');
-			}
-		}
-		return buffer.toString().toLowerCase();
-	}
-
-	public static String getFile(String FileName) {
+	public static String readFile(String FileName) {
 
 		StringBuffer buffer = new StringBuffer();
 
@@ -83,13 +69,5 @@ public class Utils {
 		return bd.doubleValue();
 	}
 
-	public static Double entropy(double[] p) {
-
-		double h = 0;
-		for (int i = 0; i < p.length; i++) {
-			h += (p[i] > 0) ? p[i] * Math.log(p[i]) : 0.0;
-		}
-		return -h;
-	}
-
+	
 }

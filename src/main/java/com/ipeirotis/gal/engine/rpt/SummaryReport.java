@@ -2,10 +2,10 @@ package com.ipeirotis.gal.engine.rpt;
 
 import java.io.IOException;
 
+import com.ipeirotis.gal.core.Datum;
+import com.ipeirotis.gal.core.Worker;
 import com.ipeirotis.gal.decorator.FieldAccessors.EvalDatumFieldAccessor;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
-import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.Worker;
 
 public class SummaryReport extends Report {
 	@Override

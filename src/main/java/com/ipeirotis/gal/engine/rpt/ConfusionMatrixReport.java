@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.ConfusionMatrix;
+import com.ipeirotis.gal.core.Datum;
+import com.ipeirotis.gal.core.Datum.ClassificationMethod;
 import com.ipeirotis.gal.decorator.DawidSkeneDecorator;
-import com.ipeirotis.gal.scripts.ConfusionMatrix;
-import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.Datum.ClassificationMethod;
-import com.ipeirotis.gal.scripts.DawidSkene;
 import com.ipeirotis.utils.Utils;
 
 public class ConfusionMatrixReport extends Report {

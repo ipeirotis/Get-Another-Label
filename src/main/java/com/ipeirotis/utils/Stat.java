@@ -119,7 +119,7 @@ public class Stat {
 	}
 
 	/**
-	 * Computing log(n!) using Stirling's approximation of n!
+	 * Computing log(n!) using Gosper's approximation of n! for values of n above 100 
 	 */
 	public static double logNfact(long n) {
 
@@ -139,7 +139,7 @@ public class Stat {
 	}
 
 	/**
-	 * Computing log(n!) using Stirling's approximation of n!
+	 * Computes log(n!) 
 	 */
 	private static double logNfactExact(long n) {
 
@@ -155,7 +155,7 @@ public class Stat {
 	}
 
 	/**
-	 * Computing log(n!) using Stirling's approximation of n!
+	 * Computes the exact value of n! using the standard approach
 	 */
 	public static long NfactExact(long n) {
 
@@ -171,7 +171,7 @@ public class Stat {
 	}
 
 	/**
-	 * Computing log(n!) using Stirling's approximation of n!
+	 * Computes the binomial coefficient using the exact factorial computation
 	 */
 	public static double binom(int n, int i) {
 
@@ -179,6 +179,9 @@ public class Stat {
 
 	}
 
+	/**
+  * Computes the log of the binomial coefficient using the exact factorial computation
+  */
 	public static double logBinom(int n, int i) {
 
 		return logNfactExact(n) - (logNfactExact(i) + logNfactExact(n - i));

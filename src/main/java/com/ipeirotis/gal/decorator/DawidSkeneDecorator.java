@@ -2,10 +2,10 @@ package com.ipeirotis.gal.decorator;
 
 import java.util.Map;
 
-import com.ipeirotis.gal.scripts.ConfusionMatrix;
-import com.ipeirotis.gal.scripts.Datum;
-import com.ipeirotis.gal.scripts.Datum.ClassificationMethod;
-import com.ipeirotis.gal.scripts.DawidSkene;
+import com.ipeirotis.gal.algorithms.DawidSkene;
+import com.ipeirotis.gal.core.ConfusionMatrix;
+import com.ipeirotis.gal.core.Datum;
+import com.ipeirotis.gal.core.Datum.ClassificationMethod;
 
 public class DawidSkeneDecorator extends Decorator<DawidSkene> {
 	public DawidSkeneDecorator(DawidSkene wrapped) {

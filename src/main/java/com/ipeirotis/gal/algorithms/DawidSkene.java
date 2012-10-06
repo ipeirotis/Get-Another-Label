@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ipeirotis.gal.scripts;
+package com.ipeirotis.gal.algorithms;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.ipeirotis.gal.core.AssignedLabel;
+import com.ipeirotis.gal.core.Category;
+import com.ipeirotis.gal.core.ConfusionMatrix;
+import com.ipeirotis.gal.core.CorrectLabel;
+import com.ipeirotis.gal.core.Datum;
+import com.ipeirotis.gal.core.MisclassificationCost;
+import com.ipeirotis.gal.core.Worker;
 import com.ipeirotis.gal.decorator.FieldAccessors;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
 import com.ipeirotis.utils.Utils;

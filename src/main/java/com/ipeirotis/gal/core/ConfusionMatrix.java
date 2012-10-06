@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ipeirotis.gal.scripts;
+package com.ipeirotis.gal.core;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
 
 class CategoryPair {
 
