@@ -49,8 +49,22 @@ public class CSVGenerator<T> {
 	private String[] getRecordLineFor(T object) {
 		List<String> result = new ArrayList<String>();
 		
-		for (FieldAccessor fieldAccessor : fieldAccessors)
-			result.add(fieldAccessor.getStringValue(object));
+		for (FieldAccessor fieldAccessor : fieldAccessors) {
+			
+			String toAdd = "";
+			if (null != fieldAccessor.getFormatter()) {
+				Double doubleValue = (Double) fieldAccessor.getValue(object);
+				toAdd = "" + fieldAccessor.getFormatter().format(doubleValue);
+			} else {
+				toAdd = "" + fieldAccessor.getValue(object);
+			}
+			
+			
+			result.add(toAdd);
+		}
+		
+		
+		
 		
 		return (String[]) result.toArray(new String[result.size()]);
 	}
