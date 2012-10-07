@@ -108,26 +108,44 @@ public class DatumDecorator extends Decorator<Datum> {
 	}
 	
 	public Double getEvalDataQualityForDSML() {
+		if (! object.isEvaluation())
+			return null;
+		
 		return 1 - getEvalClassificationCostForDSML() / getMinSpammerCost();
 	}
 
 	public Double getEvalDataQualityForDSSoft() {
+		if (! object.isEvaluation())
+			return null;
+
 		return 1 - getEvalClassificationCostForDSSoft() / getMinSpammerCost();
 	}
 
 	public Double getEvalDataQualityForMVML() {
+		if (! object.isEvaluation())
+			return null;
+		
 		return 1 - getEvalClassificationCostForMVML() / getMinSpammerCost();
 	}
 
 	public Double getEvalDataQualityForMVSoft() {
+		if (! object.isEvaluation())
+			return null;
+
 		return 1 - getEvalClassificationCostForMVSoft() / getMinSpammerCost();
 	}
 	
 	public Double getEvalDataQualityForMVMinCost() {
+		if (! object.isEvaluation())
+			return null;
+		
 		return 1 - getEvalCostMVMin() / getMinSpammerCost();
 	}
 
 	public Double getEvalDataQualityForDSMinCost() {
+		if (! object.isEvaluation())
+			return null;
+		
 		return 1 - getEvalCostDSMin() / getMinSpammerCost();
 	}
 
