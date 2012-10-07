@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ipeirotis.gal.algorithms;
+package com.ipeirotis.utils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,6 +191,35 @@ public class Helper {
 			prior.put(c.getName(), c.getPrior());
 		}
 		return getExpectedSoftLabelCost(prior, categories);
+	}
+
+	public static String readFile(String FileName) {
+	
+		StringBuffer buffer = new StringBuffer();
+	
+		try {
+			BufferedReader dataInput = new BufferedReader(new FileReader(new File(FileName)));
+			String line;
+	
+			while ((line = dataInput.readLine()) != null) {
+				// buffer.append(cleanLine(line.toLowerCase()));
+				buffer.append(line);
+				buffer.append('\n');
+			}
+			dataInput.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return buffer.toString();
+	}
+
+	public static Double round(double d, int decimalPlace) {
+	
+		// see the Javadoc about why we use a String in the constructor
+		// http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html#BigDecimal(double)
+		BigDecimal bd = new BigDecimal(Double.toString(d));
+		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		return bd.doubleValue();
 	}
 	
 }

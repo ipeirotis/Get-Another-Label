@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.ipeirotis.gal.core.Category;
 import com.ipeirotis.gal.core.ConfusionMatrix;
-import com.ipeirotis.utils.Utils;
+import com.ipeirotis.utils.Helper;
 
 public class ConfusionMatrixTest {
 	private ConfusionMatrix cm;
@@ -64,14 +64,12 @@ public class ConfusionMatrixTest {
 				for (String classified: cm.getCategoryNames()) {
 					Double p = cm.getErrorRate(correct, classified);
 					Long actual = results.get(classified);
-					Double e =  p*(1-p);
-					
-					
-					Double error = Utils.round(cm.getErrorRate(correct, classified), 4);
+
+					Double error = Helper.round(cm.getErrorRate(correct, classified), 4);
 					System.out.print("CM["+correct+ "->"+classified+"]="+error);
 					System.out.print("\tActual = "+actual);
 					System.out.print("\tExpected = "+Math.round(N*p));
-					System.out.print("\tErr = " + Utils.round(1.0*Math.abs(actual-Math.round(N*p))/Math.round(N*p),2));
+					System.out.print("\tErr = " + Helper.round(1.0*Math.abs(actual-Math.round(N*p))/Math.round(N*p),2));
 					System.out.println("\tDiff = " + Math.abs(actual-Math.round(N*p)));
 					
 				}

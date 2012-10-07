@@ -10,7 +10,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import com.ipeirotis.gal.algorithms.DawidSkene;
 import com.ipeirotis.gal.core.Datum;
 import com.ipeirotis.gal.core.Worker;
-import com.ipeirotis.utils.Utils;
+import com.ipeirotis.utils.Helper;
 
 public class FieldAccessors {
 	public static abstract class FieldAccessor {
@@ -175,7 +175,7 @@ public class FieldAccessors {
 				if (v instanceof Double) {
 					Double value = (Double) v;
 
-					return Double.toString(Utils.round(value, 3));
+					return Double.toString(Helper.round(value, 3));
 				} else if (v != null) {
 					return ObjectUtils.toString(v);
 				}
@@ -611,10 +611,18 @@ public class FieldAccessors {
 
 		public static final EntityFieldAccessor COUNT_ANNOTATION = new EntityFieldAccessor(
 				"numContributions", "Number of labels",
-				WorkerDecorator.class).withSummaryAveraged("Labels per worker");
+				WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Labels per worker");
 
 		public static final EntityFieldAccessor COUNT_GOLD_TEST = new EntityFieldAccessor(
-				"numGoldTests", "Gold Tests", WorkerDecorator.class).withSummaryAveraged("Gold tests per worker");
+				"numGoldTests", "Gold Tests", WorkerDecorator.class) {
+			{
+				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+			}
+		}.withSummaryAveraged("Gold tests per worker");
 
 		public static Collection<FieldAccessor> getFieldAccessors(DawidSkene ds) {
 			List<FieldAccessor> result = new ArrayList<FieldAccessor>();

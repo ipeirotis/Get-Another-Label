@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.ipeirotis.gal.algorithms.DawidSkene;
-import com.ipeirotis.gal.algorithms.Helper;
+import com.ipeirotis.utils.Helper;
 
 @SuppressWarnings("serial")
 public class Datum implements Entity {
@@ -155,7 +155,7 @@ public class Datum implements Entity {
 	 * @param classificationMethod
 	 * @return
 	 */
-	public String getSingleClassClassification(ClassificationMethod method) {
+	public String getSingleClassClassification(ClassificationMethod method) throws IllegalArgumentException {
 		switch (method) { 
 			case DS_MaxLikelihood: 
 			case MV_MaxLikelihood: 
@@ -164,8 +164,7 @@ public class Datum implements Entity {
 			case MV_MinCost:
 				return Helper.getMinCostLabel(getProbabilityVector(method) , ds.getCategories());
 			default:
-			// TODO: Should we throw an Exception here? We should not pass any other method here
-				return null;
+				throw new IllegalArgumentException("The Classification method passed ("+method.name()+") is not valid for getSingleClassClassification");
 				
 		}
 	}

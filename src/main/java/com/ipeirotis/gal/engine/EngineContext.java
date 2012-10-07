@@ -42,21 +42,24 @@ public class EngineContext {
 		this.inputFile = inputfile;
 	}
 
-	@Option(name = "--correct", metaVar = "<correctfile>", usage = "A tab-separated text file. Each line has the form <objectid><tab><assigned_label> and records the correct labels for whatever objects we have them.")
-	String correctFile;
+	@Option(name = "--gold", metaVar = "<goldfile>", usage = "A tab-separated text file. Each line has the form <objectid><tab><gold_label> and records the gold label for whatever objects we have them.")
+	String goldFile;
 
-	public String getCorrectFile() {
-		return correctFile;
+	public String getGoldFile() {
+		return goldFile;
 	}
 
-	public boolean hasCorrectFile() {
-		return isNotBlank(correctFile);
+	public boolean hasGoldFile() {
+		return isNotBlank(goldFile);
 	}
 
 	public void setCorrectFile(String correctfile) {
-		this.correctFile = correctfile;
+		this.goldFile = correctfile;
 	}
 
+	
+	
+	
 	@Option(name = "--cost", metaVar = "<costfile>", usage = "A tab-separated text file. Each line has the form <from_class><tab><to_class><tab><classification_cost> and records the classification cost of classifying an object thatbelongs to the `from_class` into the `to_class`.")
 	String costFile;
 
@@ -87,8 +90,8 @@ public class EngineContext {
 		this.evaluationFile = evaluationfile;
 	}
 
-	@Option(name = "--iterations", usage = "is the number of times to run the algorithm. Even a value of 10 (the default) less often works well.", metaVar = "<num-iterations>")
-	int numIterations = 10;
+	@Option(name = "--iterations", usage = "is the maximum number of iterations to execute the EM algorithm. The default value of 50 often works well. No need to change it unless you believe that the algorithm is not converging.", metaVar = "<num-iterations>")
+	int numIterations = 50;
 
 	public int getNumIterations() {
 		return numIterations;
@@ -96,6 +99,17 @@ public class EngineContext {
 
 	public void setNumIterations(int iterations) {
 		this.numIterations = iterations;
+	}
+	
+	@Option(name = "--epsilon", usage = "the difference in the log-likelihood between two consecutive iterations of the EM algorithm. The default value of 10E-6 often works well. . No need to change it unless you believe that the algorithm is not converging.", metaVar = "<epsilon>")
+	double epsilon = 10E-6;
+
+	public double getEpsilon() {
+		return epsilon;
+	}
+
+	public void setEpsilon(double epsilon) {
+		this.epsilon = epsilon;
 	}
 
 	@Option(name = "--verbose", usage = "Verbose Mode?")

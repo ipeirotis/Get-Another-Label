@@ -9,7 +9,7 @@ import com.ipeirotis.gal.core.ConfusionMatrix;
 import com.ipeirotis.gal.core.Datum;
 import com.ipeirotis.gal.core.Datum.ClassificationMethod;
 import com.ipeirotis.gal.decorator.DawidSkeneDecorator;
-import com.ipeirotis.utils.Utils;
+import com.ipeirotis.utils.Helper;
 
 public class ConfusionMatrixReport extends Report {
 	@Override
@@ -44,8 +44,7 @@ public class ConfusionMatrixReport extends Report {
 			for (String from : confMatrix.getCategoryNames()) {
 				for (String to : confMatrix.getCategoryNames()) {
 					Double cm_entry = confMatrix.getErrorRate(from, to);
-					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils
-							.round(100 * cm_entry, 3).toString();
+					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Helper.round(100 * cm_entry, 3).toString();
 					reportTarget.print("P[%s->%s]=%s\t", from, to, s_cm_entry);
 				}
 				reportTarget.println("");
@@ -53,7 +52,7 @@ public class ConfusionMatrixReport extends Report {
 			reportTarget.println("");
 		}
 
-		type = "Evaluation";
+		type = "Actual";
 		
 		// for each classification method, we need to create a confusion matrix
 		for (ClassificationMethod clasMethod : Datum.ClassificationMethod.values()) {
@@ -64,8 +63,7 @@ public class ConfusionMatrixReport extends Report {
 			for (String from : confMatrix.getCategoryNames()) {
 				for (String to : confMatrix.getCategoryNames()) {
 					Double cm_entry = confMatrix.getErrorRate(from, to);
-					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils
-							.round(100 * cm_entry, 3).toString();
+					String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Helper.round(100 * cm_entry, 3).toString();
 					reportTarget.print("P[%s->%s]=%s\t", from, to, s_cm_entry);
 				}
 				reportTarget.println("");

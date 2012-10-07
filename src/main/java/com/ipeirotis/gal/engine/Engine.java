@@ -34,7 +34,7 @@ import com.ipeirotis.gal.engine.rpt.Report;
 import com.ipeirotis.gal.engine.rpt.ReportingContext;
 import com.ipeirotis.gal.engine.rpt.SummaryReport;
 import com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
-import com.ipeirotis.utils.Utils;
+import com.ipeirotis.utils.Helper;
 
 public class Engine {
 	private Set<Category> categories;
@@ -78,7 +78,7 @@ public class Engine {
 		return ds;
 	}
 
-	public void setDs(DawidSkene ds) {
+	public void setDawidSkene(DawidSkene ds) {
 		this.ds = ds;
 	}
 
@@ -117,7 +117,8 @@ public class Engine {
 	public void execute() {
 		setCategories(loadCategories(ctx.getCategoriesFile()));
 
-		setDs(new DawidSkene(getCategories()));
+		setDawidSkene(new DawidSkene(getCategories()));
+		
 		if (getDs().fixedPriors() == true)
 			println("Using fixed priors.");
 		else
@@ -125,9 +126,6 @@ public class Engine {
 
 		if (ctx.hasCosts()) {
 			setCosts(loadCosts(ctx.getCostFile()));
-
-			assert (getCosts().size() == getCategories().size()
-					* getCategories().size());
 
 			for (MisclassificationCost mcc : getCosts()) {
 				getDs().addMisclassificationCost(mcc);
@@ -145,8 +143,8 @@ public class Engine {
 		}
 		println("%d worker-assigned labels loaded.", getLabels().size());
 
-		if (ctx.hasCorrectFile()) {
-			setCorrect(loadGoldLabels(ctx.getCorrectFile()));
+		if (ctx.hasGoldFile()) {
+			setCorrect(loadGoldLabels(ctx.getGoldFile()));
 
 			int cl = 0;
 			for (CorrectLabel l : getCorrect()) {
@@ -173,10 +171,12 @@ public class Engine {
 
 		println("");
 		println("Running the Dawid&Skene algorithm");
-		for (int i = 0; i < ctx.getNumIterations(); i++) {
-			println("Iteration: %d", i);
-			getDs().estimate(1);
-		}
+		double epsilon = ctx.getEpsilon();
+		int maxIterations = ctx.getNumIterations();
+		double ll = getDs().getLogLikelihood();
+		println("Initial Log-likelihood: %3.6f", ll);
+		ll = getDs().estimate(maxIterations, epsilon);
+		println("Final Log-likelihood: %3.6f", ll);
 		println("Done\n");
 
 		if (ctx.hasEvaluateResultsAgainstFile()) {
@@ -218,7 +218,7 @@ public class Engine {
 		// We load the "gold" cases (if any)
 		println("");
 		println("Loading file with correct labels. ");
-		String[] lines_correct = Utils.readFile(correctfile).split("\n");
+		String[] lines_correct = Helper.readFile(correctfile).split("\n");
 		println("File contained %d entries.", lines_correct.length);
 		Set<CorrectLabel> correct = loadCorrectLabels(lines_correct);
 		return correct;
@@ -233,7 +233,7 @@ public class Engine {
 		// We load the "gold" cases (if any)
 		println("");
 		println("Loading file with evaluation labels. ");
-		String[] lines_correct = Utils.readFile(evalfile).split("\n");
+		String[] lines_correct = Helper.readFile(evalfile).split("\n");
 		println("File contained %d entries.", lines_correct.length);
 		Set<CorrectLabel> correct = loadEvaluationLabels(lines_correct);
 		return correct;
@@ -359,7 +359,7 @@ public class Engine {
 		// We load the labels assigned by the workers on the different objects
 		println("");
 		println("Loading file with assigned labels. ");
-		String[] lines_input = Utils.readFile(inputfile).split("\n");
+		String[] lines_input = Helper.readFile(inputfile).split("\n");
 		println("File contains " + lines_input.length + " entries.");
 		Set<AssignedLabel> labels = loadAssignedLabels(lines_input);
 		return labels;
@@ -373,11 +373,9 @@ public class Engine {
 
 		// We load the cost file. The file should have exactly n^2 lines
 		// where n is the number of categories.
-		// TODO: Later, we can also allow an empty file, and assume a default
-		// 0/1 loss function.
 		println("");
 		println("Loading cost file.");
-		String[] lines_cost = Utils.readFile(costfile).split("\n");
+		String[] lines_cost = Helper.readFile(costfile).split("\n");
 		// assert (lines_cost.length == categories.size() * categories.size());
 		println("File contains " + lines_cost.length + " entries.");
 		Set<MisclassificationCost> costs = loadClassificationCost(lines_cost);
@@ -391,7 +389,7 @@ public class Engine {
 	private Set<Category> loadCategories(String categoriesfile) {
 		println("");
 		println("Loading categories file.");
-		String[] lines_categories = Utils.readFile(categoriesfile).split("\n");
+		String[] lines_categories = Helper.readFile(categoriesfile).split("\n");
 		println("File contains " + lines_categories.length + " categories.");
 		Set<Category> categories = loadCategories(lines_categories);
 		return categories;

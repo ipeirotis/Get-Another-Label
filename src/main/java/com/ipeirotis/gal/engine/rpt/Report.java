@@ -9,7 +9,7 @@ public abstract class Report {
 
 	protected void info(String message, Object... args) {
 		// TODO: Implement PROPER Logging
-		System.err.println(String.format(message, args));
+		System.out.println(String.format(message, args));
 	}
 
 }

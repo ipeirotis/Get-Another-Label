@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ipeirotis.gal.algorithms.DawidSkene;
-import com.ipeirotis.gal.algorithms.Helper;
+import com.ipeirotis.utils.Helper;
 
 @SuppressWarnings("serial")
 public class Worker implements Entity {
@@ -155,7 +155,7 @@ public class Worker implements Entity {
 			
 			// Let's find the soft label that corresponds to assigned_label
 			String assignedCategory = assigned.getName();
-			Map<String, Double> softLabel;
+			Map<String, Double> softLabel = null;
 			
 			switch (method) {
 				case DS_MaxLikelihood_Estm:
@@ -167,10 +167,6 @@ public class Worker implements Entity {
 				case DS_Soft_Eval:
 				case DS_MinCost_Eval:
 					softLabel = getSoftLabelForLabel(assignedCategory, categories, true);
-					break;
-				default:
-					System.err.println("ERROR! Incorrect method!");
-					softLabel = null; // should never happen
 					break;
 			}
 				
@@ -188,8 +184,6 @@ public class Worker implements Entity {
 				case DS_MinCost_Eval:
 					cost += Helper.getMinCostLabelCost(softLabel, categories) * worker_prior.get(assignedCategory);
 					break;
-				default:
-					// should never happen
 			}
 			
 

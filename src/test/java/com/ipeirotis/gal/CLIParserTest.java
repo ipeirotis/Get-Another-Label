@@ -41,12 +41,12 @@ public class CLIParserTest {
 
 	@Test
 	public void testHappyPath() throws Exception {
-		parser.parseArgument("--categories data\\categories.txt --input data\\unlabeled.txt --correct data\\labeled.txt --cost data\\costs.txt --eval data\\evaluationdata.txt --iterations 10"
+		parser.parseArgument("--categories data\\categories.txt --input data\\unlabeled.txt --gold data\\labeled.txt --cost data\\costs.txt --eval data\\evaluationdata.txt --iterations 10"
 				.split("\\s+"));
 
 		assertEquals("data\\categories.txt", ctx.getCategoriesFile());
 		assertEquals("data\\unlabeled.txt", ctx.getInputFile());
-		assertEquals("data\\labeled.txt", ctx.getCorrectFile());
+		assertEquals("data\\labeled.txt", ctx.getGoldFile());
 		assertEquals("data\\costs.txt", ctx.getCostFile());
 		assertEquals("data\\evaluationdata.txt", ctx.getEvaluationFile());
 		assertEquals(10, ctx.getNumIterations());

@@ -7,7 +7,7 @@ import java.util.Collection;
 import com.ipeirotis.gal.core.Worker;
 import com.ipeirotis.gal.csv.CSVGenerator;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
-import com.ipeirotis.utils.Utils;
+import com.ipeirotis.utils.Helper;
 
 public class WorkerQualityReport extends Report {
 	static class ReportKind {
@@ -89,8 +89,7 @@ public class WorkerQualityReport extends Report {
 			for (String assigned_name : w.getDs().getCategories().keySet()) {
 				Double cm_entry = w.getErrorRate_Eval(correct_name,
 						assigned_name);
-				String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils
-						.round(100 * cm_entry, 3).toString();
+				String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Helper.round(100 * cm_entry, 3).toString();
 				reportTarget.print("P[" + correct_name + "->" + assigned_name + "]="
 						+ s_cm_entry + "%%\t");
 			}
@@ -107,8 +106,7 @@ public class WorkerQualityReport extends Report {
 			for (String assigned_name : w.getDs().getCategories().keySet()) {
 				Double cm_entry = w.getErrorRate(correct_name,
 						assigned_name);
-				String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Utils
-						.round(100 * cm_entry, 3).toString();
+				String s_cm_entry = Double.isNaN(cm_entry) ? "---" : Helper.round(100 * cm_entry, 3).toString();
 				reportTarget.print("P[" + correct_name + "->" + assigned_name + "]="
 						+ s_cm_entry + "%%\t");
 			}

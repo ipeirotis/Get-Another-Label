@@ -19,17 +19,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.ipeirotis.gal.core.AssignedLabel;
 import com.ipeirotis.gal.core.Category;
 import com.ipeirotis.gal.core.ConfusionMatrix;
 import com.ipeirotis.gal.core.CorrectLabel;
 import com.ipeirotis.gal.core.Datum;
+import com.ipeirotis.gal.core.Datum.ClassificationMethod;
 import com.ipeirotis.gal.core.MisclassificationCost;
 import com.ipeirotis.gal.core.Worker;
 import com.ipeirotis.gal.decorator.FieldAccessors;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
-import com.ipeirotis.utils.Utils;
+import com.ipeirotis.utils.Helper;
 
 public class DawidSkene {
 
@@ -53,10 +55,9 @@ public class DawidSkene {
 	}
 
 	public DawidSkene(Set<Category> categories) {
-		// TODO: Changing those kinds of maps (between hash and tree) CHANGES
-		// BEHAVIOUR. Its a bug likely
-		this.objects = new HashMap<String, Datum>();
-		this.workers = new HashMap<String, Worker>();
+
+		this.objects = new TreeMap<String, Datum>();
+		this.workers = new TreeMap<String, Worker>();
 
 		this.fixedPriors = false;
 		this.categories = new HashMap<String, Category>();
@@ -68,8 +69,7 @@ public class DawidSkene {
 			}
 		}
 
-		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS
-				.getFieldAccessors(this);
+		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAccessors(this);
 
 		// We initialize the priors to be uniform across classes
 		// if the user did not pass any information about the prior values
@@ -82,6 +82,29 @@ public class DawidSkene {
 		initializeCosts();
 	}
 
+	public Double getLogLikelihood() {
+		double result = 0;
+		
+		for (Datum d : this.objects.values()) {
+			for (AssignedLabel al: d.getAssignedLabels()) {
+				String workerName = al.getWorkerName();
+				String assignedLabel = al.getCategoryName();
+				
+				Map<String, Double> estimatedCorrectLabel = d.getProbabilityVector(ClassificationMethod.DS_Soft);
+				
+				for (String from: estimatedCorrectLabel.keySet()) {
+					Worker w = this.getWorkers().get(workerName);
+					Double categoryProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
+					Double labelingProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
+					result += Math.log(categoryProbability)+Math.log(labelingProbability);
+				}
+			}
+		}
+		
+		
+		return result;
+	}
+	
 	public void addAssignedLabel(AssignedLabel al) {
 
 		String workerName = al.getWorkerName();
@@ -167,34 +190,32 @@ public class DawidSkene {
 	}
 
 	/**
-	 * Runs the algorithm, iterating the specified number of times TODO:
-	 * Estimate the model log-likelihood and stop once the log-likelihood values
-	 * converge
+	 * Runs the algorithm, iterating until convergence, i.e., the difference
+	 * in the log likelihood between two consecutive iterations is lower
+	 * than the specified threshold epsilon, or until executing more than maxIterations
 	 * 
-	 * @param iterations
+	 * @param maxIterations 
 	 */
-	public void estimate(int iterations) {
-		for (int i = 0; i < iterations; i++) {
+	public double estimate(int maxIterations, double epsilon) {
+		
+		double pastLogLikelihood = Double.POSITIVE_INFINITY;
+		double logLikelihood = 0d;
+		
+		int cnt = 0;
+		
+		
+		while (cnt <maxIterations && Math.abs(logLikelihood - pastLogLikelihood) > epsilon) {
+			cnt++;
+			pastLogLikelihood = getLogLikelihood();
 			updateObjectClassProbabilities();
 			updatePriors();
 			updateWorkerConfusionMatrices();
+			logLikelihood = getLogLikelihood();
 		}
 
-		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS
-				.getFieldAccessors(this);
-	}
-
-	public HashMap<String, String> getMajorityVote() {
-
-		HashMap<String, String> result = new HashMap<String, String>();
-
-		for (String objectName : this.objects.keySet()) {
-			Datum d = this.objects.get(objectName);
-			String category = d
-					.getSingleClassClassification(Datum.ClassificationMethod.DS_MaxLikelihood);
-			result.put(objectName, category);
-		}
-		return result;
+		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAccessors(this);
+		
+		return logLikelihood;
 	}
 
 	private HashMap<String, Double> getObjectClassProbabilities(
@@ -280,7 +301,7 @@ public class DawidSkene {
 				// result.put(category, 0.0);
 				return null;
 			} else {
-				Double probability = Utils.round(nominator / denominator, 5);
+				Double probability = Helper.round(nominator / denominator, 5);
 				result.put(category, probability);
 			}
 		}
@@ -326,13 +347,14 @@ public class DawidSkene {
 		}
 	}
 
-	public void evaluateWorkers() {
 
+	public void evaluateWorkers() {
 		for (Worker w : this.workers.values()) {
 			computeEvalConfusionMatrix(w);
 		}
 	}
 
+	
 	private void computeEvalConfusionMatrix(Worker w) {
 		ConfusionMatrix eval_cm = new ConfusionMatrix(this.categories.values());
 		eval_cm.empty();
@@ -354,6 +376,7 @@ public class DawidSkene {
 		eval_cm.normalize();
 		w.setEvalConfusionMatrix(eval_cm);
 	}
+	
 
 	public Integer countGoldTests(Set<AssignedLabel> labels) {
 		Integer result = 0;
