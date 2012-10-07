@@ -36,8 +36,7 @@ public class ObjectResultReport extends Report {
 	public void printObjectClassProbabilities(DawidSkene dawidSkene,
 			PrintWriter writer) throws IOException {
 		CSVGenerator<Datum> csvGenerator = new CSVGenerator<Datum>(
-				dawidSkene.getFieldAccessors(Datum.class), dawidSkene
-						.getObjects().values());
+				dawidSkene.getFieldAccessors(Datum.class), dawidSkene.getObjects().values());
 
 		csvGenerator.writeTo(writer);
 	}
