@@ -1,8 +1,6 @@
 com.ipeirotis.gal
 com.ipeirotis.gal.algorithms
 com.ipeirotis.gal.core
-com.ipeirotis.gal.csv
 com.ipeirotis.gal.decorator
 com.ipeirotis.gal.engine
 com.ipeirotis.gal.engine.rpt
-com.ipeirotis.utils
