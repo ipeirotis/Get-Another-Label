@@ -26,8 +26,8 @@ public class MetricsTest {
 		parser.parseArgument("--input data/test-unlabeled.txt --categories data/test-categories.txt --dry-run"
 				.split("\\s+"));
 
-		assertEquals(ctx.getInputFile(), "data/test-unlabeled.txt");
-		assertEquals(ctx.getCategoriesFile(), "data/test-categories.txt");
+		assertEquals(ctx.getInputFile(), "data/AdultContent/test-unlabeled.txt");
+		assertEquals(ctx.getCategoriesFile(), "data/AdultContent/test-categories.txt");
 		
 		Engine engine = new Engine(ctx);
 		
@@ -36,7 +36,7 @@ public class MetricsTest {
 	
 	@Test
 	public void testMoreComplexPath() throws Exception {
-		parser.parseArgument("--input data/input.txt --categories data/categories.txt --eval data/evaluation.txt --dry-run"
+		parser.parseArgument("--input data/AdultContent/input.txt --categories data/AdultContent/categories.txt --eval data/AdultContent/evaluation.txt --dry-run"
 				.split("\\s+"));
 		
 		Engine engine = new Engine(ctx);

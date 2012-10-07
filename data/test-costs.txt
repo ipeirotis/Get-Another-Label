@@ -1,4 +1,0 @@
-porn	porn	0
-notporn	notporn	0
-porn	notporn	1
-notporn	porn	1
