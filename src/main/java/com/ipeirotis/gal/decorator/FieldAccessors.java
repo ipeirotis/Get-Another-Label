@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.algorithms.DawidSkene;
 import com.ipeirotis.gal.core.Datum;
 import com.ipeirotis.gal.core.Worker;
-import com.ipeirotis.utils.Helper;
 
 public class FieldAccessors {
 	public static abstract class FieldAccessor {

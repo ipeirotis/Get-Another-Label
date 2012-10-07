@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.algorithms.DawidSkene;
-import com.ipeirotis.utils.Helper;
 
 @SuppressWarnings("serial")
 public class Worker implements Entity, Comparable<Worker> {

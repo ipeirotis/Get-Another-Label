@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.ipeirotis.gal.core.Category;
 import com.ipeirotis.gal.core.ConfusionMatrix;
-import com.ipeirotis.utils.Helper;
 
 public class ConfusionMatrixTest {
 	private ConfusionMatrix cm;

@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 
+import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.core.Worker;
-import com.ipeirotis.gal.csv.CSVGenerator;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
-import com.ipeirotis.utils.Helper;
 
 public class WorkerQualityReport extends Report {
 	static class ReportKind {

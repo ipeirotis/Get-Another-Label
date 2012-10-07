@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.core.AssignedLabel;
 import com.ipeirotis.gal.core.Category;
 import com.ipeirotis.gal.core.ConfusionMatrix;
@@ -31,7 +32,6 @@ import com.ipeirotis.gal.core.MisclassificationCost;
 import com.ipeirotis.gal.core.Worker;
 import com.ipeirotis.gal.decorator.FieldAccessors;
 import com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
-import com.ipeirotis.utils.Helper;
 
 public class DawidSkene {
 

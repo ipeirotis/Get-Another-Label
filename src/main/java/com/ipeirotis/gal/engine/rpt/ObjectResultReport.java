@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 
 import com.ipeirotis.gal.algorithms.DawidSkene;
 import com.ipeirotis.gal.core.Datum;
-import com.ipeirotis.gal.csv.CSVGenerator;
 
 public class ObjectResultReport extends Report {
 	@Override

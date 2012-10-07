@@ -1,8 +1,8 @@
 package com.ipeirotis.gal.decorator;
 
+import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.core.Datum;
 import com.ipeirotis.gal.core.Datum.ClassificationMethod;
-import com.ipeirotis.utils.Helper;
 
 public class DatumDecorator extends Decorator<Datum> {
 	public DatumDecorator(Datum wrapped) {

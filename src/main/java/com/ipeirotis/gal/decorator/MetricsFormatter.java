@@ -2,7 +2,7 @@ package com.ipeirotis.gal.decorator;
 
 import java.util.Locale;
 
-import com.ipeirotis.utils.Helper;
+import com.ipeirotis.gal.Helper;
 
 public abstract class MetricsFormatter {
 	public abstract String format(Double result);

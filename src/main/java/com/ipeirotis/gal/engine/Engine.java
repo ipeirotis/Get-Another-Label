@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.algorithms.DawidSkene;
 import com.ipeirotis.gal.core.AssignedLabel;
 import com.ipeirotis.gal.core.Category;
@@ -34,7 +35,6 @@ import com.ipeirotis.gal.engine.rpt.Report;
 import com.ipeirotis.gal.engine.rpt.ReportingContext;
 import com.ipeirotis.gal.engine.rpt.SummaryReport;
 import com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
-import com.ipeirotis.utils.Helper;
 
 public class Engine {
 	private Set<Category> categories;

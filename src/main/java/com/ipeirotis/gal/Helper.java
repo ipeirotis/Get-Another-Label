@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ipeirotis.utils;
+package com.ipeirotis.gal;
 
 import java.io.BufferedReader;
 import java.io.File;
