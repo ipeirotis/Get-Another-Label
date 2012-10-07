@@ -33,7 +33,7 @@
 <a class="jxr_linenumber" name="23" href="#23">23</a>  
 <a class="jxr_linenumber" name="24" href="#24">24</a>  	@Test
 <a class="jxr_linenumber" name="25" href="#25">25</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testHappyPath() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="26" href="#26">26</a>  		parser.parseArgument(<span class="jxr_string">"--input data/test-unlabeled.txt --categories data/test-categories.txt --dry-run"</span>
+<a class="jxr_linenumber" name="26" href="#26">26</a>  		parser.parseArgument(<span class="jxr_string">"--input data/AdultContent/test-unlabeled.txt --categories data/AdultContent/test-categories.txt --dry-run"</span>
 <a class="jxr_linenumber" name="27" href="#27">27</a>  				.split(<span class="jxr_string">"&#92;&#92;s+"</span>));
 <a class="jxr_linenumber" name="28" href="#28">28</a>  
 <a class="jxr_linenumber" name="29" href="#29">29</a>  		assertEquals(ctx.getInputFile(), <span class="jxr_string">"data/AdultContent/test-unlabeled.txt"</span>);
@@ -46,7 +46,7 @@
 <a class="jxr_linenumber" name="36" href="#36">36</a>  	
 <a class="jxr_linenumber" name="37" href="#37">37</a>  	@Test
 <a class="jxr_linenumber" name="38" href="#38">38</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMoreComplexPath() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="39" href="#39">39</a>  		parser.parseArgument(<span class="jxr_string">"--input data/AdultContent/input.txt --categories data/AdultContent/categories.txt --eval data/AdultContent/evaluation.txt --dry-run"</span>
+<a class="jxr_linenumber" name="39" href="#39">39</a>  		parser.parseArgument(<span class="jxr_string">"--input data/BarzanMozafari/input.txt --categories data/BarzanMozafari/categories.txt --eval data/BarzanMozafari/evaluation.txt --dry-run"</span>
 <a class="jxr_linenumber" name="40" href="#40">40</a>  				.split(<span class="jxr_string">"&#92;&#92;s+"</span>));
 <a class="jxr_linenumber" name="41" href="#41">41</a>  		
 <a class="jxr_linenumber" name="42" href="#42">42</a>  		Engine engine = <strong class="jxr_keyword">new</strong> Engine(ctx);
