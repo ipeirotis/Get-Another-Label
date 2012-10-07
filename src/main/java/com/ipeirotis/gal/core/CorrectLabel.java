@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.ipeirotis.gal.core;
 
-public class CorrectLabel {
+public class CorrectLabel implements Comparable<CorrectLabel> {
 
 	private String	objectName;
 	private String	correctCategory;
@@ -24,6 +24,17 @@ public class CorrectLabel {
 
 		this.objectName = objectName;
 		this.correctCategory = correctCategory;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(CorrectLabel o) {
+		int c1 = this.objectName.compareTo(o.objectName);
+		if (c1 != 0) return c1;
+		
+		return this.correctCategory.compareTo(o.correctCategory);
 	}
 
 	/**

@@ -17,7 +17,7 @@ package com.ipeirotis.gal.core;
 
 import java.util.HashMap;
 
-public class Category {
+public class Category implements Comparable<Category> {
 
 	private String									name;
 
@@ -28,6 +28,19 @@ public class Category {
 	// into some other category. The HashMap key is the other category, and the Double
 	// is the cost.
 	private HashMap<String, Double>	misclassification_cost;
+
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Category o) {
+
+		// TODO Auto-generated method stub
+		return this.name.compareTo(o.getName());
+	}
 
 	public Category(String name) {
 

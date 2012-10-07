@@ -25,7 +25,16 @@ import com.ipeirotis.gal.algorithms.DawidSkene;
 import com.ipeirotis.utils.Helper;
 
 @SuppressWarnings("serial")
-public class Worker implements Entity {
+public class Worker implements Entity, Comparable<Worker> {
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Worker o) {
+
+		return this.name.compareTo(o.getName());
+	}
 
 	private String										name;
 

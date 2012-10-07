@@ -15,12 +15,26 @@
  ******************************************************************************/
 package com.ipeirotis.gal.core;
 
-public class AssignedLabel {
+public class AssignedLabel implements Comparable<AssignedLabel> {
 
 	private String	workerName;
 	private String	objectName;
 	private String	categoryName;
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(AssignedLabel o) {
+		int c1 = this.workerName.compareTo(o.workerName);
+		if (c1 != 0) return c1;
+		
+		int c2 = this.objectName.compareTo(o.objectName);
+		if (c2 != 0) return c2;
+		
+		return this.categoryName.compareTo(o.categoryName);
+	}
+	
 	/**
 	 * @return the workerName
 	 */

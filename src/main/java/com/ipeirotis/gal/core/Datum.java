@@ -26,7 +26,7 @@ import com.ipeirotis.gal.algorithms.DawidSkene;
 import com.ipeirotis.utils.Helper;
 
 @SuppressWarnings("serial")
-public class Datum implements Entity {
+public class Datum implements Entity, Comparable<Datum> {
 	String									name;
 
 	// Defines if we have the correct category for this object
@@ -262,6 +262,15 @@ public class Datum implements Entity {
 
 	
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Datum o) {
+
+		return this.name.compareTo(o.getName());
+	}
+
 	public void setCategoryProbability(String c, Double prob) {
 		categoryProbability.put(c, prob);
 	}
