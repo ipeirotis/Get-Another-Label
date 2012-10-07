@@ -23,7 +23,7 @@ public class MetricsTest {
 
 	@Test
 	public void testHappyPath() throws Exception {
-		parser.parseArgument("--input data/test-unlabeled.txt --categories data/test-categories.txt --dry-run"
+		parser.parseArgument("--input data/AdultContent/test-unlabeled.txt --categories data/AdultContent/test-categories.txt --dry-run"
 				.split("\\s+"));
 
 		assertEquals(ctx.getInputFile(), "data/AdultContent/test-unlabeled.txt");
@@ -36,7 +36,7 @@ public class MetricsTest {
 	
 	@Test
 	public void testMoreComplexPath() throws Exception {
-		parser.parseArgument("--input data/AdultContent/input.txt --categories data/AdultContent/categories.txt --eval data/AdultContent/evaluation.txt --dry-run"
+		parser.parseArgument("--input data/BarzanMozafari/input.txt --categories data/BarzanMozafari/categories.txt --eval data/BarzanMozafari/evaluation.txt --dry-run"
 				.split("\\s+"));
 		
 		Engine engine = new Engine(ctx);
