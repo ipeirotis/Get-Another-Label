@@ -84,7 +84,7 @@ public class WorkerQualityReport extends Report {
 	 * TODO Smells bad
 	 */
 	private void writeEvalConfusionMatrix(ReportTarget reportTarget, Worker w) {
-		reportTarget.println("Confusion Matrix (Evaluation data):");
+		reportTarget.println("Actual Confusion Matrix (evaluation data):");
 		for (String correct_name : w.getDs().getCategories().keySet()) {
 			for (String assigned_name : w.getDs().getCategories().keySet()) {
 				Double cm_entry = w.getErrorRate_Eval(correct_name,
@@ -101,7 +101,7 @@ public class WorkerQualityReport extends Report {
 	 * TODO Smells bad
 	 */
 	private void writeEstimatedConfusionMatrix(ReportTarget reportTarget, Worker w) {
-		reportTarget.println("Confusion Matrix (Estimated data):");
+		reportTarget.println("Estimated Confusion Matrix:");
 		for (String correct_name : w.getDs().getCategories().keySet()) {
 			for (String assigned_name : w.getDs().getCategories().keySet()) {
 				Double cm_entry = w.getErrorRate(correct_name,
