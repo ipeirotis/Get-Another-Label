@@ -19,7 +19,7 @@
 <a class="jxr_linenumber" name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Datum;
 <a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Datum.ClassificationMethod;
 <a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.decorator.DawidSkeneDecorator;
-<a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
+<a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Helper;
 <a class="jxr_linenumber" name="13" href="#13">13</a>  
 <a class="jxr_linenumber" name="14" href="#14">14</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/ConfusionMatrixReport.html">ConfusionMatrixReport</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/Report.html">Report</a> {
 <a class="jxr_linenumber" name="15" href="#15">15</a>  	@Override
@@ -54,37 +54,35 @@
 <a class="jxr_linenumber" name="44" href="#44">44</a>  			<strong class="jxr_keyword">for</strong> (String from : confMatrix.getCategoryNames()) {
 <a class="jxr_linenumber" name="45" href="#45">45</a>  				<strong class="jxr_keyword">for</strong> (String to : confMatrix.getCategoryNames()) {
 <a class="jxr_linenumber" name="46" href="#46">46</a>  					Double cm_entry = confMatrix.getErrorRate(from, to);
-<a class="jxr_linenumber" name="47" href="#47">47</a>  					String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : <a href="../../../../../com/ipeirotis/utils/Utils.html">Utils</a>
-<a class="jxr_linenumber" name="48" href="#48">48</a>  							.round(100 * cm_entry, 3).toString();
-<a class="jxr_linenumber" name="49" href="#49">49</a>  					reportTarget.print(<span class="jxr_string">"P[%s-&gt;%s]=%s\t"</span>, from, to, s_cm_entry);
-<a class="jxr_linenumber" name="50" href="#50">50</a>  				}
-<a class="jxr_linenumber" name="51" href="#51">51</a>  				reportTarget.println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="52" href="#52">52</a>  			}
-<a class="jxr_linenumber" name="53" href="#53">53</a>  			reportTarget.println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="54" href="#54">54</a>  		}
-<a class="jxr_linenumber" name="55" href="#55">55</a>  
-<a class="jxr_linenumber" name="56" href="#56">56</a>  		type = <span class="jxr_string">"Evaluation"</span>;
-<a class="jxr_linenumber" name="57" href="#57">57</a>  		
-<a class="jxr_linenumber" name="58" href="#58">58</a>  		<em class="jxr_comment">// for each classification method, we need to create a confusion matrix</em>
-<a class="jxr_linenumber" name="59" href="#59">59</a>  		<strong class="jxr_keyword">for</strong> (ClassificationMethod clasMethod : Datum.ClassificationMethod.values()) {
-<a class="jxr_linenumber" name="60" href="#60">60</a>  			ConfusionMatrix confMatrix = decorator.getConfusionMatrix(clasMethod);
-<a class="jxr_linenumber" name="61" href="#61">61</a>  			
-<a class="jxr_linenumber" name="62" href="#62">62</a>  			reportTarget.println(<span class="jxr_string">"%s Confusion Matrix (%s):"</span>, type, clasMethod.name());
-<a class="jxr_linenumber" name="63" href="#63">63</a>  			
-<a class="jxr_linenumber" name="64" href="#64">64</a>  			<strong class="jxr_keyword">for</strong> (String from : confMatrix.getCategoryNames()) {
-<a class="jxr_linenumber" name="65" href="#65">65</a>  				<strong class="jxr_keyword">for</strong> (String to : confMatrix.getCategoryNames()) {
-<a class="jxr_linenumber" name="66" href="#66">66</a>  					Double cm_entry = confMatrix.getErrorRate(from, to);
-<a class="jxr_linenumber" name="67" href="#67">67</a>  					String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : <a href="../../../../../com/ipeirotis/utils/Utils.html">Utils</a>
-<a class="jxr_linenumber" name="68" href="#68">68</a>  							.round(100 * cm_entry, 3).toString();
-<a class="jxr_linenumber" name="69" href="#69">69</a>  					reportTarget.print(<span class="jxr_string">"P[%s-&gt;%s]=%s\t"</span>, from, to, s_cm_entry);
-<a class="jxr_linenumber" name="70" href="#70">70</a>  				}
-<a class="jxr_linenumber" name="71" href="#71">71</a>  				reportTarget.println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="72" href="#72">72</a>  			}
-<a class="jxr_linenumber" name="73" href="#73">73</a>  			reportTarget.println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="74" href="#74">74</a>  		}
-<a class="jxr_linenumber" name="75" href="#75">75</a>  	}
-<a class="jxr_linenumber" name="76" href="#76">76</a>  
-<a class="jxr_linenumber" name="77" href="#77">77</a>  }
+<a class="jxr_linenumber" name="47" href="#47">47</a>  					String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : Helper.round(100 * cm_entry, 3).toString();
+<a class="jxr_linenumber" name="48" href="#48">48</a>  					reportTarget.print(<span class="jxr_string">"P[%s-&gt;%s]=%s\t"</span>, from, to, s_cm_entry);
+<a class="jxr_linenumber" name="49" href="#49">49</a>  				}
+<a class="jxr_linenumber" name="50" href="#50">50</a>  				reportTarget.println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="51" href="#51">51</a>  			}
+<a class="jxr_linenumber" name="52" href="#52">52</a>  			reportTarget.println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="53" href="#53">53</a>  		}
+<a class="jxr_linenumber" name="54" href="#54">54</a>  
+<a class="jxr_linenumber" name="55" href="#55">55</a>  		type = <span class="jxr_string">"Actual"</span>;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  		
+<a class="jxr_linenumber" name="57" href="#57">57</a>  		<em class="jxr_comment">// for each classification method, we need to create a confusion matrix</em>
+<a class="jxr_linenumber" name="58" href="#58">58</a>  		<strong class="jxr_keyword">for</strong> (ClassificationMethod clasMethod : Datum.ClassificationMethod.values()) {
+<a class="jxr_linenumber" name="59" href="#59">59</a>  			ConfusionMatrix confMatrix = decorator.getConfusionMatrix(clasMethod);
+<a class="jxr_linenumber" name="60" href="#60">60</a>  			
+<a class="jxr_linenumber" name="61" href="#61">61</a>  			reportTarget.println(<span class="jxr_string">"%s Confusion Matrix (%s):"</span>, type, clasMethod.name());
+<a class="jxr_linenumber" name="62" href="#62">62</a>  			
+<a class="jxr_linenumber" name="63" href="#63">63</a>  			<strong class="jxr_keyword">for</strong> (String from : confMatrix.getCategoryNames()) {
+<a class="jxr_linenumber" name="64" href="#64">64</a>  				<strong class="jxr_keyword">for</strong> (String to : confMatrix.getCategoryNames()) {
+<a class="jxr_linenumber" name="65" href="#65">65</a>  					Double cm_entry = confMatrix.getErrorRate(from, to);
+<a class="jxr_linenumber" name="66" href="#66">66</a>  					String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : Helper.round(100 * cm_entry, 3).toString();
+<a class="jxr_linenumber" name="67" href="#67">67</a>  					reportTarget.print(<span class="jxr_string">"P[%s-&gt;%s]=%s\t"</span>, from, to, s_cm_entry);
+<a class="jxr_linenumber" name="68" href="#68">68</a>  				}
+<a class="jxr_linenumber" name="69" href="#69">69</a>  				reportTarget.println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="70" href="#70">70</a>  			}
+<a class="jxr_linenumber" name="71" href="#71">71</a>  			reportTarget.println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="72" href="#72">72</a>  		}
+<a class="jxr_linenumber" name="73" href="#73">73</a>  	}
+<a class="jxr_linenumber" name="74" href="#74">74</a>  
+<a class="jxr_linenumber" name="75" href="#75">75</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

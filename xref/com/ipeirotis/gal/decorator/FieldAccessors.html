@@ -20,7 +20,7 @@
 <a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.algorithms.DawidSkene;
 <a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Datum;
 <a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Worker;
-<a class="jxr_linenumber" name="13" href="#13">13</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
+<a class="jxr_linenumber" name="13" href="#13">13</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Helper;
 <a class="jxr_linenumber" name="14" href="#14">14</a>  
 <a class="jxr_linenumber" name="15" href="#15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">FieldAccessors</a> {
 <a class="jxr_linenumber" name="16" href="#16">16</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">FieldAccessor</a> {
@@ -185,7 +185,7 @@
 <a class="jxr_linenumber" name="175" href="#175">175</a> 				<strong class="jxr_keyword">if</strong> (v instanceof Double) {
 <a class="jxr_linenumber" name="176" href="#176">176</a> 					Double value = (Double) v;
 <a class="jxr_linenumber" name="177" href="#177">177</a> 
-<a class="jxr_linenumber" name="178" href="#178">178</a> 					<strong class="jxr_keyword">return</strong> Double.toString(Utils.round(value, 3));
+<a class="jxr_linenumber" name="178" href="#178">178</a> 					<strong class="jxr_keyword">return</strong> Double.toString(Helper.round(value, 3));
 <a class="jxr_linenumber" name="179" href="#179">179</a> 				} <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (v != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="180" href="#180">180</a> 					<strong class="jxr_keyword">return</strong> ObjectUtils.toString(v);
 <a class="jxr_linenumber" name="181" href="#181">181</a> 				}
@@ -621,41 +621,49 @@
 <a class="jxr_linenumber" name="611" href="#611">611</a> 
 <a class="jxr_linenumber" name="612" href="#612">612</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a> COUNT_ANNOTATION = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a>(
 <a class="jxr_linenumber" name="613" href="#613">613</a> 				<span class="jxr_string">"numContributions"</span>, <span class="jxr_string">"Number of labels"</span>,
-<a class="jxr_linenumber" name="614" href="#614">614</a> 				WorkerDecorator.<strong class="jxr_keyword">class</strong>).withSummaryAveraged(<span class="jxr_string">"Labels per worker"</span>);
-<a class="jxr_linenumber" name="615" href="#615">615</a> 
-<a class="jxr_linenumber" name="616" href="#616">616</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a> COUNT_GOLD_TEST = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a>(
-<a class="jxr_linenumber" name="617" href="#617">617</a> 				<span class="jxr_string">"numGoldTests"</span>, <span class="jxr_string">"Gold Tests"</span>, WorkerDecorator.<strong class="jxr_keyword">class</strong>).withSummaryAveraged(<span class="jxr_string">"Gold tests per worker"</span>);
-<a class="jxr_linenumber" name="618" href="#618">618</a> 
-<a class="jxr_linenumber" name="619" href="#619">619</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Collection&lt;FieldAccessor&gt; getFieldAccessors(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
-<a class="jxr_linenumber" name="620" href="#620">620</a> 			List&lt;FieldAccessor&gt; result = <strong class="jxr_keyword">new</strong> ArrayList&lt;FieldAccessor&gt;();
-<a class="jxr_linenumber" name="621" href="#621">621</a> 
-<a class="jxr_linenumber" name="622" href="#622">622</a> 			result.add(NAME);
-<a class="jxr_linenumber" name="623" href="#623">623</a> 
-<a class="jxr_linenumber" name="624" href="#624">624</a> 			result.add(EST_QUALITY_EXP);
-<a class="jxr_linenumber" name="625" href="#625">625</a> 			result.add(EST_QUALITY_EXP_W);
+<a class="jxr_linenumber" name="614" href="#614">614</a> 				WorkerDecorator.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="615" href="#615">615</a> 			{
+<a class="jxr_linenumber" name="616" href="#616">616</a> 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+<a class="jxr_linenumber" name="617" href="#617">617</a> 			}
+<a class="jxr_linenumber" name="618" href="#618">618</a> 		}.withSummaryAveraged(<span class="jxr_string">"Labels per worker"</span>);
+<a class="jxr_linenumber" name="619" href="#619">619</a> 
+<a class="jxr_linenumber" name="620" href="#620">620</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a> COUNT_GOLD_TEST = <strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/decorator/FieldAccessors.html">EntityFieldAccessor</a>(
+<a class="jxr_linenumber" name="621" href="#621">621</a> 				<span class="jxr_string">"numGoldTests"</span>, <span class="jxr_string">"Gold Tests"</span>, WorkerDecorator.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="622" href="#622">622</a> 			{
+<a class="jxr_linenumber" name="623" href="#623">623</a> 				setFormatter(MetricsFormatter.DECIMAL_FORMATTER);
+<a class="jxr_linenumber" name="624" href="#624">624</a> 			}
+<a class="jxr_linenumber" name="625" href="#625">625</a> 		}.withSummaryAveraged(<span class="jxr_string">"Gold tests per worker"</span>);
 <a class="jxr_linenumber" name="626" href="#626">626</a> 
-<a class="jxr_linenumber" name="627" href="#627">627</a> 			result.add(EST_QUALITY_ML);
-<a class="jxr_linenumber" name="628" href="#628">628</a> 			result.add(EST_QUALITY_ML_W);
+<a class="jxr_linenumber" name="627" href="#627">627</a> 		<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Collection&lt;FieldAccessor&gt; getFieldAccessors(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
+<a class="jxr_linenumber" name="628" href="#628">628</a> 			List&lt;FieldAccessor&gt; result = <strong class="jxr_keyword">new</strong> ArrayList&lt;FieldAccessor&gt;();
 <a class="jxr_linenumber" name="629" href="#629">629</a> 
-<a class="jxr_linenumber" name="630" href="#630">630</a> 			result.add(EST_QUALITY_OPT);
-<a class="jxr_linenumber" name="631" href="#631">631</a> 			result.add(EST_QUALITY_OPT_W);
-<a class="jxr_linenumber" name="632" href="#632">632</a> 			
-<a class="jxr_linenumber" name="633" href="#633">633</a> 			result.add(EVAL_QUALITY_EXP);
-<a class="jxr_linenumber" name="634" href="#634">634</a> 			result.add(EVAL_QUALITY_EXP_W);
-<a class="jxr_linenumber" name="635" href="#635">635</a> 			
-<a class="jxr_linenumber" name="636" href="#636">636</a> 			result.add(EVAL_QUALITY_ML);
-<a class="jxr_linenumber" name="637" href="#637">637</a> 			result.add(EVAL_QUALITY_ML_W);
-<a class="jxr_linenumber" name="638" href="#638">638</a> 		
-<a class="jxr_linenumber" name="639" href="#639">639</a> 			result.add(EVAL_QUALITY_OPT);
-<a class="jxr_linenumber" name="640" href="#640">640</a> 			result.add(EVAL_QUALITY_OPT_W);
-<a class="jxr_linenumber" name="641" href="#641">641</a> 			
-<a class="jxr_linenumber" name="642" href="#642">642</a> 			result.add(COUNT_ANNOTATION);
-<a class="jxr_linenumber" name="643" href="#643">643</a> 			result.add(COUNT_GOLD_TEST);
-<a class="jxr_linenumber" name="644" href="#644">644</a> 
-<a class="jxr_linenumber" name="645" href="#645">645</a> 			<strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="646" href="#646">646</a> 		}
-<a class="jxr_linenumber" name="647" href="#647">647</a> 	}
-<a class="jxr_linenumber" name="648" href="#648">648</a> }
+<a class="jxr_linenumber" name="630" href="#630">630</a> 			result.add(NAME);
+<a class="jxr_linenumber" name="631" href="#631">631</a> 
+<a class="jxr_linenumber" name="632" href="#632">632</a> 			result.add(EST_QUALITY_EXP);
+<a class="jxr_linenumber" name="633" href="#633">633</a> 			result.add(EST_QUALITY_EXP_W);
+<a class="jxr_linenumber" name="634" href="#634">634</a> 
+<a class="jxr_linenumber" name="635" href="#635">635</a> 			result.add(EST_QUALITY_ML);
+<a class="jxr_linenumber" name="636" href="#636">636</a> 			result.add(EST_QUALITY_ML_W);
+<a class="jxr_linenumber" name="637" href="#637">637</a> 
+<a class="jxr_linenumber" name="638" href="#638">638</a> 			result.add(EST_QUALITY_OPT);
+<a class="jxr_linenumber" name="639" href="#639">639</a> 			result.add(EST_QUALITY_OPT_W);
+<a class="jxr_linenumber" name="640" href="#640">640</a> 			
+<a class="jxr_linenumber" name="641" href="#641">641</a> 			result.add(EVAL_QUALITY_EXP);
+<a class="jxr_linenumber" name="642" href="#642">642</a> 			result.add(EVAL_QUALITY_EXP_W);
+<a class="jxr_linenumber" name="643" href="#643">643</a> 			
+<a class="jxr_linenumber" name="644" href="#644">644</a> 			result.add(EVAL_QUALITY_ML);
+<a class="jxr_linenumber" name="645" href="#645">645</a> 			result.add(EVAL_QUALITY_ML_W);
+<a class="jxr_linenumber" name="646" href="#646">646</a> 		
+<a class="jxr_linenumber" name="647" href="#647">647</a> 			result.add(EVAL_QUALITY_OPT);
+<a class="jxr_linenumber" name="648" href="#648">648</a> 			result.add(EVAL_QUALITY_OPT_W);
+<a class="jxr_linenumber" name="649" href="#649">649</a> 			
+<a class="jxr_linenumber" name="650" href="#650">650</a> 			result.add(COUNT_ANNOTATION);
+<a class="jxr_linenumber" name="651" href="#651">651</a> 			result.add(COUNT_GOLD_TEST);
+<a class="jxr_linenumber" name="652" href="#652">652</a> 
+<a class="jxr_linenumber" name="653" href="#653">653</a> 			<strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="654" href="#654">654</a> 		}
+<a class="jxr_linenumber" name="655" href="#655">655</a> 	}
+<a class="jxr_linenumber" name="656" href="#656">656</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

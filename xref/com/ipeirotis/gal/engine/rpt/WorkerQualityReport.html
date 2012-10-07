@@ -17,7 +17,7 @@
 <a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.core.Worker;
 <a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.csv.CSVGenerator;
 <a class="jxr_linenumber" name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.decorator.FieldAccessors.FieldAccessor;
-<a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
+<a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Helper;
 <a class="jxr_linenumber" name="11" href="#11">11</a>  
 <a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/WorkerQualityReport.html">WorkerQualityReport</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/Report.html">Report</a> {
 <a class="jxr_linenumber" name="13" href="#13">13</a>  	<strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/ipeirotis/gal/engine/rpt/WorkerQualityReport.html">ReportKind</a> {
@@ -99,34 +99,32 @@
 <a class="jxr_linenumber" name="89" href="#89">89</a>  			<strong class="jxr_keyword">for</strong> (String assigned_name : w.getDs().getCategories().keySet()) {
 <a class="jxr_linenumber" name="90" href="#90">90</a>  				Double cm_entry = w.getErrorRate_Eval(correct_name,
 <a class="jxr_linenumber" name="91" href="#91">91</a>  						assigned_name);
-<a class="jxr_linenumber" name="92" href="#92">92</a>  				String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : <a href="../../../../../com/ipeirotis/utils/Utils.html">Utils</a>
-<a class="jxr_linenumber" name="93" href="#93">93</a>  						.round(100 * cm_entry, 3).toString();
-<a class="jxr_linenumber" name="94" href="#94">94</a>  				reportTarget.print(<span class="jxr_string">"P["</span> + correct_name + <span class="jxr_string">"-&gt;"</span> + assigned_name + <span class="jxr_string">"]="</span>
-<a class="jxr_linenumber" name="95" href="#95">95</a>  						+ s_cm_entry + <span class="jxr_string">"%%\t"</span>);
-<a class="jxr_linenumber" name="96" href="#96">96</a>  			}
-<a class="jxr_linenumber" name="97" href="#97">97</a>  			reportTarget.println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="98" href="#98">98</a>  		}
-<a class="jxr_linenumber" name="99" href="#99">99</a>  	}
-<a class="jxr_linenumber" name="100" href="#100">100</a> 
-<a class="jxr_linenumber" name="101" href="#101">101</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="102" href="#102">102</a> <em class="jxr_javadoccomment">	 * TODO Smells bad</em>
-<a class="jxr_linenumber" name="103" href="#103">103</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="104" href="#104">104</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> writeEstimatedConfusionMatrix(<a href="../../../../../com/ipeirotis/gal/engine/rpt/ReportTarget.html">ReportTarget</a> reportTarget, <a href="../../../../../com/ipeirotis/gal/core/Worker.html">Worker</a> w) {
-<a class="jxr_linenumber" name="105" href="#105">105</a> 		reportTarget.println(<span class="jxr_string">"Confusion Matrix (Estimated data):"</span>);
-<a class="jxr_linenumber" name="106" href="#106">106</a> 		<strong class="jxr_keyword">for</strong> (String correct_name : w.getDs().getCategories().keySet()) {
-<a class="jxr_linenumber" name="107" href="#107">107</a> 			<strong class="jxr_keyword">for</strong> (String assigned_name : w.getDs().getCategories().keySet()) {
-<a class="jxr_linenumber" name="108" href="#108">108</a> 				Double cm_entry = w.getErrorRate(correct_name,
-<a class="jxr_linenumber" name="109" href="#109">109</a> 						assigned_name);
-<a class="jxr_linenumber" name="110" href="#110">110</a> 				String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : <a href="../../../../../com/ipeirotis/utils/Utils.html">Utils</a>
-<a class="jxr_linenumber" name="111" href="#111">111</a> 						.round(100 * cm_entry, 3).toString();
-<a class="jxr_linenumber" name="112" href="#112">112</a> 				reportTarget.print(<span class="jxr_string">"P["</span> + correct_name + <span class="jxr_string">"-&gt;"</span> + assigned_name + <span class="jxr_string">"]="</span>
-<a class="jxr_linenumber" name="113" href="#113">113</a> 						+ s_cm_entry + <span class="jxr_string">"%%\t"</span>);
-<a class="jxr_linenumber" name="114" href="#114">114</a> 			}
-<a class="jxr_linenumber" name="115" href="#115">115</a> 			reportTarget.println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="116" href="#116">116</a> 		}
-<a class="jxr_linenumber" name="117" href="#117">117</a> 	}
-<a class="jxr_linenumber" name="118" href="#118">118</a> 
-<a class="jxr_linenumber" name="119" href="#119">119</a> }
+<a class="jxr_linenumber" name="92" href="#92">92</a>  				String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : Helper.round(100 * cm_entry, 3).toString();
+<a class="jxr_linenumber" name="93" href="#93">93</a>  				reportTarget.print(<span class="jxr_string">"P["</span> + correct_name + <span class="jxr_string">"-&gt;"</span> + assigned_name + <span class="jxr_string">"]="</span>
+<a class="jxr_linenumber" name="94" href="#94">94</a>  						+ s_cm_entry + <span class="jxr_string">"%%\t"</span>);
+<a class="jxr_linenumber" name="95" href="#95">95</a>  			}
+<a class="jxr_linenumber" name="96" href="#96">96</a>  			reportTarget.println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="97" href="#97">97</a>  		}
+<a class="jxr_linenumber" name="98" href="#98">98</a>  	}
+<a class="jxr_linenumber" name="99" href="#99">99</a>  
+<a class="jxr_linenumber" name="100" href="#100">100</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="101" href="#101">101</a> <em class="jxr_javadoccomment">	 * TODO Smells bad</em>
+<a class="jxr_linenumber" name="102" href="#102">102</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="103" href="#103">103</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> writeEstimatedConfusionMatrix(<a href="../../../../../com/ipeirotis/gal/engine/rpt/ReportTarget.html">ReportTarget</a> reportTarget, <a href="../../../../../com/ipeirotis/gal/core/Worker.html">Worker</a> w) {
+<a class="jxr_linenumber" name="104" href="#104">104</a> 		reportTarget.println(<span class="jxr_string">"Confusion Matrix (Estimated data):"</span>);
+<a class="jxr_linenumber" name="105" href="#105">105</a> 		<strong class="jxr_keyword">for</strong> (String correct_name : w.getDs().getCategories().keySet()) {
+<a class="jxr_linenumber" name="106" href="#106">106</a> 			<strong class="jxr_keyword">for</strong> (String assigned_name : w.getDs().getCategories().keySet()) {
+<a class="jxr_linenumber" name="107" href="#107">107</a> 				Double cm_entry = w.getErrorRate(correct_name,
+<a class="jxr_linenumber" name="108" href="#108">108</a> 						assigned_name);
+<a class="jxr_linenumber" name="109" href="#109">109</a> 				String s_cm_entry = Double.isNaN(cm_entry) ? <span class="jxr_string">"---"</span> : Helper.round(100 * cm_entry, 3).toString();
+<a class="jxr_linenumber" name="110" href="#110">110</a> 				reportTarget.print(<span class="jxr_string">"P["</span> + correct_name + <span class="jxr_string">"-&gt;"</span> + assigned_name + <span class="jxr_string">"]="</span>
+<a class="jxr_linenumber" name="111" href="#111">111</a> 						+ s_cm_entry + <span class="jxr_string">"%%\t"</span>);
+<a class="jxr_linenumber" name="112" href="#112">112</a> 			}
+<a class="jxr_linenumber" name="113" href="#113">113</a> 			reportTarget.println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="114" href="#114">114</a> 		}
+<a class="jxr_linenumber" name="115" href="#115">115</a> 	}
+<a class="jxr_linenumber" name="116" href="#116">116</a> 
+<a class="jxr_linenumber" name="117" href="#117">117</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

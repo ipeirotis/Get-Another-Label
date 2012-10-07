@@ -12,7 +12,7 @@
 <a class="jxr_linenumber" name="2" href="#2">2</a>   
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.util.Locale;
 <a class="jxr_linenumber" name="4" href="#4">4</a>   
-<a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
+<a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Helper;
 <a class="jxr_linenumber" name="6" href="#6">6</a>   
 <a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/decorator/MetricsFormatter.html">MetricsFormatter</a> {
 <a class="jxr_linenumber" name="8" href="#8">8</a>   	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> String format(Double result);
@@ -24,7 +24,7 @@
 <a class="jxr_linenumber" name="14" href="#14">14</a>  			<strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == result || Double.isNaN(result))
 <a class="jxr_linenumber" name="15" href="#15">15</a>  				<strong class="jxr_keyword">return</strong> <span class="jxr_string">"N/A"</span>;
 <a class="jxr_linenumber" name="16" href="#16">16</a>  
-<a class="jxr_linenumber" name="17" href="#17">17</a>  			<strong class="jxr_keyword">return</strong> String.format(Locale.ENGLISH, <span class="jxr_string">"%3.2f%%"</span>, Utils.round(100 * result, 2));
+<a class="jxr_linenumber" name="17" href="#17">17</a>  			<strong class="jxr_keyword">return</strong> String.format(Locale.ENGLISH, <span class="jxr_string">"%3.2f%%"</span>, Helper.round(100 * result, 2));
 <a class="jxr_linenumber" name="18" href="#18">18</a>  		}
 <a class="jxr_linenumber" name="19" href="#19">19</a>  	};
 <a class="jxr_linenumber" name="20" href="#20">20</a>  	
@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="25" href="#25">25</a>  			<strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == result || Double.isNaN(result))
 <a class="jxr_linenumber" name="26" href="#26">26</a>  				<strong class="jxr_keyword">return</strong> <span class="jxr_string">"N/A"</span>;
 <a class="jxr_linenumber" name="27" href="#27">27</a>  			
-<a class="jxr_linenumber" name="28" href="#28">28</a>  			<strong class="jxr_keyword">return</strong> String.format(Locale.ENGLISH, <span class="jxr_string">"%2.4f"</span>, Utils.round(result, 4)).toString();
+<a class="jxr_linenumber" name="28" href="#28">28</a>  			<strong class="jxr_keyword">return</strong> String.format(Locale.ENGLISH, <span class="jxr_string">"%2.4f"</span>, Helper.round(result, 4)).toString();
 <a class="jxr_linenumber" name="29" href="#29">29</a>  		}
 <a class="jxr_linenumber" name="30" href="#30">30</a>  	};
 <a class="jxr_linenumber" name="31" href="#31">31</a>  }

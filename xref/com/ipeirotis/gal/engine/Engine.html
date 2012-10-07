@@ -44,7 +44,7 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.ReportingContext;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.SummaryReport;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.gal.engine.rpt.WorkerQualityReport;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Utils;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.ipeirotis.utils.Helper;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/ipeirotis/gal/engine/Engine.html">Engine</a> {
 <a class="jxr_linenumber" name="40" href="#40">40</a>  	<strong class="jxr_keyword">private</strong> Set&lt;Category&gt; categories;
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="78" href="#78">78</a>  		<strong class="jxr_keyword">return</strong> ds;
 <a class="jxr_linenumber" name="79" href="#79">79</a>  	}
 <a class="jxr_linenumber" name="80" href="#80">80</a>  
-<a class="jxr_linenumber" name="81" href="#81">81</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDs(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
+<a class="jxr_linenumber" name="81" href="#81">81</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDawidSkene(<a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a> ds) {
 <a class="jxr_linenumber" name="82" href="#82">82</a>  		<strong class="jxr_keyword">this</strong>.ds = ds;
 <a class="jxr_linenumber" name="83" href="#83">83</a>  	}
 <a class="jxr_linenumber" name="84" href="#84">84</a>  
@@ -127,66 +127,66 @@
 <a class="jxr_linenumber" name="117" href="#117">117</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> execute() {
 <a class="jxr_linenumber" name="118" href="#118">118</a> 		setCategories(loadCategories(ctx.getCategoriesFile()));
 <a class="jxr_linenumber" name="119" href="#119">119</a> 
-<a class="jxr_linenumber" name="120" href="#120">120</a> 		setDs(<strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a>(getCategories()));
-<a class="jxr_linenumber" name="121" href="#121">121</a> 		<strong class="jxr_keyword">if</strong> (getDs().fixedPriors() == <strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="122" href="#122">122</a> 			println(<span class="jxr_string">"Using fixed priors."</span>);
-<a class="jxr_linenumber" name="123" href="#123">123</a> 		<strong class="jxr_keyword">else</strong>
-<a class="jxr_linenumber" name="124" href="#124">124</a> 			println(<span class="jxr_string">"Using data-inferred priors."</span>);
-<a class="jxr_linenumber" name="125" href="#125">125</a> 
-<a class="jxr_linenumber" name="126" href="#126">126</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasCosts()) {
-<a class="jxr_linenumber" name="127" href="#127">127</a> 			setCosts(loadCosts(ctx.getCostFile()));
-<a class="jxr_linenumber" name="128" href="#128">128</a> 
-<a class="jxr_linenumber" name="129" href="#129">129</a> 			assert (getCosts().size() == getCategories().size()
-<a class="jxr_linenumber" name="130" href="#130">130</a> 					* getCategories().size());
-<a class="jxr_linenumber" name="131" href="#131">131</a> 
-<a class="jxr_linenumber" name="132" href="#132">132</a> 			<strong class="jxr_keyword">for</strong> (MisclassificationCost mcc : getCosts()) {
-<a class="jxr_linenumber" name="133" href="#133">133</a> 				getDs().addMisclassificationCost(mcc);
-<a class="jxr_linenumber" name="134" href="#134">134</a> 			}
-<a class="jxr_linenumber" name="135" href="#135">135</a> 		}
+<a class="jxr_linenumber" name="120" href="#120">120</a> 		setDawidSkene(<strong class="jxr_keyword">new</strong> <a href="../../../../com/ipeirotis/gal/algorithms/DawidSkene.html">DawidSkene</a>(getCategories()));
+<a class="jxr_linenumber" name="121" href="#121">121</a> 		
+<a class="jxr_linenumber" name="122" href="#122">122</a> 		<strong class="jxr_keyword">if</strong> (getDs().fixedPriors() == <strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="123" href="#123">123</a> 			println(<span class="jxr_string">"Using fixed priors."</span>);
+<a class="jxr_linenumber" name="124" href="#124">124</a> 		<strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="125" href="#125">125</a> 			println(<span class="jxr_string">"Using data-inferred priors."</span>);
+<a class="jxr_linenumber" name="126" href="#126">126</a> 
+<a class="jxr_linenumber" name="127" href="#127">127</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasCosts()) {
+<a class="jxr_linenumber" name="128" href="#128">128</a> 			setCosts(loadCosts(ctx.getCostFile()));
+<a class="jxr_linenumber" name="129" href="#129">129</a> 
+<a class="jxr_linenumber" name="130" href="#130">130</a> 			<strong class="jxr_keyword">for</strong> (MisclassificationCost mcc : getCosts()) {
+<a class="jxr_linenumber" name="131" href="#131">131</a> 				getDs().addMisclassificationCost(mcc);
+<a class="jxr_linenumber" name="132" href="#132">132</a> 			}
+<a class="jxr_linenumber" name="133" href="#133">133</a> 		}
+<a class="jxr_linenumber" name="134" href="#134">134</a> 
+<a class="jxr_linenumber" name="135" href="#135">135</a> 		setLabels(loadWorkerAssignedLabels(ctx.getInputFile()));
 <a class="jxr_linenumber" name="136" href="#136">136</a> 
-<a class="jxr_linenumber" name="137" href="#137">137</a> 		setLabels(loadWorkerAssignedLabels(ctx.getInputFile()));
+<a class="jxr_linenumber" name="137" href="#137">137</a> 		<strong class="jxr_keyword">int</strong> al = 0;
 <a class="jxr_linenumber" name="138" href="#138">138</a> 
-<a class="jxr_linenumber" name="139" href="#139">139</a> 		<strong class="jxr_keyword">int</strong> al = 0;
-<a class="jxr_linenumber" name="140" href="#140">140</a> 
-<a class="jxr_linenumber" name="141" href="#141">141</a> 		<strong class="jxr_keyword">for</strong> (AssignedLabel l : getLabels()) {
-<a class="jxr_linenumber" name="142" href="#142">142</a> 			<strong class="jxr_keyword">if</strong> (++al % 1000 == 0)
-<a class="jxr_linenumber" name="143" href="#143">143</a> 				print(<span class="jxr_string">"."</span>);
-<a class="jxr_linenumber" name="144" href="#144">144</a> 			getDs().addAssignedLabel(l);
-<a class="jxr_linenumber" name="145" href="#145">145</a> 		}
-<a class="jxr_linenumber" name="146" href="#146">146</a> 		println(<span class="jxr_string">"%d worker-assigned labels loaded."</span>, getLabels().size());
-<a class="jxr_linenumber" name="147" href="#147">147</a> 
-<a class="jxr_linenumber" name="148" href="#148">148</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasCorrectFile()) {
-<a class="jxr_linenumber" name="149" href="#149">149</a> 			setCorrect(loadGoldLabels(ctx.getCorrectFile()));
-<a class="jxr_linenumber" name="150" href="#150">150</a> 
-<a class="jxr_linenumber" name="151" href="#151">151</a> 			<strong class="jxr_keyword">int</strong> cl = 0;
-<a class="jxr_linenumber" name="152" href="#152">152</a> 			<strong class="jxr_keyword">for</strong> (CorrectLabel l : getCorrect()) {
-<a class="jxr_linenumber" name="153" href="#153">153</a> 				<strong class="jxr_keyword">if</strong> (++cl % 1000 == 0)
-<a class="jxr_linenumber" name="154" href="#154">154</a> 					print(<span class="jxr_string">"."</span>);
-<a class="jxr_linenumber" name="155" href="#155">155</a> 				getDs().addCorrectLabel(l);
-<a class="jxr_linenumber" name="156" href="#156">156</a> 			}
-<a class="jxr_linenumber" name="157" href="#157">157</a> 			println(<span class="jxr_string">"%d correct labels loaded."</span>, getCorrect().size());
-<a class="jxr_linenumber" name="158" href="#158">158</a> 		}
-<a class="jxr_linenumber" name="159" href="#159">159</a> 
-<a class="jxr_linenumber" name="160" href="#160">160</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasEvaluations()) {
-<a class="jxr_linenumber" name="161" href="#161">161</a> 			setEvaluation(loadEvaluationLabels(ctx.getEvaluationFile()));
-<a class="jxr_linenumber" name="162" href="#162">162</a> 			<strong class="jxr_keyword">int</strong> el = 0;
-<a class="jxr_linenumber" name="163" href="#163">163</a> 			<strong class="jxr_keyword">for</strong> (CorrectLabel l : getEvaluation()) {
-<a class="jxr_linenumber" name="164" href="#164">164</a> 				<strong class="jxr_keyword">if</strong> (++el % 1000 == 0)
-<a class="jxr_linenumber" name="165" href="#165">165</a> 					print(<span class="jxr_string">"."</span>);
-<a class="jxr_linenumber" name="166" href="#166">166</a> 				getDs().addEvaluationLabel(l);
-<a class="jxr_linenumber" name="167" href="#167">167</a> 			}
-<a class="jxr_linenumber" name="168" href="#168">168</a> 			println(getEvaluation().size() + <span class="jxr_string">" evaluation labels loaded."</span>);
-<a class="jxr_linenumber" name="169" href="#169">169</a> 		}
-<a class="jxr_linenumber" name="170" href="#170">170</a> 
-<a class="jxr_linenumber" name="171" href="#171">171</a> 		<em class="jxr_comment">// We compute the evaluation-based confusion matrix for the workers</em>
-<a class="jxr_linenumber" name="172" href="#172">172</a> 		getDs().evaluateWorkers();
-<a class="jxr_linenumber" name="173" href="#173">173</a> 
-<a class="jxr_linenumber" name="174" href="#174">174</a> 		println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="175" href="#175">175</a> 		println(<span class="jxr_string">"Running the Dawid&amp;Skene algorithm"</span>);
-<a class="jxr_linenumber" name="176" href="#176">176</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; ctx.getNumIterations(); i++) {
-<a class="jxr_linenumber" name="177" href="#177">177</a> 			println(<span class="jxr_string">"Iteration: %d"</span>, i);
-<a class="jxr_linenumber" name="178" href="#178">178</a> 			getDs().estimate(1);
-<a class="jxr_linenumber" name="179" href="#179">179</a> 		}
+<a class="jxr_linenumber" name="139" href="#139">139</a> 		<strong class="jxr_keyword">for</strong> (AssignedLabel l : getLabels()) {
+<a class="jxr_linenumber" name="140" href="#140">140</a> 			<strong class="jxr_keyword">if</strong> (++al % 1000 == 0)
+<a class="jxr_linenumber" name="141" href="#141">141</a> 				print(<span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="142" href="#142">142</a> 			getDs().addAssignedLabel(l);
+<a class="jxr_linenumber" name="143" href="#143">143</a> 		}
+<a class="jxr_linenumber" name="144" href="#144">144</a> 		println(<span class="jxr_string">"%d worker-assigned labels loaded."</span>, getLabels().size());
+<a class="jxr_linenumber" name="145" href="#145">145</a> 
+<a class="jxr_linenumber" name="146" href="#146">146</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasGoldFile()) {
+<a class="jxr_linenumber" name="147" href="#147">147</a> 			setCorrect(loadGoldLabels(ctx.getGoldFile()));
+<a class="jxr_linenumber" name="148" href="#148">148</a> 
+<a class="jxr_linenumber" name="149" href="#149">149</a> 			<strong class="jxr_keyword">int</strong> cl = 0;
+<a class="jxr_linenumber" name="150" href="#150">150</a> 			<strong class="jxr_keyword">for</strong> (CorrectLabel l : getCorrect()) {
+<a class="jxr_linenumber" name="151" href="#151">151</a> 				<strong class="jxr_keyword">if</strong> (++cl % 1000 == 0)
+<a class="jxr_linenumber" name="152" href="#152">152</a> 					print(<span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="153" href="#153">153</a> 				getDs().addCorrectLabel(l);
+<a class="jxr_linenumber" name="154" href="#154">154</a> 			}
+<a class="jxr_linenumber" name="155" href="#155">155</a> 			println(<span class="jxr_string">"%d correct labels loaded."</span>, getCorrect().size());
+<a class="jxr_linenumber" name="156" href="#156">156</a> 		}
+<a class="jxr_linenumber" name="157" href="#157">157</a> 
+<a class="jxr_linenumber" name="158" href="#158">158</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasEvaluations()) {
+<a class="jxr_linenumber" name="159" href="#159">159</a> 			setEvaluation(loadEvaluationLabels(ctx.getEvaluationFile()));
+<a class="jxr_linenumber" name="160" href="#160">160</a> 			<strong class="jxr_keyword">int</strong> el = 0;
+<a class="jxr_linenumber" name="161" href="#161">161</a> 			<strong class="jxr_keyword">for</strong> (CorrectLabel l : getEvaluation()) {
+<a class="jxr_linenumber" name="162" href="#162">162</a> 				<strong class="jxr_keyword">if</strong> (++el % 1000 == 0)
+<a class="jxr_linenumber" name="163" href="#163">163</a> 					print(<span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="164" href="#164">164</a> 				getDs().addEvaluationLabel(l);
+<a class="jxr_linenumber" name="165" href="#165">165</a> 			}
+<a class="jxr_linenumber" name="166" href="#166">166</a> 			println(getEvaluation().size() + <span class="jxr_string">" evaluation labels loaded."</span>);
+<a class="jxr_linenumber" name="167" href="#167">167</a> 		}
+<a class="jxr_linenumber" name="168" href="#168">168</a> 
+<a class="jxr_linenumber" name="169" href="#169">169</a> 		<em class="jxr_comment">// We compute the evaluation-based confusion matrix for the workers</em>
+<a class="jxr_linenumber" name="170" href="#170">170</a> 		getDs().evaluateWorkers();
+<a class="jxr_linenumber" name="171" href="#171">171</a> 
+<a class="jxr_linenumber" name="172" href="#172">172</a> 		println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="173" href="#173">173</a> 		println(<span class="jxr_string">"Running the Dawid&amp;Skene algorithm"</span>);
+<a class="jxr_linenumber" name="174" href="#174">174</a> 		<strong class="jxr_keyword">double</strong> epsilon = ctx.getEpsilon();
+<a class="jxr_linenumber" name="175" href="#175">175</a> 		<strong class="jxr_keyword">int</strong> maxIterations = ctx.getNumIterations();
+<a class="jxr_linenumber" name="176" href="#176">176</a> 		<strong class="jxr_keyword">double</strong> ll = getDs().getLogLikelihood();
+<a class="jxr_linenumber" name="177" href="#177">177</a> 		println(<span class="jxr_string">"Initial Log-likelihood: %3.6f"</span>, ll);
+<a class="jxr_linenumber" name="178" href="#178">178</a> 		ll = getDs().estimate(maxIterations, epsilon);
+<a class="jxr_linenumber" name="179" href="#179">179</a> 		println(<span class="jxr_string">"Final Log-likelihood: %3.6f"</span>, ll);
 <a class="jxr_linenumber" name="180" href="#180">180</a> 		println(<span class="jxr_string">"Done\n"</span>);
 <a class="jxr_linenumber" name="181" href="#181">181</a> 
 <a class="jxr_linenumber" name="182" href="#182">182</a> 		<strong class="jxr_keyword">if</strong> (ctx.hasEvaluateResultsAgainstFile()) {
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="218" href="#218">218</a> 		<em class="jxr_comment">// We load the "gold" cases (if any)</em>
 <a class="jxr_linenumber" name="219" href="#219">219</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="220" href="#220">220</a> 		println(<span class="jxr_string">"Loading file with correct labels. "</span>);
-<a class="jxr_linenumber" name="221" href="#221">221</a> 		String[] lines_correct = Utils.readFile(correctfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="221" href="#221">221</a> 		String[] lines_correct = Helper.readFile(correctfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="222" href="#222">222</a> 		println(<span class="jxr_string">"File contained %d entries."</span>, lines_correct.length);
 <a class="jxr_linenumber" name="223" href="#223">223</a> 		Set&lt;CorrectLabel&gt; correct = loadCorrectLabels(lines_correct);
 <a class="jxr_linenumber" name="224" href="#224">224</a> 		<strong class="jxr_keyword">return</strong> correct;
@@ -243,7 +243,7 @@
 <a class="jxr_linenumber" name="233" href="#233">233</a> 		<em class="jxr_comment">// We load the "gold" cases (if any)</em>
 <a class="jxr_linenumber" name="234" href="#234">234</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="235" href="#235">235</a> 		println(<span class="jxr_string">"Loading file with evaluation labels. "</span>);
-<a class="jxr_linenumber" name="236" href="#236">236</a> 		String[] lines_correct = Utils.readFile(evalfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="236" href="#236">236</a> 		String[] lines_correct = Helper.readFile(evalfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="237" href="#237">237</a> 		println(<span class="jxr_string">"File contained %d entries."</span>, lines_correct.length);
 <a class="jxr_linenumber" name="238" href="#238">238</a> 		Set&lt;CorrectLabel&gt; correct = loadEvaluationLabels(lines_correct);
 <a class="jxr_linenumber" name="239" href="#239">239</a> 		<strong class="jxr_keyword">return</strong> correct;
@@ -369,7 +369,7 @@
 <a class="jxr_linenumber" name="359" href="#359">359</a> 		<em class="jxr_comment">// We load the labels assigned by the workers on the different objects</em>
 <a class="jxr_linenumber" name="360" href="#360">360</a> 		println(<span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="361" href="#361">361</a> 		println(<span class="jxr_string">"Loading file with assigned labels. "</span>);
-<a class="jxr_linenumber" name="362" href="#362">362</a> 		String[] lines_input = Utils.readFile(inputfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="362" href="#362">362</a> 		String[] lines_input = Helper.readFile(inputfile).split(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="363" href="#363">363</a> 		println(<span class="jxr_string">"File contains "</span> + lines_input.length + <span class="jxr_string">" entries."</span>);
 <a class="jxr_linenumber" name="364" href="#364">364</a> 		Set&lt;AssignedLabel&gt; labels = loadAssignedLabels(lines_input);
 <a class="jxr_linenumber" name="365" href="#365">365</a> 		<strong class="jxr_keyword">return</strong> labels;
@@ -383,50 +383,48 @@
 <a class="jxr_linenumber" name="373" href="#373">373</a> 
 <a class="jxr_linenumber" name="374" href="#374">374</a> 		<em class="jxr_comment">// We load the cost file. The file should have exactly n^2 lines</em>
 <a class="jxr_linenumber" name="375" href="#375">375</a> 		<em class="jxr_comment">// where n is the number of categories.</em>
-<a class="jxr_linenumber" name="376" href="#376">376</a> 		<em class="jxr_comment">// TODO: Later, we can also allow an empty file, and assume a default</em>
-<a class="jxr_linenumber" name="377" href="#377">377</a> 		<em class="jxr_comment">// 0/1 loss function.</em>
-<a class="jxr_linenumber" name="378" href="#378">378</a> 		println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="379" href="#379">379</a> 		println(<span class="jxr_string">"Loading cost file."</span>);
-<a class="jxr_linenumber" name="380" href="#380">380</a> 		String[] lines_cost = Utils.readFile(costfile).split(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="381" href="#381">381</a> 		<em class="jxr_comment">// assert (lines_cost.length == categories.size() * categories.size());</em>
-<a class="jxr_linenumber" name="382" href="#382">382</a> 		println(<span class="jxr_string">"File contains "</span> + lines_cost.length + <span class="jxr_string">" entries."</span>);
-<a class="jxr_linenumber" name="383" href="#383">383</a> 		Set&lt;MisclassificationCost&gt; costs = loadClassificationCost(lines_cost);
-<a class="jxr_linenumber" name="384" href="#384">384</a> 		<strong class="jxr_keyword">return</strong> costs;
-<a class="jxr_linenumber" name="385" href="#385">385</a> 	}
-<a class="jxr_linenumber" name="386" href="#386">386</a> 
-<a class="jxr_linenumber" name="387" href="#387">387</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="388" href="#388">388</a> <em class="jxr_javadoccomment">	 * @param categoriesfile</em>
-<a class="jxr_linenumber" name="389" href="#389">389</a> <em class="jxr_javadoccomment">	 * @return</em>
-<a class="jxr_linenumber" name="390" href="#390">390</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="391" href="#391">391</a> 	<strong class="jxr_keyword">private</strong> Set&lt;Category&gt; loadCategories(String categoriesfile) {
-<a class="jxr_linenumber" name="392" href="#392">392</a> 		println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="393" href="#393">393</a> 		println(<span class="jxr_string">"Loading categories file."</span>);
-<a class="jxr_linenumber" name="394" href="#394">394</a> 		String[] lines_categories = Utils.readFile(categoriesfile).split(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="395" href="#395">395</a> 		println(<span class="jxr_string">"File contains "</span> + lines_categories.length + <span class="jxr_string">" categories."</span>);
-<a class="jxr_linenumber" name="396" href="#396">396</a> 		Set&lt;Category&gt; categories = loadCategories(lines_categories);
-<a class="jxr_linenumber" name="397" href="#397">397</a> 		<strong class="jxr_keyword">return</strong> categories;
-<a class="jxr_linenumber" name="398" href="#398">398</a> 	}
-<a class="jxr_linenumber" name="399" href="#399">399</a> 
-<a class="jxr_linenumber" name="400" href="#400">400</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> println(String mask, Object... args) {
-<a class="jxr_linenumber" name="401" href="#401">401</a> 		print(mask + <span class="jxr_string">"\n"</span>, args);
-<a class="jxr_linenumber" name="402" href="#402">402</a> 	}
-<a class="jxr_linenumber" name="403" href="#403">403</a> 
-<a class="jxr_linenumber" name="404" href="#404">404</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> print(String mask, Object... args) {
-<a class="jxr_linenumber" name="405" href="#405">405</a> 		<strong class="jxr_keyword">if</strong> (!ctx.isVerbose())
-<a class="jxr_linenumber" name="406" href="#406">406</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="376" href="#376">376</a> 		println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="377" href="#377">377</a> 		println(<span class="jxr_string">"Loading cost file."</span>);
+<a class="jxr_linenumber" name="378" href="#378">378</a> 		String[] lines_cost = Helper.readFile(costfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="379" href="#379">379</a> 		<em class="jxr_comment">// assert (lines_cost.length == categories.size() * categories.size());</em>
+<a class="jxr_linenumber" name="380" href="#380">380</a> 		println(<span class="jxr_string">"File contains "</span> + lines_cost.length + <span class="jxr_string">" entries."</span>);
+<a class="jxr_linenumber" name="381" href="#381">381</a> 		Set&lt;MisclassificationCost&gt; costs = loadClassificationCost(lines_cost);
+<a class="jxr_linenumber" name="382" href="#382">382</a> 		<strong class="jxr_keyword">return</strong> costs;
+<a class="jxr_linenumber" name="383" href="#383">383</a> 	}
+<a class="jxr_linenumber" name="384" href="#384">384</a> 
+<a class="jxr_linenumber" name="385" href="#385">385</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="386" href="#386">386</a> <em class="jxr_javadoccomment">	 * @param categoriesfile</em>
+<a class="jxr_linenumber" name="387" href="#387">387</a> <em class="jxr_javadoccomment">	 * @return</em>
+<a class="jxr_linenumber" name="388" href="#388">388</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="389" href="#389">389</a> 	<strong class="jxr_keyword">private</strong> Set&lt;Category&gt; loadCategories(String categoriesfile) {
+<a class="jxr_linenumber" name="390" href="#390">390</a> 		println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="391" href="#391">391</a> 		println(<span class="jxr_string">"Loading categories file."</span>);
+<a class="jxr_linenumber" name="392" href="#392">392</a> 		String[] lines_categories = Helper.readFile(categoriesfile).split(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="393" href="#393">393</a> 		println(<span class="jxr_string">"File contains "</span> + lines_categories.length + <span class="jxr_string">" categories."</span>);
+<a class="jxr_linenumber" name="394" href="#394">394</a> 		Set&lt;Category&gt; categories = loadCategories(lines_categories);
+<a class="jxr_linenumber" name="395" href="#395">395</a> 		<strong class="jxr_keyword">return</strong> categories;
+<a class="jxr_linenumber" name="396" href="#396">396</a> 	}
+<a class="jxr_linenumber" name="397" href="#397">397</a> 
+<a class="jxr_linenumber" name="398" href="#398">398</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> println(String mask, Object... args) {
+<a class="jxr_linenumber" name="399" href="#399">399</a> 		print(mask + <span class="jxr_string">"\n"</span>, args);
+<a class="jxr_linenumber" name="400" href="#400">400</a> 	}
+<a class="jxr_linenumber" name="401" href="#401">401</a> 
+<a class="jxr_linenumber" name="402" href="#402">402</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> print(String mask, Object... args) {
+<a class="jxr_linenumber" name="403" href="#403">403</a> 		<strong class="jxr_keyword">if</strong> (!ctx.isVerbose())
+<a class="jxr_linenumber" name="404" href="#404">404</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="405" href="#405">405</a> 
+<a class="jxr_linenumber" name="406" href="#406">406</a> 		String message;
 <a class="jxr_linenumber" name="407" href="#407">407</a> 
-<a class="jxr_linenumber" name="408" href="#408">408</a> 		String message;
-<a class="jxr_linenumber" name="409" href="#409">409</a> 
-<a class="jxr_linenumber" name="410" href="#410">410</a> 		<strong class="jxr_keyword">if</strong> (args.length &gt; 0) {
-<a class="jxr_linenumber" name="411" href="#411">411</a> 			message = String.format(mask, args);
-<a class="jxr_linenumber" name="412" href="#412">412</a> 		} <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="413" href="#413">413</a> 			<em class="jxr_comment">// without format arguments, print the mask/string as-is</em>
-<a class="jxr_linenumber" name="414" href="#414">414</a> 			message = mask;
-<a class="jxr_linenumber" name="415" href="#415">415</a> 		}
-<a class="jxr_linenumber" name="416" href="#416">416</a> 
-<a class="jxr_linenumber" name="417" href="#417">417</a> 		System.out.println(message);
-<a class="jxr_linenumber" name="418" href="#418">418</a> 	}
-<a class="jxr_linenumber" name="419" href="#419">419</a> }
+<a class="jxr_linenumber" name="408" href="#408">408</a> 		<strong class="jxr_keyword">if</strong> (args.length &gt; 0) {
+<a class="jxr_linenumber" name="409" href="#409">409</a> 			message = String.format(mask, args);
+<a class="jxr_linenumber" name="410" href="#410">410</a> 		} <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="411" href="#411">411</a> 			<em class="jxr_comment">// without format arguments, print the mask/string as-is</em>
+<a class="jxr_linenumber" name="412" href="#412">412</a> 			message = mask;
+<a class="jxr_linenumber" name="413" href="#413">413</a> 		}
+<a class="jxr_linenumber" name="414" href="#414">414</a> 
+<a class="jxr_linenumber" name="415" href="#415">415</a> 		System.out.println(message);
+<a class="jxr_linenumber" name="416" href="#416">416</a> 	}
+<a class="jxr_linenumber" name="417" href="#417">417</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
