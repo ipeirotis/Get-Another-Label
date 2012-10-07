@@ -16,10 +16,8 @@ For details on how to run the algorithm see https://github.com/ipeirotis/Get-Ano
 
  The 2.x series his is the last stand-alone version of the code. 
  
- Soon, we will make available a REST-based web service that has significant additional functionality (support for streaming and incremental updates, persistence, etc). 
+ Soon, we will make available a REST-based web service that has significant additional functionality (support for streaming and incremental updates, persistence, etc). Stay tuned. The web service will be available at http://www.project-troia.com/
  
- Stay tuned. The code, which is currently under developerment, is available at https://github.com/ipeirotis/Troia-server
-
 ## Miscellaneous
 
 A web-accessible demo of is available at http://qmturk.appspot.com/
