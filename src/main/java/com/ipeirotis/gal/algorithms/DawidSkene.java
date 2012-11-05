@@ -94,7 +94,7 @@ public class DawidSkene {
 				
 				for (String from: estimatedCorrectLabel.keySet()) {
 					Worker w = this.getWorkers().get(workerName);
-					Double categoryProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
+					Double categoryProbability = estimatedCorrectLabel.get(from);
 					Double labelingProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
 					result += Math.log(categoryProbability)+Math.log(labelingProbability);
 				}
