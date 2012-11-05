@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="94" href="#94">94</a>  				
 <a class="jxr_linenumber" name="95" href="#95">95</a>  				<strong class="jxr_keyword">for</strong> (String from: estimatedCorrectLabel.keySet()) {
 <a class="jxr_linenumber" name="96" href="#96">96</a>  					Worker w = <strong class="jxr_keyword">this</strong>.getWorkers().get(workerName);
-<a class="jxr_linenumber" name="97" href="#97">97</a>  					Double categoryProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
+<a class="jxr_linenumber" name="97" href="#97">97</a>  					Double categoryProbability = estimatedCorrectLabel.get(from);
 <a class="jxr_linenumber" name="98" href="#98">98</a>  					Double labelingProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
 <a class="jxr_linenumber" name="99" href="#99">99</a>  					result += Math.log(categoryProbability)+Math.log(labelingProbability);
 <a class="jxr_linenumber" name="100" href="#100">100</a> 				}
