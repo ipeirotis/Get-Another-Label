@@ -8,6 +8,11 @@ The requesters will also be able to examine which workers are doing a good work 
 
 The ideas behind this work are described in Quality Management on Amazon Mechanical Turk, by Ipeirotis, Wang, and Provost, which was presented at HCOMP 2010.
 
+## Downloading
+
+[This Link](http://ipeirotis-assets.s3.amazonaws.com/get-another-label/get-another-label-latest.zip) contains the latest version, straight from our Continuous Integration builds.
+[Test](http://whatismyreferer.com/)
+
 ## How to Run
 
 For details on how to run the algorithm see https://github.com/ipeirotis/Get-Another-Label/wiki/How-to-Run-Get-Another-Label
