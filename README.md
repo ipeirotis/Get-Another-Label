@@ -11,7 +11,6 @@ The ideas behind this work are described in Quality Management on Amazon Mechani
 ## Downloading
 
 [This Link](http://ipeirotis-assets.s3.amazonaws.com/get-another-label/get-another-label-latest.zip) contains the latest version, straight from our Continuous Integration builds.
-[Test](http://whatismyreferer.com/)
 
 ## How to Run
 
