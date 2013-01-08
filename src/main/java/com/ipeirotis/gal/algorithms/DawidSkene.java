@@ -96,12 +96,10 @@ public class DawidSkene {
 					Worker w = this.getWorkers().get(workerName);
 					Double categoryProbability = estimatedCorrectLabel.get(from);
 					Double labelingProbability = w.getConfusionMatrix().getErrorRate(from, assignedLabel);
-					if (categoryProbability > 0.0) {
-						result += Math.log(categoryProbability);
-					}
-					if (labelingProbability > 0.0) {
-						result += Math.log(labelingProbability);
-					}
+					if (categoryProbability == 0.0 || labelingProbability ==0.0 ) 
+						continue; 
+					else
+						result += Math.log(categoryProbability) + Math.log(labelingProbability);
 				}
 			}
 		}
