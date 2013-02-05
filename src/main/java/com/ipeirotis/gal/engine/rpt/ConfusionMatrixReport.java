@@ -1,8 +1,6 @@
 package com.ipeirotis.gal.engine.rpt;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.algorithms.DawidSkene;
@@ -34,9 +32,6 @@ public class ConfusionMatrixReport extends Report {
 		DawidSkeneDecorator decorator = new DawidSkeneDecorator(ds);
 
 		String type = "Estimated";
-
-		List<ClassificationMethod> estimatedClasMethods = Arrays.asList(ClassificationMethod.DS_Soft,
-				ClassificationMethod.MV_Soft);
 
 		for (ClassificationMethod estimatedClasMethod : Datum.ClassificationMethod.values()) {
 			

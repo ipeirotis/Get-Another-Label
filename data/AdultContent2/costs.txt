@@ -1,0 +1,16 @@
+G	G	0
+G	P	1
+G	R	2
+G	X	3
+P	G	1
+P	P	0
+P	R	1
+P	X	2
+R	G	2
+R	P	1
+R	R	0
+R	X	1
+X	G	3
+X	P	2
+X	R	1
+X	X	0

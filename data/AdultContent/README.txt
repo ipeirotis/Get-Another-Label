@@ -1,6 +1,8 @@
 Example Application: Porn or Not Porn? 
 
-The has five workers (worker1 to worker5), five objects (url1 to url5), and two classes (porn and notporn). 
+This is a toy dataset, mainly for demonstration and basic testing purposes
+
+We have five workers (worker1 to worker5), five objects (url1 to url5), and two classes (porn and notporn). 
 
 The correct (but unknown) label for url1, url3, and url5 is notporn; for url2 and url4 is porn.
 

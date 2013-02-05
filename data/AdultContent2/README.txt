@@ -1,0 +1,1 @@
+This is a set of approximately 100K labels assigned by Mechanical Turk workers to websites.

@@ -26,13 +26,20 @@ public class AssignedLabel implements Comparable<AssignedLabel> {
 	 */
 	@Override
 	public int compareTo(AssignedLabel o) {
+		int result = 0;
+		
 		int c1 = this.workerName.compareTo(o.workerName);
-		if (c1 != 0) return c1;
-		
 		int c2 = this.objectName.compareTo(o.objectName);
-		if (c2 != 0) return c2;
 		
-		return this.categoryName.compareTo(o.categoryName);
+		if (c1 != 0) {
+			result = c1;
+		} else if (c2 != 0) {
+			result = c2;
+		} else {
+			result = this.categoryName.compareTo(o.categoryName);
+		}
+		
+		return result;
 	}
 	
 	/**

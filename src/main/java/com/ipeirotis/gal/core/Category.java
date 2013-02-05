@@ -83,10 +83,7 @@ public class Category implements Comparable<Category> {
 	 */
 	public boolean hasPrior() {
 
-		if (this.prior != -1)
-			return true;
-		else
-			return false;
+		return (this.prior != -1);
 	}
 
 	/*

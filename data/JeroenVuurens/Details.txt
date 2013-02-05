@@ -1,0 +1,17 @@
+
+"votes" contains the labels that our team obtained:
+column 1: sequence in which the labels where obtained over time on the same question. (so all data with sequence <= 5 contains the first 5 labels obtained for all questions)
+column 2: question id (<query number>_<document name>,)
+column 3: worker id
+column 4: label (0=not relevant, 1=relevant)
+
+"otherparticipantsvotes" contains all labels obtained by the 7 other participants for the same task:
+column 1: question id (<query number>_<document name>, which is the same for our data)
+column 2: worker id
+column 3: label (0=not relevant, 1=relevant)
+
+So we didn't have 9 workers, but 540. We did get more labels, 20.840 in total, but only on selected questions, so not a full set (in fact on a few question we have only 7 or 8 labels).
+
+The 8 TREC participants were asked to retrieve different subsets of a bigger task, with the subsets having some overlap in query-document pairs. So for some query-document pairs almost all teams collected labels, but for some only 2 teams collected labels. There are ternary gold labels for topics (querynrs) 1-75 (0=not relevant, 1=partly relevant, 2=highly relevant, -1=missing) (see attachment) from query-document pairs that were used in a previous year for a different track, assessed by NIST assessors. The agreement between crowdsourced data and these expert annotated labels is relatively low (on average about 64% over data obtained by all participants, 62% on all our data (spam included)). We did not use the query-document pairs with available gold labels differently from the other query-document pairs.
+
+To estimate ground truth, I use all labels collected by the other participants, to enable GAL to get a better estimate of worker qualities.
