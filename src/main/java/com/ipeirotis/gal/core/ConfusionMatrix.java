@@ -18,9 +18,13 @@ package com.ipeirotis.gal.core;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.ipeirotis.gal.Helper;
+import com.ipeirotis.gal.Stat;
 
 
 class CategoryPair {
@@ -162,6 +166,7 @@ public class ConfusionMatrix {
 	 * 
 	 * We use Laplace smoothing
 	 */
+	/*
 	public void normalizeLaplacean() {
 
 		for (String from : this.categories) {
@@ -176,6 +181,7 @@ public class ConfusionMatrix {
 			}
 		}
 	}
+	*/
 
 	public void addError(String from, String to, Double error) {
 
@@ -227,5 +233,188 @@ public class ConfusionMatrix {
 		// gets exponentially small very quickly
 		return getAssignedLabel(correct);
 	}
+	
 
+
+	/**
+	 * @param priors
+	 * @param draw
+	 * @return
+	 */
+	private HashMap<String, Double> getPosterior(Map<String, Category> priors, Map<String, Integer> draw) {
+
+		// Now compute the posterior, given the draw
+		HashMap<String, Double> posterior = new  HashMap<String, Double>();
+		for (String s: this.categories) {
+			posterior.put(s, 0.0);
+		}
+		
+		Double sum = 0.0;
+		for (String from : this.categories) {
+			double pi_c = priors.get(from).getPrior();
+			double evidence = pi_c;
+			for (String to : this.categories) {
+				Integer n  = draw.get(to);
+				double p = getErrorRate(from, to);
+				if (n!=0 && p!=0) {
+					evidence *= Math.pow(p, n);
+				} 
+				if (p==0) {
+					evidence = 0;
+				}
+			}
+			posterior.put(from, evidence);
+			sum += evidence;
+		}
+		for (String c: posterior.keySet()) {
+			double existing = posterior.get(c);
+			posterior.put(c, existing/sum);
+		}
+		return posterior;
+	}
+
+	/**
+	 * Gets as input the "from" category for the object, and simulates a draw from the multinomial
+	 * distribution that corresponds to that row. 
+	 * 
+	 * @param m
+	 * @param objectCategory
+	 * @return
+	 */
+	private HashMap<String, Integer> getRandomLabelAssignment(int m, String objectCategory) {
+
+		Double total = 0.0;
+		// Get the total sum of the corresponding row of the confusion matrix
+		for (String to : this.categories) {
+			total += getErrorRate(objectCategory, to);
+		}
+		
+		HashMap<String, Integer> draw = new HashMap<String, Integer>();
+		for (String s: this.categories) {
+			draw.put(s, 0);
+		}
+		
+		for (int i=0; i<m; i++) {
+			// We pick now the label assigned by worker i 
+			Double r = Math.random() * total;
+			
+			for (String to : this.categories) {
+				if (r < getErrorRate(objectCategory, to)) {
+					Integer existing = draw.get(to);
+					draw.put(to, existing+1);
+					break;
+				} else {
+					r -= getErrorRate(objectCategory, to);
+				}
+			}
+		}
+		
+		// Double check that we assigned exactly m elements in the draw
+		int sum = 0;
+		for (String s : draw.keySet()) {
+			sum += draw.get(s);
+		}
+		if (sum == m) return draw;
+		else return getRandomLabelAssignment(m, objectCategory);
+		
+		
+		
+	}
+	
+	/** 
+	 * 
+	 */
+	public Double getWorkerCost(int m, Map<String, Category> priors, int sample) {
+		
+		Double cost = 0.0;
+		
+		for (String objectCategory : priors.keySet()) {
+			
+			Double pi = priors.get(objectCategory).getPrior();
+
+			Double c = 0.0;
+			for (int i = 0; i<sample; i++) {
+				Map<String, Integer> draw = getRandomLabelAssignment(m, objectCategory);
+				Map<String, Double> posterior = getPosterior(priors, draw);
+				c += Helper.getMinCostLabelCost(posterior, priors);
+			}
+			cost += pi * c / sample;
+		}
+		return cost;
+	}
+	
+	public Double getWorkerWage(double qualifiedWage, double costThreshold, Map<String, Category> priors) {
+		
+		int m = 0;
+		double cost;
+		do {
+			m++;
+			cost = getWorkerCost(m, priors, 100*m);
+		} while (cost > costThreshold);
+		
+		return qualifiedWage / m;
+	}
+	
+	public static void main(String[] args) {
+		
+	  Category a = new Category("A");
+	  Category b = new Category("B");
+	  
+	  a.setPrior(0.5);
+	  b.setPrior(0.5);
+	  
+	  a.setCost("A", 0.0);
+	  a.setCost("B", 1.0);
+	  b.setCost("A", 1.0);
+	  b.setCost("B", 0.0);
+	  
+	  Collection<Category> categories = new HashSet<Category>();
+		categories.add(a);
+	  categories.add(b);
+	  
+	  Map<String, Category> map = new HashMap<String, Category>();
+	  map.put("A", a);
+	  map.put("B", b);
+	  
+	  ConfusionMatrix cm = new ConfusionMatrix(categories);
+	  
+	  // FOR TESTS: 
+	  // q=1 should return 0 cost
+	  // q=1 should not be affected by m
+	  
+	  
+	  
+	  //double q=0.9;
+	  for (int Q=95; Q>=55; Q -= 5) {
+	  	
+	  	double q = Q/100.0;
+	  	
+		  cm.setErrorRate("A", "A", q);
+		  cm.setErrorRate("A", "B", 1-q);
+		  cm.setErrorRate("B", "B", q);
+		  cm.setErrorRate("B", "A", 1-q);
+		  
+		  // Classification cost of a set of m workers with the confusion matrix given above 
+		  /*
+		  for (int m = 1; m<=40; m+=2) {
+		  	System.out.print(q+"\t"+m);
+		  	Double c = cm.getWorkerCost(m, map, 100*m*m);
+		  	System.out.println("\t"+Math.round(100000*c)/100000.0);
+		  }
+		  */
+		  
+		  for (double tau=0.1; tau>0.0001; tau /= 10) {
+		  	System.out.print(q+"\t"+(1-tau));
+			  double w = cm.getWorkerWage(1.0, tau, map);
+			  System.out.println("\t"+w+"\t"+1.0/w);
+		  }
+		  
+	  }
+	  
+
+
+		
+		
+	}
+	
 }

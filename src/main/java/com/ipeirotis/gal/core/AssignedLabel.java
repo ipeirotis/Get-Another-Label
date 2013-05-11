@@ -116,4 +116,9 @@ public class AssignedLabel implements Comparable<AssignedLabel> {
 		this.categoryName = c;
 	}
 
+	public String toString() {
+
+		return this.workerName + "\t" + this.objectName + "\t" +  this.categoryName; 
+	}
+	
 }

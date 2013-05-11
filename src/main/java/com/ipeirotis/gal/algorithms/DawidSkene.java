@@ -140,6 +140,7 @@ public class DawidSkene {
 		} else {
 			w = new Worker(workerName, this);
 		}
+		
 		w.addAssignedLabel(al);
 		this.workers.put(workerName, w);
 
@@ -214,6 +215,7 @@ public class DawidSkene {
 			updatePriors();
 			updateWorkerConfusionMatrices();
 			logLikelihood = getLogLikelihood();
+			System.out.println(cnt + "\t" + logLikelihood);
 		}
 
 		datumFieldAccessors = FieldAccessors.DATUM_ACCESSORS.getFieldAccessors(this);

@@ -1,0 +1,9 @@
+http://1024kbytes.com	broken
+http://18x.fr	yes
+http://1ting.com	yes	
+http://3dmgame.com	yes
+http://3xupdate.com	yes
+http://6ano.org	broken
+http://7-win.ru	yes
+http://7dl.biz	yes
+http://7elm3aber.com	yes
