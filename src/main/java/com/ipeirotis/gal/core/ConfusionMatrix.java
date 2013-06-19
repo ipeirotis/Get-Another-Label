@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.ipeirotis.gal.core;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import com.ipeirotis.gal.Helper;
 import com.ipeirotis.gal.Stat;
@@ -251,20 +253,15 @@ public class ConfusionMatrix {
 		
 		Double sum = 0.0;
 		for (String from : this.categories) {
-			double pi_c = priors.get(from).getPrior();
-			double evidence = pi_c;
+			double pi_from = priors.get(from).getPrior();
+			double evidence_from = pi_from;
 			for (String to : this.categories) {
 				Integer n  = draw.get(to);
 				double p = getErrorRate(from, to);
-				if (n!=0 && p!=0) {
-					evidence *= Math.pow(p, n);
-				} 
-				if (p==0) {
-					evidence = 0;
-				}
+				evidence_from *= Math.pow(p, n);
 			}
-			posterior.put(from, evidence);
-			sum += evidence;
+			posterior.put(from, evidence_from);
+			sum += evidence_from;
 		}
 		for (String c: posterior.keySet()) {
 			double existing = posterior.get(c);
@@ -345,14 +342,37 @@ public class ConfusionMatrix {
 	
 	public Double getWorkerWage(double qualifiedWage, double costThreshold, Map<String, Category> priors) {
 		
-		int m = 0;
+			
 		double cost;
+		int m=0;
 		do {
 			m++;
-			cost = getWorkerCost(m, priors, 100*m);
+			cost = getWorkerCost(m, priors, 1000);
+			
+			// If the worker is worth less than 1/100 of a qualified worker, we return a 0 payment.
+			if(m>100) return 0.0;
 		} while (cost > costThreshold);
 		
 		return qualifiedWage / m;
+
+	}
+	
+	public Double getWorkerWageRegr(double qualifiedWage, double costThreshold, Map<String, Category> priors) {
+		
+		SimpleRegression regression = new SimpleRegression();
+		
+		for (int m=1; m<=41; m+=4) {
+			
+				double cost = getWorkerCost(m, priors, 1000);
+				if (cost == 0) break;
+				regression.addData(Math.log(cost), m);
+
+		}
+		
+		double d = regression.predict(Math.log(costThreshold));
+		
+		return qualifiedWage/d;
+		
 	}
 	
 	public static void main(String[] args) {
@@ -382,9 +402,23 @@ public class ConfusionMatrix {
 	  // q=1 should return 0 cost
 	  // q=1 should not be affected by m
 	  
+	  /*
+	  cm.setErrorRate("A", "A", 0.9);
+	  cm.setErrorRate("A", "B", 0.1);
+	  cm.setErrorRate("B", "B", 0.0);
+	  cm.setErrorRate("B", "A", 1.0);
 	  
+	  
+	  double tau=0.01;
+	  double w = cm.getWorkerWage(1.0, tau, map);
+	  double pwage = Double.valueOf(new DecimalFormat("#.####").format(w));
+	  double pworkers = Double.valueOf(new DecimalFormat("#.####").format(1.0/w));
+	  System.out.print("\t"+pwage+"\t"+pworkers);
+	  */
 	  
 	  //double q=0.9;
+	  
+
 	  for (int Q=95; Q>=55; Q -= 5) {
 	  	
 	  	double q = Q/100.0;
@@ -403,11 +437,27 @@ public class ConfusionMatrix {
 		  }
 		  */
 		  
-		  for (double tau=0.1; tau>0.0001; tau /= 10) {
-		  	System.out.print(q+"\t"+(1-tau));
+
+		  for (double tau=0.1; tau>0.0001; tau /= 1.5) {
+		  	
+		  	double pq = Double.valueOf(new DecimalFormat("#.##").format(q));
+		  	double ptau = Double.valueOf(new DecimalFormat("#.####").format((1-tau)));
+		  	System.out.print(pq+"\t"+ptau);
+		  	
 			  double w = cm.getWorkerWage(1.0, tau, map);
-			  System.out.println("\t"+w+"\t"+1.0/w);
+			  double pwage = Double.valueOf(new DecimalFormat("#.####").format(w));
+			  double pworkers = Double.valueOf(new DecimalFormat("#.####").format(1.0/w));
+			  System.out.print("\t"+pwage+"\t"+pworkers);
+			  
+			  double wr = cm.getWorkerWageRegr(1.0, tau, map);
+			  double pwager = Double.valueOf(new DecimalFormat("#.####").format(wr));
+			  double pworkersr = Double.valueOf(new DecimalFormat("#.####").format(1.0/wr));
+			  System.out.print("\t"+pwager+"\t"+pworkersr);
+			  System.out.println();
 		  }
+
+	  
+	  
 		  
 	  }
 	  

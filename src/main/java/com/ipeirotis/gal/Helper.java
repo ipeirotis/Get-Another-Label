@@ -97,7 +97,7 @@ public class Helper {
 
 			}
 
-			if (costfor_c1 < min_cost) {
+			if (costfor_c1 <= min_cost) {
 				result = c1;
 				min_cost = costfor_c1;
 			}
