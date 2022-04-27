@@ -8,9 +8,9 @@ The requesters will also be able to examine which workers are doing a good work 
 
 The ideas behind this work are described in Quality Management on Amazon Mechanical Turk, by Ipeirotis, Wang, and Provost, which was presented at HCOMP 2010.
 
-## Downloading
+## Downloading and compiling
 
-[This Link](http://ipeirotis-assets.s3.amazonaws.com/get-another-label/get-another-label-latest.zip) contains the latest version, straight from our Continuous Integration builds.
+Clone the repo and then run `mvn package`
 
 ## How to Run
 
@@ -18,12 +18,11 @@ For details on how to run the algorithm see https://github.com/ipeirotis/Get-Ano
 
 ## Deprecation warning
 
- The 2.x series his is the last stand-alone version of the code. 
- 
- Soon, we will make available a REST-based web service that has significant additional functionality (support for streaming and incremental updates, persistence, etc). Stay tuned. The web service will be available at http://www.project-troia.com/
+This is the last stand-alone version of the code. We do not expect to update the code in the future.  
+
  
 ## Miscellaneous
 
-A web-accessible demo of is available at http://qmturk.appspot.com/
-
 A .NET version of the code, by Julian Urbano, is available at http://code.google.com/p/get-another-label-dotnet/
+
+The web service version is available at https://github.com/ipeirotis/Troia-Server
